@@ -1,10 +1,3 @@
-//
-//  StatisticsViewController.swift
-//  FakeNFT
-//
-//  Created by Юрий Гриневич on 09.11.2024.
-//
-
 import UIKit
 import SnapKit
 
@@ -16,6 +9,7 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     
     var presenter: StatisticsPresenterProtocol?
     
+    // MARK: - UIElements
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
@@ -25,12 +19,14 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
         return tableView
     }()
     
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
 }
 
+// MARK: - UITableViewDataSource
 extension StatisticsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         5
@@ -43,6 +39,7 @@ extension StatisticsViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension StatisticsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         88
@@ -53,6 +50,7 @@ extension StatisticsViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - SettingView
 extension StatisticsViewController: SettingViewsProtocol {
     func setupView() {
         view.backgroundColor = .nftWhite

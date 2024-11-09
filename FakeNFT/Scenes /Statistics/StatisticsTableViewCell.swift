@@ -1,15 +1,9 @@
-//
-//  StatisticsTableViewCell.swift
-//  FakeNFT
-//
-//  Created by Юрий Гриневич on 09.11.2024.
-//
-
 import UIKit
 import SnapKit
 
 final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
     
+    // MARK: - UIElements
     private lazy var backgroundGreyView: UIView = {
         let view = UIView()
         view.backgroundColor = .nftLightGrey
@@ -68,6 +62,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
         return label
     }()
     
+    // MARK: - LifeCycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
@@ -77,6 +72,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - PublicMethods
     func configure() {
         ratingLabel.text = "1"
         avatarImageView.image = UIImage(named: "profilePhoto")
@@ -85,6 +81,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
     }
 }
 
+// MARK: - SettingView
 extension StatisticsTableViewCell: SettingViewsProtocol {
     func setupView() {
         backgroundColor = .clear
