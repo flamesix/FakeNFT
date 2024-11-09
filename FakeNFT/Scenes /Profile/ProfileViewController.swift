@@ -13,6 +13,7 @@ final class ProfileViewController: UIViewController {
         let editButton = UIButton(type: .system)
         editButton.setImage(UIImage(named: "editButton"), for: .normal)
         editButton.tintColor = UIColor(named: "nftBlack")
+        editButton.addTarget(self, action: #selector(didEditButtonTapped), for: .touchUpInside)
         editButton.translatesAutoresizingMaskIntoConstraints = false
         return editButton
     }()
@@ -29,7 +30,7 @@ final class ProfileViewController: UIViewController {
     private lazy var usernameTitle: UILabel = {
         var usernameTitle = UILabel()
         usernameTitle.text = "User Name"
-        usernameTitle.font = .systemFont(ofSize: 22, weight: .bold)
+        usernameTitle.font = .headline3
         usernameTitle.textColor = UIColor(named: "nftBlack")
         usernameTitle.translatesAutoresizingMaskIntoConstraints = false
         return usernameTitle
@@ -45,7 +46,7 @@ final class ProfileViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
-        descriptionLabel.font = .systemFont(ofSize: 13, weight: .regular)
+        descriptionLabel.font = .caption2
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 4
         descriptionLabel.lineBreakMode = .byWordWrapping
@@ -57,7 +58,7 @@ final class ProfileViewController: UIViewController {
     private lazy var linkButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("username.com", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
+        button.titleLabel?.font = .caption1
         button.titleLabel?.textColor = UIColor(named: "nftBlue")
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -119,6 +120,12 @@ final class ProfileViewController: UIViewController {
             tableView.heightAnchor.constraint(equalToConstant: 162)
         ])
     }
+    
+    @objc
+    private func didEditButtonTapped(){
+        let editProfileInfoVC = EditProfileInfoViewController()
+        present(editProfileInfoVC, animated: true)
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource{
@@ -152,4 +159,6 @@ extension ProfileViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 54
     }
+    
+    
 }

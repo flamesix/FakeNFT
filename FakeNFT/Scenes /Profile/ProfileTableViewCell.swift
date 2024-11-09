@@ -13,7 +13,7 @@ final class ProfileTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textColor = UIColor(named: "nftBlack")
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        titleLabel.font = .bodyBold
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
     }()

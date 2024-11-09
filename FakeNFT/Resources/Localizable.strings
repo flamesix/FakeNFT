@@ -7,3 +7,6 @@
 
 // MARK: ProfileVC
 "Tab.profile" = "Профиль";
+"editNameTitle" = "Имя";
+"editBioTitle" = "Описание";
+"editSiteTitle" = "Сайт";
