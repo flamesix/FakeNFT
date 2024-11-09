@@ -88,6 +88,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
 extension StatisticsTableViewCell: SettingViewsProtocol {
     func setupView() {
         backgroundColor = .clear
+        selectionStyle = .none
         addSubviews(mainStack)
         backgroundGreyView.addSubviews(contentStack)
         
@@ -95,7 +96,8 @@ extension StatisticsTableViewCell: SettingViewsProtocol {
     }
     
     func addConstraints() {
-        mainStack.snp.makeConstraints { $0.edges.equalToSuperview() }
+        let spacing = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        mainStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(spacing) }
         
         avatarImageView.snp.makeConstraints { make in
             make.height.width.equalTo(28)
