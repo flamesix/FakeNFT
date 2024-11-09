@@ -73,11 +73,11 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
     }
     
     // MARK: - PublicMethods
-    func configure() {
-        ratingLabel.text = "1"
+    func configure(with user: User) {
+        ratingLabel.text = user.rating
         avatarImageView.image = UIImage(named: "profilePhoto")
-        usernameLabel.text = "Username"
-        nftCountLabel.text = "112"
+        usernameLabel.text = user.name
+        nftCountLabel.text = user.nfts.count.description
     }
 }
 

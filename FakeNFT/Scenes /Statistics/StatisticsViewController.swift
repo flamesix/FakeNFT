@@ -29,12 +29,13 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
 // MARK: - UITableViewDataSource
 extension StatisticsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        presenter?.users.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: StatisticsTableViewCell = tableView.dequeueReusableCell()
-        cell.configure()
+        guard let user = presenter?.users[indexPath.row] else { return cell }
+        cell.configure(with: user)
         return cell
     }
 }
@@ -53,6 +54,8 @@ extension StatisticsViewController: UITableViewDelegate {
 // MARK: - SettingView
 extension StatisticsViewController: SettingViewsProtocol {
     func setupView() {
+        presenter?.view = self
+        self.presenter = StatisticsPresenter()
         view.backgroundColor = .nftWhite
         view.addSubviews(tableView)
         
