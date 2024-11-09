@@ -27,7 +27,24 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     }
     
     @objc private func didTapFilterButton() {
-        print("Filter button tapped")
+        let alertController = UIAlertController(title: NSLocalizedString("Statistics.Sort", comment: ""), message: nil, preferredStyle: .actionSheet)
+        
+        let byNameAction = UIAlertAction(title: NSLocalizedString("Statistics.ByName", comment: ""), style: .default) { [weak self] _ in
+            print("Sort by name")
+            
+        }
+        
+        let byRatingAction = UIAlertAction(title: NSLocalizedString("Statistics.ByRating", comment: ""), style: .default) { [weak self] _ in
+            print("Sort by rating")
+        }
+        
+        let closeAction = UIAlertAction(title: NSLocalizedString("Statistics.Close", comment: ""), style: .cancel)
+        
+        [byNameAction, byRatingAction, closeAction].forEach {
+            alertController.addAction($0)
+        }
+        
+        present(alertController, animated: true)
     }
 }
 
