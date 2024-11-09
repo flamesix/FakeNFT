@@ -24,7 +24,7 @@ final class TabBarController: UITabBarController {
         )
         catalogController.tabBarItem = catalogTabBarItem
         
-        let statisticsController = StatisticsViewController()
+        let statisticsController = UINavigationController(rootViewController: StatisticsViewController())
         statisticsController.tabBarItem = statisticsTabBarItem
 
         viewControllers = [catalogController, statisticsController]

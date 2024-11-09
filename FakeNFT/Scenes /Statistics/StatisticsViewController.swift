@@ -15,6 +15,7 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .nftWhite
         tableView.register(StatisticsTableViewCell.self)
         return tableView
     }()
@@ -23,6 +24,10 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    @objc private func didTapFilterButton() {
+        print("Filter button tapped")
     }
 }
 
@@ -58,6 +63,12 @@ extension StatisticsViewController: SettingViewsProtocol {
         self.presenter = StatisticsPresenter()
         view.backgroundColor = .nftWhite
         view.addSubviews(tableView)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "sortIcon"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(didTapFilterButton))
+        navigationItem.rightBarButtonItem?.tintColor = .nftBlack
         
         addConstraints()
     }
