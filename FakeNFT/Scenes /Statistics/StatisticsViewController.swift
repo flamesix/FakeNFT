@@ -24,18 +24,21 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        presenter?.viewDidLoad()
     }
     
     @objc private func didTapFilterButton() {
         let alertController = UIAlertController(title: NSLocalizedString("Statistics.Sort", comment: ""), message: nil, preferredStyle: .actionSheet)
         
         let byNameAction = UIAlertAction(title: NSLocalizedString("Statistics.ByName", comment: ""), style: .default) { [weak self] _ in
-            print("Sort by name")
+            self?.presenter?.filter(by: .name)
+            self?.tableView.reloadData()
             
         }
         
         let byRatingAction = UIAlertAction(title: NSLocalizedString("Statistics.ByRating", comment: ""), style: .default) { [weak self] _ in
-            print("Sort by rating")
+            self?.presenter?.filter(by: .rating)
+            self?.tableView.reloadData()
         }
         
         let closeAction = UIAlertAction(title: NSLocalizedString("Statistics.Close", comment: ""), style: .cancel)
@@ -51,12 +54,12 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
 // MARK: - UITableViewDataSource
 extension StatisticsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter?.users.count ?? 0
+        presenter?.filteresUsers.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: StatisticsTableViewCell = tableView.dequeueReusableCell()
-        guard let user = presenter?.users[indexPath.row] else { return cell }
+        guard let user = presenter?.filteresUsers[indexPath.row] else { return cell }
         cell.configure(with: user)
         return cell
     }
