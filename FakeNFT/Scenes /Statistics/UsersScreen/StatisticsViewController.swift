@@ -73,6 +73,10 @@ extension StatisticsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let vc = UserCardViewController()
+        let presenter = UserCardPresenter()
+        vc.presenter = presenter
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
