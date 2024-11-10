@@ -365,12 +365,12 @@
 		5B6925582CDF6D1A000561C2 /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
-				5B6925672CE08A78000561C2 /* New Group */,
+				5B6925672CE08A78000561C2 /* UsersScreen */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
 		};
-		5B6925672CE08A78000561C2 /* New Group */ = {
+		5B6925672CE08A78000561C2 /* UsersScreen */ = {
 			isa = PBXGroup;
 			children = (
 				5B6925592CDF6D6F000561C2 /* StatisticsViewController.swift */,
@@ -380,7 +380,7 @@
 				5B6925632CDFD8C1000561C2 /* FilterStateStorage.swift */,
 				5B6925652CDFD962000561C2 /* FilterOption.swift */,
 			);
-			path = "New Group";
+			path = UsersScreen;
 			sourceTree = "<group>";
 		};
 		E19CD5A92A98B55900CA39A5 /* Cell */ = {
