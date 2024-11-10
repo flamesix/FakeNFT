@@ -54,12 +54,12 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
 // MARK: - UITableViewDataSource
 extension StatisticsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter?.filteresUsers.count ?? 0
+        presenter?.filteredUsers.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: StatisticsTableViewCell = tableView.dequeueReusableCell()
-        guard let user = presenter?.filteresUsers[indexPath.row] else { return cell }
+        guard let user = presenter?.filteredUsers[indexPath.row] else { return cell }
         cell.configure(with: user)
         return cell
     }
