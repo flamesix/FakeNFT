@@ -9,6 +9,17 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     
     var presenter: StatisticsPresenterProtocol?
     
+    let servicesAssembly: ServicesAssembly
+
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - UIElements
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -83,8 +94,8 @@ extension StatisticsViewController: UITableViewDelegate {
 // MARK: - SettingView
 extension StatisticsViewController: SettingViewsProtocol {
     func setupView() {
-        presenter?.view = self
-        self.presenter = StatisticsPresenter()
+//        presenter?.view = self
+//        self.presenter = StatisticsPresenter(service: servicesAssembly.statisticService)
         view.backgroundColor = .nftWhite
         view.addSubviews(tableView)
         

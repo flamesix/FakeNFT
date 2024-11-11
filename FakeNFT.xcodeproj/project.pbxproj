@@ -44,6 +44,10 @@
 		3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */; };
 		558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558E39E62C68CE0900FB86AC /* NftService.swift */; };
 		5B08941B2CE0EE5000E09A50 /* UILable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08941A2CE0EE5000E09A50 /* UILable+Extension.swift */; };
+		5B08941D2CE1D35300E09A50 /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08941C2CE1D35300E09A50 /* StatisticService.swift */; };
+		5B08941F2CE1D44D00E09A50 /* StatisticStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08941E2CE1D44D00E09A50 /* StatisticStorage.swift */; };
+		5B0894212CE1D53000E09A50 /* StatisticRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894202CE1D53000E09A50 /* StatisticRequest.swift */; };
+		5B0894232CE1DEC900E09A50 /* StatisticsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */; };
 		5B2B55CC2CE0B8C0002F8D7E /* NftButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */; };
 		5B69254A2CDE7746000561C2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6925492CDE7746000561C2 /* UIView+Extension.swift */; };
 		5B69254C2CDE7948000561C2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B69254B2CDE7948000561C2 /* Protocols.swift */; };
@@ -118,6 +122,10 @@
 		3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
 		558E39E62C68CE0900FB86AC /* NftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftService.swift; sourceTree = "<group>"; };
 		5B08941A2CE0EE5000E09A50 /* UILable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILable+Extension.swift"; sourceTree = "<group>"; };
+		5B08941C2CE1D35300E09A50 /* StatisticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticService.swift; sourceTree = "<group>"; };
+		5B08941E2CE1D44D00E09A50 /* StatisticStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticStorage.swift; sourceTree = "<group>"; };
+		5B0894202CE1D53000E09A50 /* StatisticRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticRequest.swift; sourceTree = "<group>"; };
+		5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsAssembly.swift; sourceTree = "<group>"; };
 		5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftButton.swift; sourceTree = "<group>"; };
 		5B6925492CDE7746000561C2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		5B69254B2CDE7948000561C2 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
@@ -214,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				0CFCB74D2A7817DC0009A829 /* NftStorage.swift */,
+				5B08941E2CE1D44D00E09A50 /* StatisticStorage.swift */,
 			);
 			path = MemoryStorage;
 			sourceTree = "<group>";
@@ -287,6 +296,7 @@
 				0C79EE6B2A76DE2E00EE90EA /* ServicesAssemly.swift */,
 				558E39E62C68CE0900FB86AC /* NftService.swift */,
 				0CFCB73F2A78002A0009A829 /* ExamplePutService.swift */,
+				5B08941C2CE1D35300E09A50 /* StatisticService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -347,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				0CFCB7412A78013E0009A829 /* Nft.swift */,
+				5B6925612CDFABD6000561C2 /* User.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -357,6 +368,7 @@
 				0C79EE622A76DD1900EE90EA /* RequestConstants.swift */,
 				3FC8C39029D2453B0081F015 /* ExamplePutRequest.swift */,
 				0C79EE602A76DCD600EE90EA /* NftByIdRequest.swift */,
+				5B0894202CE1D53000E09A50 /* StatisticRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -388,9 +400,9 @@
 				5B6925592CDF6D6F000561C2 /* StatisticsViewController.swift */,
 				5B69255B2CDF6DA9000561C2 /* StatisticsPresenter.swift */,
 				5B69255D2CDF7072000561C2 /* StatisticsTableViewCell.swift */,
-				5B6925612CDFABD6000561C2 /* User.swift */,
 				5B6925632CDFD8C1000561C2 /* FilterStateStorage.swift */,
 				5B6925652CDFD962000561C2 /* FilterOption.swift */,
+				5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */,
 			);
 			path = UsersScreen;
 			sourceTree = "<group>";
@@ -570,6 +582,7 @@
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,
 				5B69254C2CDE7948000561C2 /* Protocols.swift in Sources */,
+				5B0894232CE1DEC900E09A50 /* StatisticsAssembly.swift in Sources */,
 				5B6925642CDFD8C1000561C2 /* FilterStateStorage.swift in Sources */,
 				E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */,
 				3F478ED129DB476500F6D39E /* Fonts.swift in Sources */,
@@ -601,6 +614,8 @@
 				3F6806D729CBC50A00B4F915 /* CellsReusingUtils.swift in Sources */,
 				5B6925662CDFD962000561C2 /* FilterOption.swift in Sources */,
 				5B08941B2CE0EE5000E09A50 /* UILable+Extension.swift in Sources */,
+				5B08941F2CE1D44D00E09A50 /* StatisticStorage.swift in Sources */,
+				5B0894212CE1D53000E09A50 /* StatisticRequest.swift in Sources */,
 				0C79EE612A76DCD600EE90EA /* NftByIdRequest.swift in Sources */,
 				E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
@@ -608,6 +623,7 @@
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
+				5B08941D2CE1D35300E09A50 /* StatisticService.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
