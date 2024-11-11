@@ -1,16 +1,21 @@
 import UIKit
 import SnapKit
 
-protocol StatisticsViewControllerProtocol: AnyObject {
+protocol StatisticsViewControllerProtocol: AnyObject, LoadingView, ErrorView {
     var presenter: StatisticsPresenterProtocol? { get set }
+    func updateTableView()
 }
 
 final class StatisticsViewController: UIViewController, StatisticsViewControllerProtocol {
     
+    // MARK: - Properties
     var presenter: StatisticsPresenterProtocol?
     
     let servicesAssembly: ServicesAssembly
-
+    
+    internal lazy var activityIndicator = UIActivityIndicatorView()
+    
+    // MARK: - Init
     init(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
         super.init(nibName: nil, bundle: nil)
@@ -38,6 +43,7 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
         presenter?.viewDidLoad()
     }
     
+    // MARK: - Methods
     @objc private func didTapFilterButton() {
         let alertController = UIAlertController(title: NSLocalizedString("Statistics.Sort", comment: ""), message: nil, preferredStyle: .actionSheet)
         
@@ -59,6 +65,10 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
         }
         
         present(alertController, animated: true)
+    }
+    
+    func updateTableView() {
+        tableView.reloadData()
     }
 }
 
@@ -94,10 +104,8 @@ extension StatisticsViewController: UITableViewDelegate {
 // MARK: - SettingView
 extension StatisticsViewController: SettingViewsProtocol {
     func setupView() {
-//        presenter?.view = self
-//        self.presenter = StatisticsPresenter(service: servicesAssembly.statisticService)
         view.backgroundColor = .nftWhite
-        view.addSubviews(tableView)
+        view.addSubviews(tableView, activityIndicator)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "sortIcon"),
                                                             style: .plain,
@@ -115,5 +123,7 @@ extension StatisticsViewController: SettingViewsProtocol {
             make.trailing.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(8)
         }
+        
+        activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
     }
 }
