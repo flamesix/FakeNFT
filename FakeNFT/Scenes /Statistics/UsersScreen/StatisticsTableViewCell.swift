@@ -1,5 +1,6 @@
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
     
@@ -62,9 +63,23 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
     // MARK: - PublicMethods
     func configure(with user: User) {
         ratingLabel.text = user.rating
-        avatarImageView.image = UIImage(named: "profilePhoto")
         usernameLabel.text = user.name
         nftCountLabel.text = user.nfts.count.description
+        setAvatarImage(for: user)
+    }
+    
+    private func setAvatarImage(for user: User) {
+        let url = URL(string: user.avatar)
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(with: url, placeholder: UIImage(named: "avatarPlaceholder")) { [weak self] result in
+            switch result {
+            case .success(let image):
+                self?.avatarImageView.image = image.image
+            case .failure(let error):
+                // TODO: Error handling
+                self?.avatarImageView.image = UIImage(named: "avatarPlaceholder")
+            }
+        }
     }
 }
 
