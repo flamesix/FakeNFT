@@ -37,7 +37,6 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
     }
     
     func configure(with model: NftCatalogueCollection) {
-//        collectionCoverImageView.image = model.cover
         collectionCoverImageView.kf.setImage(with: model.cover)
         let collectionName = model.name
         let nftCollectionAmount = model.nfts.count
@@ -62,7 +61,4 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
             make.bottom.equalTo(contentView).offset(-17)
         }
     }
-    
-    
-    
 }
