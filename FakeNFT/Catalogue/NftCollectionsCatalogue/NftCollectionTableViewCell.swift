@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
 
@@ -35,8 +36,9 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with model: NftCollectionModel) {
-        collectionCoverImageView.image = model.cover
+    func configure(with model: NftCatalogueCollection) {
+//        collectionCoverImageView.image = model.cover
+        collectionCoverImageView.kf.setImage(with: model.cover)
         let collectionName = model.name
         let nftCollectionAmount = model.nfts.count
         collectiobTitleLabel.text = "\(collectionName) (\(nftCollectionAmount))"
