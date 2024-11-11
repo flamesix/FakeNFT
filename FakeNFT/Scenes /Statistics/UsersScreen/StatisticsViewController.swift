@@ -94,10 +94,16 @@ extension StatisticsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard let user = presenter?.filteredUsers[indexPath.row] else { return }
+        print("USER ID: \(user.id)")
         let vc = UserCardViewController()
         let presenter = UserCardPresenter()
         vc.presenter = presenter
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        presenter?.willDisplay(for: indexPath)
     }
 }
 

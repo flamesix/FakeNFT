@@ -5,6 +5,7 @@ protocol StatisticsPresenterProtocol {
     var filteredUsers: [User] { get set }
     func viewDidLoad()
     func filter(by filter: FilterOption)
+    func willDisplay(for indexPath: IndexPath)
 }
 
 enum StatisticState {
@@ -19,6 +20,10 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
     
     private let filterStateStorage = FilterStateStorage.shared
     private var filterOption: FilterOption = .rating
+    
+    private var isLoadingPage: Bool = false
+    private var hasMoreData: Bool = true
+    private var page: Int = 0
     
     private var state = StatisticState.initial {
         didSet {
@@ -52,17 +57,26 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
             loadUsers()
         case .data(let users):
             view?.hideLoading()
-            self.users = users
+            if users.isEmpty {
+                hasMoreData = false
+            } else {
+                self.users.append(contentsOf: users)
+                page += 1
+            }
+            isLoadingPage = false
             view?.updateTableView()
         case .failed(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
             view?.showError(errorModel)
+            isLoadingPage = false
         }
     }
     
     private func loadUsers() {
-        service.loadUsers { [weak self] result in
+        guard !isLoadingPage else { return }
+        isLoadingPage = true
+        service.loadUsers(page: page) { [weak self] result in
             switch result {
             case .success(let users):
                 self?.state = .data(users)
@@ -72,13 +86,18 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
         }
     }
     
+    func willDisplay(for indexPath: IndexPath) {
+        guard indexPath.row == filteredUsers.count - 1, hasMoreData else { return }
+        state = .loading
+    }
+    
     func filter(by filter: FilterOption) {
         switch filter {
         case .name:
             filteredUsers = users.sorted { $0.name > $1.name }
             filterStateStorage.filterOption = .name
         case .rating:
-            filteredUsers = users.sorted { Int($0.rating) ?? 0 > Int($1.rating) ?? 0 }
+            filteredUsers = users.sorted { $0.rating < $1.rating }
             filterStateStorage.filterOption = .rating
         }
     }
@@ -91,7 +110,7 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
         default:
             message = NSLocalizedString("Error.unknown", comment: "")
         }
-
+        
         let actionText = NSLocalizedString("Error.repeat", comment: "")
         return ErrorModel(message: message, actionText: actionText) { [weak self] in
             self?.state = .loading

@@ -18,20 +18,6 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
         return stackView
     }()
     
-    private lazy var nameNftLabelStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [usernameLabel, nftCountLabel])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        return stackView
-    }()
-    
-    private lazy var contentStack: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [avatarImageView, nameNftLabelStack])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        return stackView
-    }()
-    
     private lazy var ratingLabel: UILabel = {
         let label = UILabel()
         label.font = .regular15
@@ -52,6 +38,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
         let label = UILabel()
         label.font = .bold22
         label.textColor = .nftBlack
+        label.contentCompressionResistancePriority(for: .horizontal)
         return label
     }()
     
@@ -87,7 +74,7 @@ extension StatisticsTableViewCell: SettingViewsProtocol {
         backgroundColor = .clear
         selectionStyle = .none
         addSubviews(mainStack)
-        backgroundGreyView.addSubviews(contentStack)
+        backgroundGreyView.addSubviews(avatarImageView, usernameLabel, nftCountLabel)
         
         addConstraints()
     }
@@ -96,16 +83,25 @@ extension StatisticsTableViewCell: SettingViewsProtocol {
         let spacing = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         mainStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(spacing) }
         
+        ratingLabel.snp.makeConstraints { make in
+            make.width.equalTo(28)
+        }
+        
         avatarImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(26)
+            make.leading.equalToSuperview().inset(16)
             make.height.width.equalTo(28)
         }
         
-        contentStack.snp.makeConstraints { make in
-            make.verticalEdges.equalToSuperview().inset(26)
-            make.horizontalEdges.equalToSuperview().inset(16)
+        usernameLabel.snp.makeConstraints { make in
+            make.leading.equalTo(avatarImageView.snp.trailing).offset(8)
+            make.trailing.equalToSuperview().inset(70)
+            make.top.bottom.equalToSuperview().inset(26)
         }
-        ratingLabel.snp.makeConstraints { make in
-            make.width.equalTo(28)
+        
+        nftCountLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(26)
+            make.trailing.equalToSuperview().inset(16)
         }
     }
 }

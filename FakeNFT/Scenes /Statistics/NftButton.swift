@@ -37,7 +37,6 @@ extension NftButton: SettingViewsProtocol {
     func setupView() {
         addSubviews(title, chevron)
         addConstraints()
-        backgroundColor = .red
     }
     
     func addConstraints() {
