@@ -139,8 +139,6 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         }
     }
     
-    rank?.rawValue = 1
-    
     func setupView() {
         [itemImageView, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
             contentView.addSubview(subView)
