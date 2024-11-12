@@ -137,7 +137,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
-        return firstLabel.bounds.width > secondLabel.bounds.width ? firstLabel : secondLabel
+        return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
     }
     
     @objc private func sortButtonTapped() {
