@@ -19,6 +19,16 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     // MARK: - Views
     
+    private let cartEmptyLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .textPrimary
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.textAlignment = .center
+        label.text = NSLocalizedString("Cart.isEmpty", comment: "")
+        label.isHidden = true
+        return label
+    }()
+    
     private let nftTableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
@@ -78,6 +88,11 @@ final class CartViewController: UIViewController, CartViewProtocol {
         setup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateView()
+    }
+    
     // MARK: - Methods
     
     private func setup() {
@@ -90,9 +105,14 @@ final class CartViewController: UIViewController, CartViewProtocol {
     private func setupViews() {
         view.backgroundColor = .white
         
-        [nftTableView, cartMenuView, paymentButton, nftCountLabel, totalCostLabel].forEach {
+        [nftTableView, cartMenuView, cartEmptyLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
+        }
+        
+        [paymentButton, nftCountLabel, totalCostLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            cartMenuView.addSubview($0)
         }
         
         nftCountLabel.text = "\(presenter.getNumberOfNftInOrder()) NFT"
@@ -101,6 +121,9 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            cartEmptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            cartEmptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             nftTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             nftTableView.bottomAnchor.constraint(equalTo: cartMenuView.topAnchor),
@@ -123,6 +146,15 @@ final class CartViewController: UIViewController, CartViewProtocol {
         ])
     }
     
+    private func updateView() {
+        let number = presenter.getNumberOfNftInOrder()
+        if number == 0 {
+            showEmptyInfo()
+        } else {
+            showContent()
+        }
+    }
+    
     private func setupTableView() {
         nftTableView.register(NftCartCell.self, forCellReuseIdentifier: NftCartCell.identifier)
         nftTableView.dataSource = self
@@ -138,6 +170,18 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
+    }
+    
+    private func showEmptyInfo() {
+        cartEmptyLabel.isHidden = false
+        cartMenuView.isHidden = true
+        navigationItem.rightBarButtonItem = nil
+    }
+    
+    private func showContent() {
+        cartEmptyLabel.isHidden = true
+        cartMenuView.isHidden = false
+        setupNavigationBar()
     }
     
     @objc private func sortButtonTapped() {
