@@ -14,26 +14,25 @@ protocol NftCatalogueItemPresenterProtocol {
 }
 
 enum NftCatalogueItemState {
-    case initial, loading, failed(Error), data([NftCatalogueCollection])
+    case initial, loading, failed(Error), data([NftCollectionItem])
 }
 
 final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     
     // MARK: - Properties
 
-    weak var view: NftCollectionsCatalgueViewContollerProtocol?
-    private let service: NftCollectionCatalogueService
-    private var state = NftCatalogueDetailState.initial {
+    weak var view: NftCatalogueItemViewControllerProtocol?
+    private let service: NftItemsService
+    private var state = NftCatalogueItemState.initial {
         didSet {
             stateDidChanged()
         }
     }
     
-    private var page = 0
 
     // MARK: - Init
 
-    init(service: NftCollectionCatalogueService) {
+    init(service: NftItemsService) {
         self.service = service
     }
 
@@ -49,14 +48,11 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
             assertionFailure("can't move to initial state")
         case .loading:
             view?.showLoading()
-            loadNftCollectionCatalogue(page: page)
-        case .data(let nftCatalogue):
-            if nftCatalogue.count == (page + 1) * 5 {
-                page += 1
-            }
+            loadNftCollectionItems()
+        case .data(let nftItems):
             view?.hideLoading()
-            view?.displayCatalogue(nftCatalogue)
-            
+            print(nftItems)
+            view?.displayItems(nftItems)
         case .failed(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
@@ -64,11 +60,11 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
         }
     }
 
-    private func loadNftCollectionCatalogue(page: Int) {
-        service.loadNftCatalogue(page: page) { [weak self] result in
+    private func loadNftCollectionItems() {
+        service.loadNftItems() { [weak self] result in
             switch result {
-            case .success(let nftCatalogue):
-                self?.state = .data(nftCatalogue)
+            case .success(let nftItems):
+                self?.state = .data(nftItems)
             case .failure(let error):
                 self?.state = .failed(error)
             }
@@ -89,6 +85,4 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
             self?.state = .loading
         }
     }
-   
-    
 }

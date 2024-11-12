@@ -10,7 +10,7 @@ public final class NftCollectionCatalogueAssembly {
 
     public func build() -> UIViewController {
         let presenter = NftCollectionCataloguePresenter(service: servicesAssembler.nftCollectionCataloguService )
-        let viewController = NftCollectionsCatalgueViewContoller(presenter: presenter)
+        let viewController = NftCollectionsCatalgueViewContoller(presenter: presenter, serviceAsssembly: servicesAssembler)
         presenter.view = viewController
         return viewController
     }

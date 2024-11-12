@@ -1,12 +1,8 @@
 import UIKit
 
-enum Rank: Int {
-    case one = 1, two = 2, three = 3, four = 4, five = 5, zero = 0
-}
-
 final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol {
 
-    private var rank: Rank?
+    private var rank: Int?
     
     private lazy var itemImageView: UIImageView = {
         let imageView = UIImageView()
@@ -35,6 +31,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         stack.addArrangedSubview(starImage5)
         stack.spacing = 2
         stack.axis = .horizontal
+        return stack
     }()
     
     private lazy var starImage1: UIImageView = {
@@ -88,7 +85,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     
     private lazy var recycleButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
+        button.setImage(UIImage(resource: .nftRecycleEmpty), for: .normal)
         button.tintColor = .nftRedUni
         return button
     }()
@@ -104,39 +101,37 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     
     func setRacnk() {
         switch rank {
-        case .one:
+        case 1:
             starImage1.tintColor = .nftYellowUni
-        case .two:
+        case 2:
             starImage1.tintColor = .nftYellowUni
             starImage2.tintColor = .nftYellowUni
-        case .three:
+        case 3:
             starImage1.tintColor = .nftYellowUni
             starImage2.tintColor = .nftYellowUni
             starImage3.tintColor = .nftYellowUni
-        case .four:
+        case 4:
             starImage1.tintColor = .nftYellowUni
             starImage2.tintColor = .nftYellowUni
             starImage3.tintColor = .nftYellowUni
             starImage4.tintColor = .nftYellowUni
-        case .five:
+        case 5:
             starImage1.tintColor = .nftYellowUni
             starImage2.tintColor = .nftYellowUni
             starImage3.tintColor = .nftYellowUni
             starImage4.tintColor = .nftYellowUni
             starImage5.tintColor = .nftYellowUni
-        case .zero:
-            starImage1.tintColor = .nftLightGrey
-            starImage2.tintColor = .nftLightGrey
-            starImage3.tintColor = .nftLightGrey
-            starImage4.tintColor = .nftLightGrey
-            starImage5.tintColor = .nftLightGrey
-        case .none:
+        default:
             starImage1.tintColor = .nftLightGrey
             starImage2.tintColor = .nftLightGrey
             starImage3.tintColor = .nftLightGrey
             starImage4.tintColor = .nftLightGrey
             starImage5.tintColor = .nftLightGrey
         }
+    }
+    
+    func configureItem(with item: NftCollectionItem) {
+        
     }
     
     func setupView() {
@@ -146,7 +141,44 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     }
     
     func addConstraints() {
+        itemImageView.snp.makeConstraints { make in
+            make.top.equalTo(contentView)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
+            make.height.equalTo(108)
+            make.width.equalTo(108)
+        }
         
+        likeImageView.snp.makeConstraints { make in
+            make.top.equalTo(itemImageView.snp.top)
+            make.trailing.equalTo(itemImageView.snp.trailing)
+            make.height.equalTo(42)
+            make.width.equalTo(42)
+        }
+        
+        hStack.snp.makeConstraints { make in
+            make.top.equalTo(itemImageView.snp.bottom).offset(8)
+            make.leading.equalTo(itemImageView.snp.leading)
+            make.height.equalTo(12)
+            make.width.equalTo(68)
+        }
+        
+        itmeTitle.snp.makeConstraints { make in
+            make.top.equalTo(hStack.snp.bottom).offset(5)
+            make.leading.equalTo(itemImageView.snp.leading)
+        }
+        
+        priceLable.snp.makeConstraints { make in
+            make.top.equalTo(itmeTitle.snp.bottom).offset(4)
+            make.leading.equalTo(itemImageView.snp.leading)
+        }
+        
+        recycleButton.snp.makeConstraints { make in
+            make.top.equalTo(itemImageView.snp.bottom).offset(24)
+            make.trailing.equalTo(itemImageView.snp.trailing)
+            make.height.equalTo(40)
+            make.width.equalTo(40)
+        }
     }
     
 }

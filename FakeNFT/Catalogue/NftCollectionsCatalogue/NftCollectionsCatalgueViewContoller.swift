@@ -13,6 +13,8 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     
     private let presenter: NftCatalogueDetailPresenter
     
+    private let servicesAssembly: ServicesAssembly
+    
     private var collectionCatalogue: [NftCatalogueCollection] = []
     
     private var nftCollectionCatalogueFactory = NftCollectionCatalogueFactory()
@@ -40,8 +42,9 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     private var collectionSortState: SortedBy = .nftCount
 
     
-    init(presenter: NftCatalogueDetailPresenter) {
+    init(presenter: NftCatalogueDetailPresenter, serviceAsssembly: ServicesAssembly) {
         self.presenter = presenter
+        self.servicesAssembly = serviceAsssembly
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -140,6 +143,11 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let presenter = NftCatalogueItemPresenter(service: servicesAssembly.nftItemsService)
+        let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: collectionCatalogue[indexPath.row])
+        presenter.view = viewController
+        viewController.modalPresentationStyle = .fullScreen
+        present(viewController, animated: true)
     }
 }
 
