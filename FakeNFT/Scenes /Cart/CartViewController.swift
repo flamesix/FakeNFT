@@ -8,14 +8,14 @@
 import UIKit
 
 protocol CartViewProtocol: AnyObject {
-    
+    var presenter: CartPresenterProtocol { get set }
 }
 
-final class CartViewController: UIViewController {
+final class CartViewController: UIViewController, CartViewProtocol {
     
     // MARK: - Properties
     
-    private let presenter: CartPresenterProtocol
+    var presenter: CartPresenterProtocol
     
     // MARK: - Views
     
@@ -75,8 +75,6 @@ final class CartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
         setup()
     }
     
@@ -96,6 +94,9 @@ final class CartViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
+        
+        nftCountLabel.text = "\(presenter.getNumberOfNftInOrder()) NFT"
+        totalCostLabel.text = "\(presenter.getOrderTotalCost()) ETH"
     }
     
     private func setupConstraints() {
@@ -140,21 +141,15 @@ final class CartViewController: UIViewController {
     }
     
     @objc private func sortButtonTapped() {
-        
+        presenter.openSortMenu()
     }
-}
-
-// MARK: - CartViewProtocol
-
-extension CartViewController: CartViewProtocol {
-    
 }
 
 // MARK: - UITableViewDataSource
 
 extension CartViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        presenter.getVisibleNftCounts()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -166,6 +161,7 @@ extension CartViewController: UITableViewDataSource {
         }
         
         cell.selectionStyle = .none
+        presenter.configureCell(for: cell, with: indexPath)
         
         return cell
     }
