@@ -6,3 +6,4 @@
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
 "Cart.price" = "Цена";
+"Cart.toPay" = "К оплате";
