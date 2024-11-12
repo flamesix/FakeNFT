@@ -86,6 +86,7 @@ final class CartViewController: UIViewController {
         setupViews()
         setupConstraints()
         setupTableView()
+        setupNavigationBar()
     }
     
     private func setupViews() {
@@ -127,8 +128,19 @@ final class CartViewController: UIViewController {
         nftTableView.delegate = self
     }
     
+    private func setupNavigationBar() {
+        let sortButton = UIBarButtonItem(image: UIImage(named: "sortIcon"), style: .plain, target: self, action: #selector(sortButtonTapped))
+        sortButton.tintColor = .nftBlack
+        navigationItem.rightBarButtonItem = sortButton
+        definesPresentationContext = true
+    }
+    
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.bounds.width > secondLabel.bounds.width ? firstLabel : secondLabel
+    }
+    
+    @objc private func sortButtonTapped() {
+        
     }
 }
 

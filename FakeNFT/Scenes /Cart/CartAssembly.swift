@@ -21,6 +21,7 @@ public final class CartAssembly {
         )
         let viewController = CartViewController(presenter: presenter)
         presenter.view = viewController
-        return viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        return navigationController
     }
 }
