@@ -7,7 +7,9 @@
 
 import UIKit
 
-protocol CartViewProtocol: AnyObject {
+protocol CartViewProtocol: AnyObject, ErrorView, LoadingView {
+    func updateCart()
+    func showEmptyInfo()
     var presenter: CartPresenterProtocol { get set }
 }
 
@@ -16,6 +18,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     // MARK: - Properties
     
     var presenter: CartPresenterProtocol
+    internal lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Views
     
@@ -86,26 +89,38 @@ final class CartViewController: UIViewController, CartViewProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        presenter.viewDidLoad()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateView()
+    // MARK: - Public Methods
+    
+    func updateCart() {
+        nftTableView.isHidden = false
+        cartMenuView.isHidden = false
+        
+        nftTableView.reloadData()
+        setupNavigationBarItem()
+        
+        nftCountLabel.text = "\(presenter.getNumberOfNftInOrder()) NFT"
+        totalCostLabel.text = "\(presenter.getOrderTotalCost()) ETH"
     }
     
-    // MARK: - Methods
+    func showEmptyInfo() {
+        cartEmptyLabel.isHidden = false
+    }
+    
+    // MARK: - Private Methods
     
     private func setup() {
         setupViews()
         setupConstraints()
         setupTableView()
-        setupNavigationBar()
     }
     
     private func setupViews() {
         view.backgroundColor = .white
         
-        [nftTableView, cartMenuView, cartEmptyLabel].forEach {
+        [nftTableView, cartMenuView, cartEmptyLabel, activityIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -115,8 +130,8 @@ final class CartViewController: UIViewController, CartViewProtocol {
             cartMenuView.addSubview($0)
         }
         
-        nftCountLabel.text = "\(presenter.getNumberOfNftInOrder()) NFT"
-        totalCostLabel.text = "\(presenter.getOrderTotalCost()) ETH"
+        nftTableView.isHidden = true
+        cartMenuView.isHidden = true
     }
     
     private func setupConstraints() {
@@ -143,16 +158,10 @@ final class CartViewController: UIViewController, CartViewProtocol {
             nftCountLabel.topAnchor.constraint(equalTo: cartMenuView.topAnchor, constant: 16),
             totalCostLabel.leadingAnchor.constraint(equalTo: cartMenuView.leadingAnchor, constant: 16),
             totalCostLabel.bottomAnchor.constraint(equalTo: cartMenuView.bottomAnchor, constant: -16),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
-    }
-    
-    private func updateView() {
-        let number = presenter.getNumberOfNftInOrder()
-        if number == 0 {
-            showEmptyInfo()
-        } else {
-            showContent()
-        }
     }
     
     private func setupTableView() {
@@ -161,7 +170,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
         nftTableView.delegate = self
     }
     
-    private func setupNavigationBar() {
+    private func setupNavigationBarItem() {
         let sortButton = UIBarButtonItem(image: UIImage(named: "sortIcon"), style: .plain, target: self, action: #selector(sortButtonTapped))
         sortButton.tintColor = .nftBlack
         navigationItem.rightBarButtonItem = sortButton
@@ -170,18 +179,6 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
-    }
-    
-    private func showEmptyInfo() {
-        cartEmptyLabel.isHidden = false
-        cartMenuView.isHidden = true
-        navigationItem.rightBarButtonItem = nil
-    }
-    
-    private func showContent() {
-        cartEmptyLabel.isHidden = true
-        cartMenuView.isHidden = false
-        setupNavigationBar()
     }
     
     @objc private func sortButtonTapped() {
@@ -193,7 +190,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
 
 extension CartViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.getVisibleNftCounts()
+        presenter.getNumberOfNftInOrder()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

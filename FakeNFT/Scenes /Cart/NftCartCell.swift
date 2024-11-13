@@ -66,10 +66,12 @@ final class NftCartCell: UITableViewCell {
     
     // MARK: - Methods
     
-    func configure(image: UIImage, title: String, rating: Int, price: String) {
-        nftImageView.image = image
-        nftTitleLabel.text = title
-        nftPriceLabel.text = price
+    func configure(images: [URL], name: String, rating: Int, price: Float) {
+        if let imageUrl = images.first {
+            nftImageView.kf.setImage(with: imageUrl)
+        }
+        nftTitleLabel.text = name
+        nftPriceLabel.text = String(price)
         starRatingView.setRating(rating)
     }
     
