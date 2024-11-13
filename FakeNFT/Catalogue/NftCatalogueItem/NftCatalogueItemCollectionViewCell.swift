@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol {
 
@@ -92,7 +93,8 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
+        setupView()
+        addConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -131,11 +133,12 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     }
     
     func configureItem(with item: NftCollectionItem) {
-        
+        itemImageView.kf.setImage(with: item.images.first)
+        itmeTitle.text = item.name
     }
     
     func setupView() {
-        [itemImageView, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
+        [itemImageView, likeImageView, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
             contentView.addSubview(subView)
         }
     }
@@ -143,8 +146,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     func addConstraints() {
         itemImageView.snp.makeConstraints { make in
             make.top.equalTo(contentView)
-            make.leading.equalTo(contentView)
-            make.trailing.equalTo(contentView)
+            make.left.equalTo(contentView)
             make.height.equalTo(108)
             make.width.equalTo(108)
         }

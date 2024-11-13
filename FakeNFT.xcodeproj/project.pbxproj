@@ -417,10 +417,10 @@
 		90C2EEB82CE0030700416178 /* Catalogue */ = {
 			isa = PBXGroup;
 			children = (
+				9F2FADD12CE488DE00698510 /* NftAuthorWebView */,
 				90C2EEC62CE0069000416178 /* CatalogueModels */,
 				90C2EEB92CE0033F00416178 /* NftCollectionsCatalogue */,
 				90C2EEBA2CE0037A00416178 /* NftCatalogueItem */,
-				90C2EEBD2CE003BB00416178 /* NftAuthorWebView */,
 			);
 			path = Catalogue;
 			sourceTree = "<group>";
@@ -448,19 +448,19 @@
 			path = NftCatalogueItem;
 			sourceTree = "<group>";
 		};
-		90C2EEBD2CE003BB00416178 /* NftAuthorWebView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = NftAuthorWebView;
-			sourceTree = "<group>";
-		};
 		90C2EEC62CE0069000416178 /* CatalogueModels */ = {
 			isa = PBXGroup;
 			children = (
 				90C2EEC72CE006C200416178 /* NftCollectionModel.swift */,
 			);
 			path = CatalogueModels;
+			sourceTree = "<group>";
+		};
+		9F2FADD12CE488DE00698510 /* NftAuthorWebView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NftAuthorWebView;
 			sourceTree = "<group>";
 		};
 		E1CD40DA2A96BE9B00BE7FE8 /* Resources */ = {

@@ -1,9 +1,9 @@
 import Foundation
 
-typealias NftItemCompletion = (Result<[NftCollectionItem], Error>) -> Void
+typealias NftItemCompletion = (Result<NftCollectionItem, Error>) -> Void
 
 protocol NftItemsService {
-    func loadNftItems(completion: @escaping NftItemCompletion)
+    func loadNftItems(id: String, completion: @escaping NftItemCompletion)
 }
 
 final class NftItemsServiceImpl: NftItemsService {
@@ -16,14 +16,14 @@ final class NftItemsServiceImpl: NftItemsService {
         self.networkClient = networkClient
     }
 
-    func loadNftItems(completion: @escaping NftItemCompletion) {
-        if let nftItems = storage.getNftCollectionItems() {
-            completion(.success(nftItems))
+    func loadNftItems(id: String, completion: @escaping NftItemCompletion) {
+        if let nftItem = storage.getNftCollectionItems(id: id) {
+            completion(.success(nftItem))
             return
         }
 
-        let request = NftCollectionItemsRequest()
-        networkClient.send(request: request, type: [NftCollectionItem].self) { [weak storage] result in
+        let request = NftCollectionItemsRequest(id: id)
+        networkClient.send(request: request, type: NftCollectionItem.self) { [weak storage] result in
             switch result {
             case .success(let nftItems):
                 storage?.saveNftCollectionItems(nftItems)

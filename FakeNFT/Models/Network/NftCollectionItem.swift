@@ -9,7 +9,7 @@ import Foundation
 
 struct NftCollectionItem: Decodable {
     let name: String
-    let images: [String]
+    let images: [URL]
     let rating: Int
     let price: Float
     let id: String

@@ -22,6 +22,8 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     // MARK: - Properties
 
     weak var view: NftCatalogueItemViewControllerProtocol?
+    private var input: [String]
+    private var output: [NftCollectionItem] = []
     private let service: NftItemsService
     private var state = NftCatalogueItemState.initial {
         didSet {
@@ -32,7 +34,8 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
 
     // MARK: - Init
 
-    init(service: NftItemsService) {
+    init(input: [String], service: NftItemsService) {
+        self.input = input
         self.service = service
     }
 
@@ -48,11 +51,16 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
             assertionFailure("can't move to initial state")
         case .loading:
             view?.showLoading()
-            loadNftCollectionItems()
+            let id = input.removeFirst()
+            loadNftCollectionItems(id: id)
         case .data(let nftItems):
-            view?.hideLoading()
-            print(nftItems)
-            view?.displayItems(nftItems)
+            if 0 < input.count {
+                state = .loading
+            } else {
+                view?.hideLoading()
+                view?.displayItems(nftItems)
+                
+            }
         case .failed(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
@@ -60,15 +68,17 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
         }
     }
 
-    private func loadNftCollectionItems() {
-        service.loadNftItems() { [weak self] result in
-            switch result {
-            case .success(let nftItems):
-                self?.state = .data(nftItems)
-            case .failure(let error):
-                self?.state = .failed(error)
+    private func loadNftCollectionItems(id: String) {
+            service.loadNftItems(id: id) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let nftItems):
+                    self.output.append(nftItems)
+                    self.state = .data(output)
+                case .failure(let error):
+                    self.state = .failed(error)
+                }
             }
-        }
     }
 
     private func makeErrorModel(_ error: Error) -> ErrorModel {

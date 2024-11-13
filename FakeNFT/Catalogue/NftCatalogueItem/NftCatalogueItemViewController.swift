@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol NftCatalogueItemViewControllerProtocol: AnyObject, ErrorView, LoadingView {
     func displayItems(_ nftCollectionItems: [NftCollectionItem])
@@ -20,10 +21,17 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     var activityIndicator = UIActivityIndicatorView()
     
+    private lazy var nftCatalogueCollectionHeight: Int = {
+        var numberOfRows = catalogue.nfts.count % 3 == 0
+        ? catalogue.nfts.count / 3
+        : catalogue.nfts.count / 3 + 1
+        return numberOfRows * 192 + (numberOfRows - 1) * 8
+    }()
     
     private lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(resource: .nftCollectionBackwardChevron), for: .normal)
+        let button = UIButton(type: .system)
+        let image = UIImage(resource: .nftCollectionBackwardChevron)
+        button.setImage(image, for: .normal)
         button.tintColor = .nftBlack
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         return button
@@ -51,15 +59,15 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     private lazy var catalogueTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.headline3
-        label.textColor = .label
+        label.textColor = .nftBlack
         return label
     }()
     
     private lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.caption2
-        label.textColor = .label
-        label.text = "Автор коллекции"
+        label.textColor = .nftBlack
+        label.text = "Автор коллекции:"
         return label
     }()
     
@@ -74,6 +82,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         let label = UITextView()
         label.font = UIFont.caption2
         label.textColor = .label
+        label.textContainer.lineFragmentPadding = 0
         label.isScrollEnabled = false
         label.isEditable = false
         label.isSelectable = false
@@ -105,17 +114,26 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         view.backgroundColor = .systemBackground
         setupView()
         addConstraints()
+        prepareViews()
+        presenter.viewDidLoad()
     }
     
     @objc func backButtonTapped(){
-        
+        self.dismiss(animated: true)
+    }
+    
+    func prepareViews() {
+        coverImgeView.kf.setImage(with: catalogue.cover)
+        catalogueTitleLabel.text = catalogue.name
+        descriptionTextView.text = catalogue.description
+        authorButton.setTitle(catalogue.author, for: .normal)
     }
     
     func setupView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(backButton)
         contentView.addSubview(coverImgeView)
+        contentView.addSubview(backButton)
         contentView.addSubview(catalogueTitleLabel)
         contentView.addSubview(authorLabel)
         contentView.addSubview(authorButton)
@@ -132,17 +150,57 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         }
         
         contentView.snp.makeConstraints { make in
-            make.leading.equalTo(scrollView.snp.leading)
+            make.leading.equalTo(view.snp.leading)
             make.top.equalTo(scrollView.snp.top)
             make.bottom.equalTo(scrollView.snp.bottom)
-            make.trailing.equalTo(scrollView.snp.trailing)
+            make.trailing.equalTo(view.snp.trailing)
         }
         
         backButton.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top).offset(55)
-            make.leading.equalTo(contentView.snp.leading).offset(9)
+            make.leading.equalTo(view.snp.leading).offset(9)
             make.height.equalTo(24)
             make.width.equalTo(24)
+        }
+        
+        coverImgeView.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.trailing.equalTo(view.snp.trailing)
+            make.height.equalTo(310)
+        }
+        
+        catalogueTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(coverImgeView.snp.bottom).offset(16)
+            make.leading.equalTo(view.snp.leading).offset(16)
+            make.trailing.equalTo(view.snp.trailing).offset(-16)
+            make.height.equalTo(28)
+        }
+        
+        authorLabel.snp.makeConstraints { make in
+            make.top.equalTo(catalogueTitleLabel.snp.bottom).offset(8)
+            make.leading.equalTo(view.snp.leading).offset(16)
+            make.height.equalTo(28)
+        }
+        
+        authorButton.snp.makeConstraints { make in
+            make.top.equalTo(catalogueTitleLabel.snp.bottom).offset(8)
+            make.leading.equalTo(authorLabel.snp.trailing).offset(4)
+            make.height.equalTo(28)
+        }
+        
+        descriptionTextView.snp.makeConstraints { make in
+            make.top.equalTo(authorLabel.snp.bottom)
+            make.leading.equalTo(view.snp.leading).offset(16)
+            make.trailing.equalTo(view.snp.trailing).offset(-16)
+        }
+        
+        nftCatalogueCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(24)
+            make.leading.equalTo(coverImgeView.snp.leading).offset(16)
+            make.trailing.equalTo(coverImgeView.snp.trailing).offset(-16)
+            make.height.equalTo(nftCatalogueCollectionHeight)
+            make.bottom.equalTo(contentView.snp.bottom)
         }
     }
 }
@@ -159,17 +217,33 @@ extension NftCatalogueItemViewController: UICollectionViewDataSource {
     }
 }
 
-extension NftCatalogueItemViewController: UICollectionViewDelegate {
+extension NftCatalogueItemViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = CGSize(width: 108, height: 192)
+        return size
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        8
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        8
+    }
 }
 
 extension NftCatalogueItemViewController: NftCatalogueItemViewControllerProtocol {
     func displayItems(_ nftCollectionItems: [NftCollectionItem]) {
-        let items = catalogue.nfts
-        nftCollectionItems.forEach { collectioItem in
-            if items.contains(collectioItem.id) {
-                catalogeItems.append(collectioItem)
-            }
-        }
+//        let items = catalogue.nfts
+//        nftCollectionItems.forEach { collectioItem in
+//            print(collectioItem.id)
+//            if items.contains(where: { id in
+//                id == collectioItem.id
+//            }) {
+//                catalogeItems.append(collectioItem)
+//            }
+//        }
+        catalogeItems = nftCollectionItems
+        nftCatalogueCollectionView.reloadData()
     }
 }

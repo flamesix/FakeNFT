@@ -16,7 +16,7 @@ final class TabBarController: UITabBarController {
 //        let catalogController = TestCatalogViewController(
 //            servicesAssembly: servicesAssembly
 //        )
-        
+//        
 //        let nftCollectionCatalogueAssembly = NftCollectionCatalogueAssembly(servicesAssembler: servicesAssembly)
 //        
 //        let preseter = NftCollectionCataloguePresenter(service: servicesAssembly.nftCollectionCataloguService)

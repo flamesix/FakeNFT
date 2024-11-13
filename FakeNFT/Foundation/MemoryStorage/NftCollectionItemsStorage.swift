@@ -1,24 +1,24 @@
 import Foundation
 
 protocol NftCollectionItemsStorage: AnyObject {
-    func saveNftCollectionItems(_ nftCatalogue: [NftCollectionItem])
-    func getNftCollectionItems() -> [NftCollectionItem]?
+    func saveNftCollectionItems(_ nftItem: NftCollectionItem)
+    func getNftCollectionItems(id: String) -> NftCollectionItem?
 }
 
 final class NftCollectionItemsStorageImpl: NftCollectionItemsStorage {
-    private var storage: [NftCollectionItem]?
+    private var storage: [String : NftCollectionItem] = [ : ]
 
     private let syncQueue = DispatchQueue(label: "sync-nftCollection-queue")
 
-    func saveNftCollectionItems(_ nftCatalogue: [NftCollectionItem]) {
+    func saveNftCollectionItems(_ nftItem: NftCollectionItem) {
         syncQueue.async { [weak self] in
-            self?.storage = nftCatalogue
+            self?.storage[ nftItem.id ] = nftItem
         }
     }
 
-    func getNftCollectionItems() -> [NftCollectionItem]? {
+    func getNftCollectionItems(id: String) -> NftCollectionItem? {
         syncQueue.sync {
-            storage
+            storage[id]
         }
     }
 }
