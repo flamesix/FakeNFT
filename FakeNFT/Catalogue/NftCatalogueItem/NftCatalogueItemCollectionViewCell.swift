@@ -3,7 +3,14 @@ import Kingfisher
 
 final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol {
 
-    private var rank: Int?
+    private var rank: Int = 0 {
+        didSet {
+            setRacnk()
+        }
+    }
+    
+    private var likeButtonState = false
+    private var recycleIsEmpty = true
     
     private lazy var itemImageView: UIImageView = {
         let imageView = UIImageView()
@@ -13,14 +20,13 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         return imageView
     }()
     
-    private lazy var likeImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var likeImageButton: UIButton = {
+        let button = UIButton()
         let image = UIImage(resource: .nftCollectionCartHeart)
-        imageView.image = image
-        imageView.tintColor = .nftWhite
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 12
-        return imageView
+        button.setImage(image, for: .normal)
+        button.tintColor = .nftWhiteUni
+        button.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     private lazy var hStack: UIStackView = {
@@ -37,35 +43,35 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     
     private lazy var starImage1: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
+        imageView.image = UIImage(resource: .nftCollectionCardStar)
         imageView.tintColor = .nftLightGrey
         return imageView
     }()
     
     private lazy var starImage2: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
+        imageView.image = UIImage(resource: .nftCollectionCardStar)
         imageView.tintColor = .nftLightGrey
         return imageView
     }()
     
     private lazy var starImage3: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
+        imageView.image = UIImage(resource: .nftCollectionCardStar)
         imageView.tintColor = .nftLightGrey
         return imageView
     }()
     
     private lazy var starImage4: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = .nftLightGrey
+        imageView.image = UIImage(resource: .nftCollectionCardStar)
+        imageView.tintColor = .nftYellowUni
         return imageView
     }()
     
     private lazy var starImage5: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
+        imageView.image = UIImage(resource: .nftCollectionCardStar)
         imageView.tintColor = .nftLightGrey
         return imageView
     }()
@@ -87,7 +93,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     private lazy var recycleButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(resource: .nftRecycleEmpty), for: .normal)
-        button.tintColor = .nftRedUni
+        button.addTarget(self, action: #selector(recycleButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -104,25 +110,25 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     func setRacnk() {
         switch rank {
         case 1:
-            starImage1.tintColor = .nftYellowUni
+            starImage1.tintColor = UIColor(resource: .nftYellow)
         case 2:
-            starImage1.tintColor = .nftYellowUni
-            starImage2.tintColor = .nftYellowUni
+            starImage1.tintColor = UIColor(resource: .nftYellow)
+            starImage2.tintColor = UIColor(resource: .nftYellow)
         case 3:
-            starImage1.tintColor = .nftYellowUni
-            starImage2.tintColor = .nftYellowUni
-            starImage3.tintColor = .nftYellowUni
+            starImage1.tintColor = UIColor(resource: .nftYellow)
+            starImage2.tintColor = UIColor(resource: .nftYellow)
+            starImage3.tintColor = UIColor(resource: .nftYellow)
         case 4:
-            starImage1.tintColor = .nftYellowUni
-            starImage2.tintColor = .nftYellowUni
-            starImage3.tintColor = .nftYellowUni
-            starImage4.tintColor = .nftYellowUni
+            starImage1.tintColor = UIColor(resource: .nftYellow)
+            starImage2.tintColor = UIColor(resource: .nftYellow)
+            starImage3.tintColor = UIColor(resource: .nftYellow)
+            starImage4.tintColor = UIColor(resource: .nftYellow)
         case 5:
-            starImage1.tintColor = .nftYellowUni
-            starImage2.tintColor = .nftYellowUni
-            starImage3.tintColor = .nftYellowUni
-            starImage4.tintColor = .nftYellowUni
-            starImage5.tintColor = .nftYellowUni
+            starImage1.tintColor = UIColor(resource: .nftYellow)
+            starImage2.tintColor = UIColor(resource: .nftYellow)
+            starImage3.tintColor = UIColor(resource: .nftYellow)
+            starImage4.tintColor = UIColor(resource: .nftYellow)
+            starImage5.tintColor = UIColor(resource: .nftYellow)
         default:
             starImage1.tintColor = .nftLightGrey
             starImage2.tintColor = .nftLightGrey
@@ -134,11 +140,32 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     
     func configureItem(with item: NftCollectionItem) {
         itemImageView.kf.setImage(with: item.images.first)
-        itmeTitle.text = item.name
+        var itemName = item.name
+        if itemName.count > 5 {
+            itemName = itemName.prefix(5) + "..."
+        }
+        itmeTitle.text = itemName
+        rank = item.rating
+        priceLable.text = "\(item.price) ETH"
+    }
+    
+    @objc func likeButtonTapped(){
+        likeButtonState.toggle()
+        likeImageButton.tintColor = likeButtonState
+        ? .nftRedUni
+        : .nftWhiteUni
+    }
+    
+    @objc func recycleButtonTapped(){
+        recycleIsEmpty.toggle()
+        let image = recycleIsEmpty
+        ? UIImage(resource: .nftRecycleEmpty)
+        : UIImage(resource: .nftRecycleFull)
+        recycleButton.setImage(image, for: .normal)
     }
     
     func setupView() {
-        [itemImageView, likeImageView, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
+        [itemImageView, likeImageButton, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
             contentView.addSubview(subView)
         }
     }
@@ -151,7 +178,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
             make.width.equalTo(108)
         }
         
-        likeImageView.snp.makeConstraints { make in
+        likeImageButton.snp.makeConstraints { make in
             make.top.equalTo(itemImageView.snp.top)
             make.trailing.equalTo(itemImageView.snp.trailing)
             make.height.equalTo(42)

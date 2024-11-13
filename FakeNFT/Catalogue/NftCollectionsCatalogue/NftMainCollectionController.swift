@@ -15,7 +15,6 @@ final class NftMainCollectionController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .systemBackground
         let assembly = NftCollectionCatalogueAssembly(servicesAssembler: servicesAssembly)
         let nftViewController = assembly.build()
         present(nftViewController, animated: true)

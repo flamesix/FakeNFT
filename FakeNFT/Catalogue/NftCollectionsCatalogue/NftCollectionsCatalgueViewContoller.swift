@@ -117,7 +117,6 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
             make.center.equalToSuperview()
         }
     }
-    
 }
 
 extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
@@ -147,7 +146,7 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
         let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, service: servicesAssembly.nftItemsService)
         let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: catalogue)
         presenter.view = viewController
-        viewController.modalPresentationStyle = .popover
+        viewController.modalPresentationStyle = .overFullScreen
         self.present(viewController, animated: true)
     }
 }
