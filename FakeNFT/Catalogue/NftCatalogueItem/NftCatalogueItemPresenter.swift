@@ -1,11 +1,5 @@
-//
-//  NftCatalogueItemPresenter.swift
-//  FakeNFT
-//
-//  Created by Федор Завьялов on 12.11.2024.
-//
 
-import UIKit
+import Foundation
 
 // MARK: - Protocol
 
@@ -31,7 +25,6 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
         }
     }
     
-
     // MARK: - Init
 
     init(input: [String], service: NftItemsService) {

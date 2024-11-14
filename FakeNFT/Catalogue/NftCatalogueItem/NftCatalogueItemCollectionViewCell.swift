@@ -108,34 +108,8 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     }
     
     func setRacnk() {
-        switch rank {
-        case 1:
-            starImage1.tintColor = UIColor(resource: .nftYellow)
-        case 2:
-            starImage1.tintColor = UIColor(resource: .nftYellow)
-            starImage2.tintColor = UIColor(resource: .nftYellow)
-        case 3:
-            starImage1.tintColor = UIColor(resource: .nftYellow)
-            starImage2.tintColor = UIColor(resource: .nftYellow)
-            starImage3.tintColor = UIColor(resource: .nftYellow)
-        case 4:
-            starImage1.tintColor = UIColor(resource: .nftYellow)
-            starImage2.tintColor = UIColor(resource: .nftYellow)
-            starImage3.tintColor = UIColor(resource: .nftYellow)
-            starImage4.tintColor = UIColor(resource: .nftYellow)
-        case 5:
-            starImage1.tintColor = UIColor(resource: .nftYellow)
-            starImage2.tintColor = UIColor(resource: .nftYellow)
-            starImage3.tintColor = UIColor(resource: .nftYellow)
-            starImage4.tintColor = UIColor(resource: .nftYellow)
-            starImage5.tintColor = UIColor(resource: .nftYellow)
-        default:
-            starImage1.tintColor = .nftLightGrey
-            starImage2.tintColor = .nftLightGrey
-            starImage3.tintColor = .nftLightGrey
-            starImage4.tintColor = .nftLightGrey
-            starImage5.tintColor = .nftLightGrey
-        }
+        let starImageViews = [starImage1, starImage2, starImage3, starImage4, starImage5]
+        starImageViews.prefix(upTo: rank).forEach{ $0.tintColor = UIColor(resource: .nftYellow) }
     }
     
     func configureItem(with item: NftCollectionItem) {

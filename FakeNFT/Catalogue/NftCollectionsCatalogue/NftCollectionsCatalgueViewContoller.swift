@@ -146,8 +146,11 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
         let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, service: servicesAssembly.nftItemsService)
         let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: catalogue)
         presenter.view = viewController
-        viewController.modalPresentationStyle = .overFullScreen
-        self.present(viewController, animated: true)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: true)
+//        viewController.modalPresentationStyle = .fullScreen
+//        self.present(viewController, animated: true)
     }
 }
 

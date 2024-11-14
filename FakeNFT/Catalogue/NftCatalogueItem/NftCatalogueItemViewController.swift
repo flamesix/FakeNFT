@@ -1,9 +1,3 @@
-//
-//  NftCatalogueItemViewController.swift
-//  FakeNFT
-//
-//  Created by Федор Завьялов on 12.11.2024.
-//
 
 import UIKit
 import Kingfisher
@@ -22,10 +16,16 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     var activityIndicator = UIActivityIndicatorView()
     
     private lazy var nftCatalogueCollectionHeight: Int = {
-        var numberOfRows = catalogue.nfts.count % 3 == 0
-        ? catalogue.nfts.count / 3
-        : catalogue.nfts.count / 3 + 1
-        return numberOfRows * 192 + (numberOfRows - 1) * 8
+        let heightOfCollectionItem: Int = 192
+        let separatorHeight: Int = 8
+        let numberOItemsInRow: Int = 3
+        let numberOfCompletedRows: Int = catalogue.nfts.count / numberOItemsInRow
+        let nubmerOfIncompletedRows: Int = numberOfCompletedRows + 1
+        var numberOfRows = catalogue.nfts.count % numberOItemsInRow == 0
+        ? numberOfCompletedRows
+        : nubmerOfIncompletedRows
+        let numberOfSeparators = numberOfRows - 1
+        return numberOfRows * heightOfCollectionItem + numberOfSeparators * separatorHeight
     }()
 
     private lazy var scrollView: UIScrollView = {
@@ -96,6 +96,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(NftCatalogueItemCollectionViewCell.self, forCellWithReuseIdentifier: "collectioItem")
         collectionView.backgroundColor = .systemBackground
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -113,6 +114,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
@@ -141,9 +143,15 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         contentView.addSubview(authorButton)
         contentView.addSubview(descriptionTextView)
         contentView.addSubview(nftCatalogueCollectionView)
+        view.addSubview(activityIndicator)
     }
     
     func addConstraints() {
+        
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalTo(view.snp.top)
@@ -221,7 +229,9 @@ extension NftCatalogueItemViewController: UICollectionViewDataSource {
 
 extension NftCatalogueItemViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: 108, height: 192)
+        let itemHeight = 192
+        let itemWidth = 108
+        let size = CGSize(width: itemWidth, height: itemHeight)
         return size
     }
     
