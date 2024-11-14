@@ -21,7 +21,7 @@ enum CartState {
     case initial, loadingCart, loadingNfts(Cart), failed(Error), cartData(Cart), nftsData([Nft])
 }
 
-enum SortType {
+enum SortType: String {
     case byPrice, byRating, byName
 }
 
@@ -72,6 +72,7 @@ final class CartPresenter: CartPresenterProtocol {
     func sortBy(_ type: SortType) {
         self.nfts = sortNFTs(self.nfts, by: type)
         view?.updateCart()
+        UserDefaults.standard.saveSortType(type)
     }
     
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath) {
@@ -98,7 +99,11 @@ final class CartPresenter: CartPresenterProtocol {
                 self.state = .loadingNfts(cart)
             }
         case .nftsData(let nfts):
-            self.nfts = nfts
+            var sortType: SortType = .byName
+            if let savedSortType = UserDefaults.standard.getSortType() {
+                sortType = savedSortType
+            }
+            self.nfts = sortNFTs(nfts, by: sortType)
             view?.hideLoading()
         case .failed(let error):
             let errorModel = makeErrorModel(error)
