@@ -57,7 +57,7 @@
 		E9219CBC2CE53F8B00CB0FE0 /* CartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219CBB2CE53F8400CB0FE0 /* CartService.swift */; };
 		E9219CBE2CE5407500CB0FE0 /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219CBD2CE5407300CB0FE0 /* Cart.swift */; };
 		E9219CC02CE5422900CB0FE0 /* CartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219CBF2CE5422800CB0FE0 /* CartRequest.swift */; };
-		E9219CC62CE57E7800CB0FE0 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219CC52CE57E5E00CB0FE0 /* UserDefaults+Extension.swift */; };
+		E99F676E2CE5F31D00D63097 /* CartSortStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99F676D2CE5F30E00D63097 /* CartSortStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,7 +131,7 @@
 		E9219CBB2CE53F8400CB0FE0 /* CartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartService.swift; sourceTree = "<group>"; };
 		E9219CBD2CE5407300CB0FE0 /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
 		E9219CBF2CE5422800CB0FE0 /* CartRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartRequest.swift; sourceTree = "<group>"; };
-		E9219CC52CE57E5E00CB0FE0 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
+		E99F676D2CE5F30E00D63097 /* CartSortStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartSortStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -362,7 +362,6 @@
 		5B6925482CDE7731000561C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E9219CC52CE57E5E00CB0FE0 /* UserDefaults+Extension.swift */,
 				5B6925492CDE7746000561C2 /* UIView+Extension.swift */,
 				5B69254B2CDE7948000561C2 /* Protocols.swift */,
 			);
@@ -400,6 +399,7 @@
 		E90C2C172CE3A49D00E96DF5 /* Cart */ = {
 			isa = PBXGroup;
 			children = (
+				E99F676D2CE5F30E00D63097 /* CartSortStorage.swift */,
 				E9219CBF2CE5422800CB0FE0 /* CartRequest.swift */,
 				E9219CBD2CE5407300CB0FE0 /* Cart.swift */,
 				E9219CBB2CE53F8400CB0FE0 /* CartService.swift */,
@@ -556,6 +556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FC8C38B29D242E90081F015 /* ProductDetailsTableViewCell.swift in Sources */,
+				E99F676E2CE5F31D00D63097 /* CartSortStorage.swift in Sources */,
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,
 				5B69254C2CDE7948000561C2 /* Protocols.swift in Sources */,
@@ -589,7 +590,6 @@
 				E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */,
 				E9219CBC2CE53F8B00CB0FE0 /* CartService.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
-				E9219CC62CE57E7800CB0FE0 /* UserDefaults+Extension.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				E90C2C192CE3A4A500E96DF5 /* CartViewController.swift in Sources */,

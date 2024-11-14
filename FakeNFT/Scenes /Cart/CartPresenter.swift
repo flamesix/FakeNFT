@@ -43,12 +43,14 @@ final class CartPresenter: CartPresenterProtocol {
         }
     }
     
+    private let sortStorage: CartSortStorageProtocol
     private let cartService: CartServiceProtocol
     private let nftService: NftService
     
     // MARK: - Init
     
-    init(cartService: CartServiceProtocol, nftService: NftService) {
+    init(sortStorage: CartSortStorageProtocol, cartService: CartServiceProtocol, nftService: NftService) {
+        self.sortStorage = sortStorage
         self.cartService = cartService
         self.nftService = nftService
     }
@@ -72,7 +74,7 @@ final class CartPresenter: CartPresenterProtocol {
     func sortBy(_ type: SortType) {
         self.nfts = sortNFTs(self.nfts, by: type)
         view?.updateCart()
-        UserDefaults.standard.saveSortType(type)
+        sortStorage.saveSortType(type)
     }
     
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath) {
@@ -100,7 +102,7 @@ final class CartPresenter: CartPresenterProtocol {
             }
         case .nftsData(let nfts):
             var sortType: SortType = .byName
-            if let savedSortType = UserDefaults.standard.getSortType() {
+            if let savedSortType = sortStorage.getSortType() {
                 sortType = savedSortType
             }
             self.nfts = sortNFTs(nfts, by: sortType)
