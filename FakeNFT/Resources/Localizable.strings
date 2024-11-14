@@ -8,3 +8,8 @@
 "Cart.price" = "Цена";
 "Cart.toPay" = "К оплате";
 "Cart.isEmpty" = "Корзина пуста";
+"Cart.sort" = "Сортировка";
+"Cart.sortByPrice" = "По цене";
+"Cart.sortByRating" = "По рейтингу";
+"Cart.sortByName" = "По названию";
+"Cart.close" = "Закрыть";

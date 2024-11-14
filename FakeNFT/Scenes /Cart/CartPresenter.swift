@@ -12,13 +12,17 @@ protocol CartPresenterProtocol {
     func getNumberOfNftInOrder() -> Int
     func getOrderTotalCost() -> Float
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath)
-    func openSortMenu()
+    func sortBy(_: SortType)
 }
 
-// MARK: - State
+// MARK: - Enum
 
 enum CartState {
     case initial, loadingCart, loadingNfts(Cart), failed(Error), cartData(Cart), nftsData([Nft])
+}
+
+enum SortType {
+    case byPrice, byRating, byName
 }
 
 final class CartPresenter: CartPresenterProtocol {
@@ -65,7 +69,10 @@ final class CartPresenter: CartPresenterProtocol {
         return totalCost
     }
     
-    func openSortMenu() {}
+    func sortBy(_ type: SortType) {
+        self.nfts = sortNFTs(self.nfts, by: type)
+        view?.updateCart()
+    }
     
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath) {
         let nft = nfts[indexPath.row]
@@ -119,6 +126,17 @@ final class CartPresenter: CartPresenterProtocol {
             case .failure(let error):
                 self?.state = .failed(error)
             }
+        }
+    }
+    
+    private func sortNFTs(_ nfts: [Nft], by option: SortType) -> [Nft] {
+        switch option {
+        case .byName:
+            return nfts.sorted { $0.name < $1.name }
+        case .byPrice:
+            return nfts.sorted { $0.price < $1.price }
+        case .byRating:
+            return nfts.sorted { $0.rating < $1.rating }
         }
     }
     

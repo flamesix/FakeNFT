@@ -182,7 +182,28 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     @objc private func sortButtonTapped() {
-        presenter.openSortMenu()
+        let actionSheet = UIAlertController(title: nil, message: NSLocalizedString("Cart.sort", comment: ""), preferredStyle: .actionSheet)
+        
+        let sortByPriceAction = UIAlertAction(title: NSLocalizedString("Cart.sortByPrice", comment: ""), style: .default) { [weak self] _ in
+            self?.presenter.sortBy(.byPrice)
+        }
+        
+        let sortByRatingAction = UIAlertAction(title: NSLocalizedString("Cart.sortByRating", comment: ""), style: .default) { [weak self] _ in
+            self?.presenter.sortBy(.byRating)
+        }
+        
+        let sortByNameAction = UIAlertAction(title: NSLocalizedString("Cart.sortByName", comment: ""), style: .default) { [weak self] _ in
+            self?.presenter.sortBy(.byName)
+        }
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cart.close", comment: ""), style: .cancel, handler: nil)
+        
+        actionSheet.addAction(sortByPriceAction)
+        actionSheet.addAction(sortByRatingAction)
+        actionSheet.addAction(sortByNameAction)
+        actionSheet.addAction(cancelAction)
+        
+        present(actionSheet, animated: true, completion: nil)
     }
 }
 
