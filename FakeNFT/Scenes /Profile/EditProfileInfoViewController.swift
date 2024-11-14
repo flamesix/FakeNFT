@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class EditProfileInfoViewController: UIViewController {
+    // MARK: - Private Properties
+    private let profileService = ProfileServiceImpl.shared
     
     private lazy var closeEditVCButton: UIButton = {
         let button = UIButton(type: .system)
@@ -55,7 +58,6 @@ final class EditProfileInfoViewController: UIViewController {
         ])
         return button
     }()
-
     
     private lazy var nameTitle: UILabel = {
         var nameTitle = UILabel()
@@ -115,7 +117,7 @@ final class EditProfileInfoViewController: UIViewController {
         textView.isScrollEnabled = false
         return textView
     }()
-
+    
     private lazy var bioStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [bioTitle, textViewForBio])
         stackView.axis = .vertical
@@ -160,15 +162,35 @@ final class EditProfileInfoViewController: UIViewController {
         return stackView
     }()
     
+    // MARK: - Life View Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVC()
+        loadProfileData()
     }
     
+    // MARK: - Setup Methods
     private func setupVC(){
         view.backgroundColor = .background
         addSubviews()
         addConstraints()
+    }
+    
+    private func loadProfileData(){
+        profileService.loadProfile { result in
+            switch result{
+            case .success(let profile):
+                self.textFieldForName.text = profile.name
+                self.textViewForBio.text = profile.description
+                self.textFieldForSite.text = profile.website
+                if let avatarUrlString = profile.avatar, let url = URL(string: avatarUrlString) {
+                    self.editIconButton.kf.setImage(with: url, for: .normal)
+                }
+            case .failure(let error):
+                print("Error loading profile:", error)
+            }
+            
+        }
     }
     
     private func addSubviews(){
@@ -200,10 +222,10 @@ final class EditProfileInfoViewController: UIViewController {
             siteStackView.topAnchor.constraint(equalTo: bioStackView.bottomAnchor, constant: 24),
             siteStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             siteStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
         ])
     }
     
+    // MARK: - Private methods
     @objc
     func closeEditVCButtonTapped(){
         dismiss(animated: true) {

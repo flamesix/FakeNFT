@@ -10,3 +10,6 @@
 "editNameTitle" = "Имя";
 "editBioTitle" = "Описание";
 "editSiteTitle" = "Сайт";
+
+// MARK: MyNFTVC
+"sort" = "Сортировка";

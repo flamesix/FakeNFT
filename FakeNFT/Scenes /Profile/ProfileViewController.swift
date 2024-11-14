@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    // MARK: - Private Properties
+    private let profileService = ProfileServiceImpl.shared
+    private var profile: Profile?
     
     private lazy var editButton: UIButton = {
         let editButton = UIButton(type: .system)
@@ -19,8 +23,8 @@ final class ProfileViewController: UIViewController {
     }()
     
     private lazy var profileImageLogo: UIImageView = {
-        let profileImageLogo = UIImageView()
-        profileImageLogo.backgroundColor = .blue
+        let profileImageLogo = UIImageView(image: UIImage(systemName: "person.circle.fill"))
+        profileImageLogo.tintColor = .gray
         profileImageLogo.layer.cornerRadius = 35
         profileImageLogo.clipsToBounds = true
         profileImageLogo.translatesAutoresizingMaskIntoConstraints = false
@@ -75,12 +79,19 @@ final class ProfileViewController: UIViewController {
         return tableView
     }()
     
+    // MARK: - Life View Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
+    }
+    
+    // MARK: - Setup Methods
+    private func setupView(){
         addSubviews()
         addConstraints()
-        
-        descriptionLabel.text = "Дизайнер из Казани, люблю цифровое искусство  и бейглы. В моей коллекции уже 100+ NFT,  и еще больше — на моём сайте. Открыт к коллаборациям."
+        let editBarButtonItem = UIBarButtonItem(customView: editButton)
+        navigationItem.rightBarButtonItem = editBarButtonItem
+        loadProfileData()
     }
     
     private func addSubviews(){
@@ -95,15 +106,13 @@ final class ProfileViewController: UIViewController {
     
     private func addConstraints(){
         NSLayoutConstraint.activate([
-            editButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
-            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             editButton.widthAnchor.constraint(equalToConstant: 42),
             editButton.heightAnchor.constraint(equalToConstant: 42),
             
             profileImageLogo.widthAnchor.constraint(equalToConstant: 70),
             profileImageLogo.heightAnchor.constraint(equalToConstant: 70),
             
-            stackViewWithTitleAndIcon.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 20),
+            stackViewWithTitleAndIcon.topAnchor.constraint(equalTo: view.topAnchor, constant: 108),
             stackViewWithTitleAndIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stackViewWithTitleAndIcon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
@@ -121,13 +130,67 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private methods
     @objc
     private func didEditButtonTapped(){
         let editProfileInfoVC = EditProfileInfoViewController()
         present(editProfileInfoVC, animated: true)
     }
+    
+    private func loadProfileData() {
+        profileService.loadProfile { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let profile):
+                    self?.profile = profile
+                    self?.updateUI(with: profile)
+                case .failure(let error):
+                    print("Error loading profile:", error)
+                }
+            }
+        }
+    }
+    
+    private func updateUI(with profile: Profile) {
+        usernameTitle.text = profile.name
+        descriptionLabel.text = profile.description
+        linkButton.setTitle(profile.website, for: .normal)
+        if let avatarUrlString = profile.avatar, let url = URL(string: avatarUrlString) {
+            profileImageLogo.kf.setImage(
+                with: url,
+                placeholder: UIImage(systemName: "person.circle.fill"),
+                options: [
+                    .transition(.fade(0.3)),
+                    .cacheOriginalImage
+                ]
+            )
+        }
+    }
+    
+    //TODO: in progress
+    //    private func updateProfile() {
+    //        let name = "Updated Name"
+    //        let description = "Updated Description"
+    //        let website = "https://newwebsite.com"
+    //        let likes = ["1", "2", "3"]
+    //
+    //        profileService.updateProfile(
+    //            name: name,
+    //            description: description,
+    //            website: website,
+    //            likes: likes
+    //        ) { result in
+    //            switch result {
+    //            case .success(let updatedProfile):
+    //                print("Profile updated successfully:", updatedProfile)
+    //            case .failure(let error):
+    //                print("Failed to update profile:", error)
+    //            }
+    //        }
+    //    }
 }
 
+// MARK: - UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? ProfileTableViewCell else {
@@ -139,9 +202,9 @@ extension ProfileViewController: UITableViewDataSource{
         
         switch indexPath.row {
         case 0:
-            cell.setTitleLabel(text: "Мои NFT (12)")
+            cell.setTitleLabel(text: "Мои NFT (\(profile?.nfts?.count ?? 0))")
         case 1:
-            cell.setTitleLabel(text: "Избранные NFT ()")
+            cell.setTitleLabel(text: "Избранные NFT (\(profile?.likes?.count ?? 0))")
         case 2:
             cell.setTitleLabel(text: "О разработчике")
         default:
@@ -155,10 +218,26 @@ extension ProfileViewController: UITableViewDataSource{
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ProfileViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 54
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            let myNFTViewController = MyNFTViewController()
+            navigationController?.pushViewController(myNFTViewController, animated: true)
+        case 1:
+            let favouriteViewController = FavouritesViewController()
+            navigationController?.pushViewController(favouriteViewController, animated: true)
+        case 2:
+            let profileSiteViewController = ProfileSiteViewController()
+            navigationController?.pushViewController(profileSiteViewController, animated: true)
+        default:
+            break
+        }
+    }
     
 }

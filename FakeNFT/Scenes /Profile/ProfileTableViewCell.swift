@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ProfileTableViewCell: UITableViewCell {
-
+    // MARK: Private properties
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textColor = UIColor(named: "nftBlack")
@@ -24,20 +24,20 @@ final class ProfileTableViewCell: UITableViewCell {
         return chevron
     }()
     
+    // MARK: Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         setUpView()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    // MARK: SetupMethods
     private func setUpView() {
         contentView.addSubview(titleLabel)
         contentView.addSubview(chevron)
-
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -48,9 +48,8 @@ final class ProfileTableViewCell: UITableViewCell {
             chevron.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             chevron.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
-
     }
-
+    
     func setTitleLabel(text: String) {
         titleLabel.text = text
     }
