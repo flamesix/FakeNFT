@@ -5,7 +5,7 @@
 //  Created by Pavel Bobkov on 12.11.2024.
 //
 
-import UIKit
+import Foundation
 
 protocol CartPresenterProtocol {
     func viewDidLoad()
