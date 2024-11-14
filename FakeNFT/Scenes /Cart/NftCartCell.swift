@@ -71,7 +71,7 @@ final class NftCartCell: UITableViewCell {
             nftImageView.kf.setImage(with: imageUrl)
         }
         nftTitleLabel.text = name
-        nftPriceLabel.text = String(price)
+        nftPriceLabel.text = "\(price) ETH"
         starRatingView.setRating(rating)
     }
     
