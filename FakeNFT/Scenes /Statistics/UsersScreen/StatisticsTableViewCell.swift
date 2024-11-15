@@ -76,8 +76,7 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
             switch result {
             case .success(let image):
                 self?.avatarImageView.image = image.image
-            case .failure(let error):
-                // TODO: Error handling
+            case .failure(_):
                 self?.avatarImageView.image = UIImage(named: "avatarPlaceholder")
             }
         }
