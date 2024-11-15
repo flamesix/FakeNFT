@@ -378,6 +378,16 @@
 			path = Requests;
 			sourceTree = "<group>";
 		};
+		5B1DAACD2CE78BED001C3092 /* UserCardScreen */ = {
+			isa = PBXGroup;
+			children = (
+				5BAB4AE32CE0959B006A1910 /* UserCardViewController.swift */,
+				5BAB4AE52CE09630006A1910 /* UserCardPresenter.swift */,
+				5B1DAACB2CE78A05001C3092 /* UserCardAssembly.swift */,
+			);
+			path = UserCardScreen;
+			sourceTree = "<group>";
+		};
 		5B6925482CDE7731000561C2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -392,10 +402,8 @@
 			isa = PBXGroup;
 			children = (
 				5B6925672CE08A78000561C2 /* UsersScreen */,
-				5BAB4AE32CE0959B006A1910 /* UserCardViewController.swift */,
-				5BAB4AE52CE09630006A1910 /* UserCardPresenter.swift */,
+				5B1DAACD2CE78BED001C3092 /* UserCardScreen */,
 				5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */,
-				5B1DAACB2CE78A05001C3092 /* UserCardAssembly.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
