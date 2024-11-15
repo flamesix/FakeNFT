@@ -155,8 +155,8 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         likeImageButton.snp.makeConstraints { make in
             make.top.equalTo(itemImageView.snp.top)
             make.trailing.equalTo(itemImageView.snp.trailing)
-            make.height.equalTo(42)
-            make.width.equalTo(42)
+            make.height.equalTo(40)
+            make.width.equalTo(40)
         }
         
         hStack.snp.makeConstraints { make in
