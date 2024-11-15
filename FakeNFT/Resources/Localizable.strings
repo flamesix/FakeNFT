@@ -4,3 +4,9 @@
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
+"Tab.statistics" = "Статистика";
+"Statistics.Sort" = "Сортировка";
+"Statistics.ByName" = "По имени";
+"Statistics.ByRating" = "По рейтингу";
+"Statistics.Close" = "Закрыть";
+"Statistics.GoToWeb" = "Перейти на сайт пользователя";
