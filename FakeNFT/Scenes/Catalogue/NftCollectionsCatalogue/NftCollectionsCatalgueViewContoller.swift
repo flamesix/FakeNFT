@@ -125,7 +125,7 @@ extension NftCollectionsCatalgueViewContoller: NftCollectionsCatalgueViewContoll
     }
 }
 
-extension NftCollectionsCatalgueViewContoller: NftCollectionSortAlerPresenterProtocol {
+extension NftCollectionsCatalgueViewContoller: NftCollectionSortProtocol {
     
     func catalogueUpdate(with sortState: SortedBy?){
         if let sortState = sortState {
