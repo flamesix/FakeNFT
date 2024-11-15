@@ -10,9 +10,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         nftCollectionItemsStorage: NftCollectionItemsStorageImpl()
     )
 
-    func scene(_: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
-        
-        let tabBarController = window?.rootViewController as? TabBarController
-        tabBarController?.catalogueServicesAssembly = catalogueServicesAssembly
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowScene)
+        let tabBarController = TabBarController(catalogueServicesAssembly: catalogueServicesAssembly)
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
     }
 }
