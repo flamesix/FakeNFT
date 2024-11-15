@@ -5,6 +5,10 @@ protocol NftCollectionsCatalgueViewContollerProtocol: AnyObject, ErrorView, Load
     func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int)
 }
 
+protocol NftCollectionSortAlerPresenterProtocol: AnyObject {
+    func catalogueUpdate(with sortState: SortedBy?)
+}
+
 enum SortedBy {
     case name, nftCount
 }
@@ -13,9 +17,9 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     
     private let presenter: NftCatalogueDetailPresenter
     private let servicesAssembly: CatalogueServicesAssembly
+    private let nftCollectionSortAlerPresenter = NftCollectionSortAlerPresenter()
     private var collectionCatalogue: [NftCatalogueCollection] = []
     private var cataloguesPerPage: Int = 5
-    private var nftCollectionCatalogueFactory = NftCollectionCatalogueFactory()
     
     private lazy var nftCollectionsSort: UIButton = {
         let button = UIButton(type: .system)
@@ -47,41 +51,15 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        nftCollectionSortAlerPresenter.delegate = self
+        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         presenter.viewDidLoad()
     }
     
     @objc func sortCatalogues(){
-        let alert = UIAlertController(title: "Сртировка", message: nil, preferredStyle: .actionSheet)
-        let sortByCount = UIAlertAction(title: "По количеству NFT", style: .default) { _ in
-            self.collectionSortState = .nftCount
-            self.catalogueUpdate()
-        }
-        let sortByName = UIAlertAction(title: "По названию", style: .default) { _ in
-            self.collectionSortState = .name
-            self.catalogueUpdate()
-        }
-        let cancel = UIAlertAction(title: "Закрыть", style: .cancel)
-        alert.addAction(sortByName)
-        alert.addAction(sortByCount)
-        alert.addAction(cancel)
-        self.present(alert, animated: true)
-    }
-    
-    func catalogueUpdate(){
-        switch collectionSortState {
-        case .name:
-            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
-                catalogue1.name < catalogue2.name
-            })
-        case .nftCount:
-            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
-                catalogue1.nfts.count > catalogue2.nfts.count
-            })
-        }
-        nftCollectionsTableView.reloadData()
+        nftCollectionSortAlerPresenter.showSortAlert(on: self)
     }
     
     func setupView() {
@@ -112,7 +90,6 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
         if (indexPath.row + 1) % cataloguesPerPage == 0, indexPath.row == collectionCatalogue.count - 1 {
             presenter.viewDidLoad()
         }
-        print(collectionCatalogue.count)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -122,6 +99,7 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "collection cell", for: indexPath) as! NftCollectionTableViewCell
         cell.configure(with: collectionCatalogue[indexPath.row])
+        cell.selectionStyle = .none
         return cell
     }
 }
@@ -134,9 +112,6 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
         let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, service: servicesAssembly.nftItemsService)
         let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: catalogue)
         presenter.view = viewController
-//        let navigationController = UINavigationController(rootViewController: viewController)
-//        navigationController.modalPresentationStyle = .fullScreen
-//        self.present(navigationController, animated: true)
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: true)
     }
@@ -147,6 +122,27 @@ extension NftCollectionsCatalgueViewContoller: NftCollectionsCatalgueViewContoll
     func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int) {
         self.collectionCatalogue += collectionCatalogue
         self.cataloguesPerPage = cataloguesPerPage
-        self.catalogueUpdate()
+        self.catalogueUpdate(with: collectionSortState)
     }
+}
+
+extension NftCollectionsCatalgueViewContoller: NftCollectionSortAlerPresenterProtocol {
+    
+    func catalogueUpdate(with sortState: SortedBy?){
+        if let sortState = sortState {
+            collectionSortState = sortState
+        }
+        switch collectionSortState {
+        case .name:
+            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
+                catalogue1.name < catalogue2.name
+            })
+        case .nftCount:
+            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
+                catalogue1.nfts.count > catalogue2.nfts.count
+            })
+        }
+        nftCollectionsTableView.reloadData()
+    }
+    
 }

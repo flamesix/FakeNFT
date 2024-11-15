@@ -183,5 +183,4 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
             make.width.equalTo(40)
         }
     }
-    
 }
