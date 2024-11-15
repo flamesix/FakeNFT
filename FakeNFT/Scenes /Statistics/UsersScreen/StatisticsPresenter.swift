@@ -19,7 +19,7 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
     private let service: StatisticsServiceProtocol
     
     private let filterStateStorage = FilterStateStorage.shared
-    private var filterOption: FilterOption = .rating
+    private let logginService = LoggingService.shared
     
     private var isLoadingPage: Bool = false
     private var hasMoreData: Bool = true
@@ -33,7 +33,7 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
     
     private var users: [User] = [] {
         didSet {
-            filter(by: filterStateStorage.filterOption ?? .rating)
+            applyCurrentFilter()
         }
     }
     
@@ -51,26 +51,34 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
     func stateDidChanged() {
         switch state {
         case .initial:
-            assertionFailure("can't move to initial state")
+            logginService.logCriticalError("can't move to initial state")
         case .loading:
             view?.showLoading()
             loadUsers()
         case .data(let users):
-            view?.hideLoading()
-            if users.isEmpty {
-                hasMoreData = false
-            } else {
-                self.users.append(contentsOf: users)
-                page += 1
-            }
-            isLoadingPage = false
-            view?.updateTableView()
+            handleNewData(users)
         case .failed(let error):
-            let errorModel = makeErrorModel(error)
-            view?.hideLoading()
-            view?.showError(errorModel)
-            isLoadingPage = false
+            handleLoadingError(error)
         }
+    }
+    
+    private func handleNewData(_ users: [User]) {
+        view?.hideLoading()
+        if users.isEmpty {
+            hasMoreData = false
+        } else {
+            self.users.append(contentsOf: users)
+            page += 1
+        }
+        isLoadingPage = false
+        view?.updateTableView()
+    }
+    
+    private func handleLoadingError(_ error: Error) {
+        let errorModel = makeErrorModel(error)
+        view?.hideLoading()
+        view?.showError(errorModel)
+        isLoadingPage = false
     }
     
     private func loadUsers() {
@@ -92,13 +100,20 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
     }
     
     func filter(by filter: FilterOption) {
+        filterStateStorage.filterOption = filter
+        applyCurrentFilter()
+    }
+
+    private func applyCurrentFilter() {
+        filteredUsers = sortedUsers(for: filterStateStorage.filterOption ?? .rating)
+    }
+
+    private func sortedUsers(for filter: FilterOption) -> [User] {
         switch filter {
         case .name:
-            filteredUsers = users.sorted { $0.name > $1.name }
-            filterStateStorage.filterOption = .name
+            return users.sorted { $0.name > $1.name }
         case .rating:
-            filteredUsers = users.sorted { $0.rating < $1.rating }
-            filterStateStorage.filterOption = .rating
+            return users.sorted { $0.rating < $1.rating }
         }
     }
     

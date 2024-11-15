@@ -48,6 +48,7 @@
 		5B08941F2CE1D44D00E09A50 /* StatisticStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08941E2CE1D44D00E09A50 /* StatisticStorage.swift */; };
 		5B0894212CE1D53000E09A50 /* StatisticRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894202CE1D53000E09A50 /* StatisticRequest.swift */; };
 		5B0894232CE1DEC900E09A50 /* StatisticsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */; };
+		5B1DAAC82CE778B3001C3092 /* LoggingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DAAC72CE778B3001C3092 /* LoggingService.swift */; };
 		5B2B55CC2CE0B8C0002F8D7E /* NftButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */; };
 		5B69254A2CDE7746000561C2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6925492CDE7746000561C2 /* UIView+Extension.swift */; };
 		5B69254C2CDE7948000561C2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B69254B2CDE7948000561C2 /* Protocols.swift */; };
@@ -126,6 +127,7 @@
 		5B08941E2CE1D44D00E09A50 /* StatisticStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticStorage.swift; sourceTree = "<group>"; };
 		5B0894202CE1D53000E09A50 /* StatisticRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticRequest.swift; sourceTree = "<group>"; };
 		5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsAssembly.swift; sourceTree = "<group>"; };
+		5B1DAAC72CE778B3001C3092 /* LoggingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingService.swift; sourceTree = "<group>"; };
 		5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftButton.swift; sourceTree = "<group>"; };
 		5B6925492CDE7746000561C2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		5B69254B2CDE7948000561C2 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			children = (
 				0CF2C2DF2A784C5600FDC837 /* Views */,
 				0CF2C2DE2A784C4C00FDC837 /* Protocols */,
+				5B1DAAC72CE778B3001C3092 /* LoggingService.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -601,6 +604,7 @@
 				5BAB4AE62CE09630006A1910 /* UserCardPresenter.swift in Sources */,
 				558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */,
 				5B69255E2CDF7072000561C2 /* StatisticsTableViewCell.swift in Sources */,
+				5B1DAAC82CE778B3001C3092 /* LoggingService.swift in Sources */,
 				5B2B55CC2CE0B8C0002F8D7E /* NftButton.swift in Sources */,
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,

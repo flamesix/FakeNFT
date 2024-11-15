@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol TypographyExtensions: UILabel {
+protocol TypographyExtensions: UILabel {
     var lineHeight: CGFloat? { get set }
 }
 

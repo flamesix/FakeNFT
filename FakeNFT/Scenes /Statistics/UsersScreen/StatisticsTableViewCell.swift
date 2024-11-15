@@ -56,11 +56,12 @@ final class StatisticsTableViewCell: UITableViewCell, ReuseIdentifying {
         setupView()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - PublicMethods
+    // MARK: - Methods
     func configure(with user: User) {
         ratingLabel.text = user.rating
         usernameLabel.text = user.name

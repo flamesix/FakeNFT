@@ -23,11 +23,12 @@ final class NftButton: UIButton {
         setupView()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setupTitle(_ title: String) {
+    func setupTitle(_ title: String) {
         self.title.text = title
     }
 }
