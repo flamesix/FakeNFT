@@ -12,7 +12,7 @@ final class NftCatalogueCollectionView: UICollectionView {
     private func setupView(){
         self.register(NftCatalogueItemCollectionViewCell.self, forCellWithReuseIdentifier: "collectioItem")
         self.backgroundColor = .nftWhite
-        
+        self.isScrollEnabled = false
     }
     
     required init?(coder: NSCoder) {
