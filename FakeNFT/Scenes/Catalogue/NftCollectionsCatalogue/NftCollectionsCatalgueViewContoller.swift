@@ -2,7 +2,7 @@
 import UIKit
 
 protocol NftCollectionsCatalgueViewContollerProtocol: AnyObject, ErrorView, LoadingView {
-    func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection])
+    func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int)
 }
 
 enum SortedBy {
@@ -12,14 +12,10 @@ enum SortedBy {
 final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsProtocol {
     
     private let presenter: NftCatalogueDetailPresenter
-    
-    private let servicesAssembly: ServicesAssembly
-    
+    private let servicesAssembly: CatalogueServicesAssembly
     private var collectionCatalogue: [NftCatalogueCollection] = []
-    
+    private var cataloguesPerPage: Int = 5
     private var nftCollectionCatalogueFactory = NftCollectionCatalogueFactory()
-    
-    internal lazy var activityIndicator = UIActivityIndicatorView()
     
     private lazy var nftCollectionsSort: UIButton = {
         let button = UIButton(type: .system)
@@ -29,11 +25,9 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
         button.tintColor = .nftBlack
         return button
     }()
-    
-    private lazy var nftCollectionsTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(NftCollectionTableViewCell.self, forCellReuseIdentifier: "collection cell")
-        tableView.separatorStyle = .none
+
+    private lazy var nftCollectionsTableView: CatalogueCollectionTableView = {
+        let tableView = CatalogueCollectionTableView()
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
@@ -41,8 +35,7 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     
     private var collectionSortState: SortedBy = .nftCount
 
-    
-    init(presenter: NftCatalogueDetailPresenter, serviceAsssembly: ServicesAssembly) {
+    init(presenter: NftCatalogueDetailPresenter, serviceAsssembly: CatalogueServicesAssembly) {
         self.presenter = presenter
         self.servicesAssembly = serviceAsssembly
         super.init(nibName: nil, bundle: nil)
@@ -60,7 +53,6 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
         presenter.viewDidLoad()
     }
     
-    
     @objc func sortCatalogues(){
         let alert = UIAlertController(title: "Сртировка", message: nil, preferredStyle: .actionSheet)
         let sortByCount = UIAlertAction(title: "По количеству NFT", style: .default) { _ in
@@ -75,7 +67,6 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
         alert.addAction(sortByName)
         alert.addAction(sortByCount)
         alert.addAction(cancel)
-        
         self.present(alert, animated: true)
     }
     
@@ -94,7 +85,7 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     }
     
     func setupView() {
-        [nftCollectionsTableView, nftCollectionsSort, activityIndicator].forEach {view.addSubview($0)
+        [nftCollectionsTableView, nftCollectionsSort].forEach {view.addSubview($0)
         }
     }
     
@@ -113,15 +104,12 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
             make.right.equalTo(view).offset(-16)
             make.bottom.equalToSuperview()
         }
-        activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
     }
 }
 
 extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if (indexPath.row + 1) % 5 == 0, indexPath.row == collectionCatalogue.count - 1 {
+        if (indexPath.row + 1) % cataloguesPerPage == 0, indexPath.row == collectionCatalogue.count - 1 {
             presenter.viewDidLoad()
         }
         print(collectionCatalogue.count)
@@ -146,18 +134,19 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
         let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, service: servicesAssembly.nftItemsService)
         let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: catalogue)
         presenter.view = viewController
-        let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.modalPresentationStyle = .fullScreen
-        self.present(navigationController, animated: true)
-//        viewController.modalPresentationStyle = .fullScreen
-//        self.present(viewController, animated: true)
+//        let navigationController = UINavigationController(rootViewController: viewController)
+//        navigationController.modalPresentationStyle = .fullScreen
+//        self.present(navigationController, animated: true)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: true)
     }
 }
 
 extension NftCollectionsCatalgueViewContoller: NftCollectionsCatalgueViewContollerProtocol {
 
-    func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection]) {
+    func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int) {
         self.collectionCatalogue += collectionCatalogue
+        self.cataloguesPerPage = cataloguesPerPage
         self.catalogueUpdate()
     }
 }

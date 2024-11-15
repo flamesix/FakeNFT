@@ -2,10 +2,10 @@ import UIKit
 
 public final class NftCollectionCatalogueAssembly {
 
-    private let servicesAssembler: ServicesAssembly
+    private let servicesAssembler: CatalogueServicesAssembly
 
-    init(servicesAssembler: ServicesAssembly) {
-        self.servicesAssembler = servicesAssembler
+    init(catalogueServicesAssembler: CatalogueServicesAssembly) {
+        self.servicesAssembler = catalogueServicesAssembler
     }
 
     public func build() -> UIViewController {

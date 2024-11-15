@@ -52,7 +52,6 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
             } else {
                 view?.hideLoading()
                 view?.displayItems(nftItems)
-                
             }
         case .failed(let error):
             let errorModel = makeErrorModel(error)

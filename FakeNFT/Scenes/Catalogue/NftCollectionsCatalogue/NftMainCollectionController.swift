@@ -2,9 +2,9 @@ import UIKit
 
 final class NftMainCollectionController: UIViewController {
 
-    let servicesAssembly: ServicesAssembly
+    let servicesAssembly: CatalogueServicesAssembly
 
-    init(servicesAssembly: ServicesAssembly) {
+    init(servicesAssembly: CatalogueServicesAssembly) {
         self.servicesAssembly = servicesAssembly
         super.init(nibName: nil, bundle: nil)
     }
@@ -15,7 +15,7 @@ final class NftMainCollectionController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let assembly = NftCollectionCatalogueAssembly(servicesAssembler: servicesAssembly)
+        let assembly = NftCollectionCatalogueAssembly(catalogueServicesAssembler: servicesAssembly)
         let nftViewController = assembly.build()
         present(nftViewController, animated: true)
         showNftCatalogue()

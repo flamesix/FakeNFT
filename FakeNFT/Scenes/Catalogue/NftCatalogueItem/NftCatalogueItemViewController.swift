@@ -13,8 +13,6 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     private var presenter: NftCatalogueItemPresenter
     
-    var activityIndicator = UIActivityIndicatorView()
-    
     private lazy var nftCatalogueCollectionHeight: Int = {
         let heightOfCollectionItem: Int = 192
         let separatorHeight: Int = 8
@@ -31,6 +29,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isScrollEnabled = true
+        scrollView.contentInsetAdjustmentBehavior = .never
         return scrollView
     }()
     
@@ -83,7 +82,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         let label = UITextView()
         label.font = UIFont.caption2
         label.textColor = .nftBlack
-        label.backgroundColor = .systemBackground
+        label.backgroundColor = .nftWhite
         label.textContainer.lineFragmentPadding = 0
         label.isScrollEnabled = false
         label.isEditable = false
@@ -91,12 +90,8 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         return label
     }()
     
-    private lazy var nftCatalogueCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(NftCatalogueItemCollectionViewCell.self, forCellWithReuseIdentifier: "collectioItem")
-        collectionView.backgroundColor = .systemBackground
-        collectionView.contentInsetAdjustmentBehavior = .never
+    private lazy var nftCatalogueCollectionView: NftCatalogueCollectionView = {
+        let collectionView = NftCatalogueCollectionView()
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -136,21 +131,10 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     func setupView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(coverImgeView)
-        contentView.addSubview(backButton)
-        contentView.addSubview(catalogueTitleLabel)
-        contentView.addSubview(authorLabel)
-        contentView.addSubview(authorButton)
-        contentView.addSubview(descriptionTextView)
-        contentView.addSubview(nftCatalogueCollectionView)
-        view.addSubview(activityIndicator)
+        [coverImgeView, backButton, catalogueTitleLabel, authorLabel, authorButton, descriptionTextView, nftCatalogueCollectionView].forEach{contentView.addSubview($0)}
     }
     
     func addConstraints() {
-        
-        activityIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
