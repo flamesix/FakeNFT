@@ -1,13 +1,12 @@
 
 import UIKit
 
+// MARK: - Protocol
+
 protocol NftCollectionsCatalgueViewContollerProtocol: AnyObject, ErrorView, LoadingView {
     func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int)
 }
 
-protocol NftCollectionSortAlerPresenterProtocol: AnyObject {
-    func catalogueUpdate(with sortState: SortedBy?)
-}
 
 enum SortedBy {
     case name, nftCount

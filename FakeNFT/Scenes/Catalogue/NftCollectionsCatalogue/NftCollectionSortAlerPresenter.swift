@@ -1,6 +1,10 @@
 
 import UIKit
 
+protocol NftCollectionSortAlerPresenterProtocol: AnyObject {
+    func catalogueUpdate(with sortState: SortedBy?)
+}
+
 final class NftCollectionSortAlerPresenter {
     
     weak var delegate: NftCollectionSortAlerPresenterProtocol?

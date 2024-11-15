@@ -13,9 +13,9 @@ enum NftCatalogueDetailState {
 }
 
 final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
-
+    
     // MARK: - Properties
-
+    
     weak var view: NftCollectionsCatalgueViewContollerProtocol?
     private let service: NftCollectionCatalogueService
     private var state = NftCatalogueDetailState.initial {
@@ -26,19 +26,19 @@ final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
     
     private var page = 0
     private let cataloguesPerPage = 5
-
+    
     // MARK: - Init
-
+    
     init(service: NftCollectionCatalogueService) {
         self.service = service
     }
-
+    
     // MARK: - Functions
-
+    
     func viewDidLoad() {
         state = .loading
     }
-
+    
     private func stateDidChanged() {
         switch state {
         case .initial:
@@ -59,7 +59,7 @@ final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
             view?.showError(errorModel)
         }
     }
-
+    
     private func loadNftCollectionCatalogue(page: Int) {
         service.loadNftCatalogue(page: page) { [weak self] result in
             switch result {
@@ -70,7 +70,7 @@ final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
             }
         }
     }
-
+    
     private func makeErrorModel(_ error: Error) -> ErrorModel {
         let message: String
         switch error {
@@ -79,7 +79,7 @@ final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
         default:
             message = NSLocalizedString("Error.unknown", comment: "")
         }
-
+        
         let actionText = NSLocalizedString("Error.repeat", comment: "")
         return ErrorModel(message: message, actionText: actionText) { [weak self] in
             self?.state = .loading
