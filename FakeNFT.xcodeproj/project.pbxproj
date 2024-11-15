@@ -49,6 +49,7 @@
 		5B0894212CE1D53000E09A50 /* StatisticRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894202CE1D53000E09A50 /* StatisticRequest.swift */; };
 		5B0894232CE1DEC900E09A50 /* StatisticsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */; };
 		5B1DAAC82CE778B3001C3092 /* LoggingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DAAC72CE778B3001C3092 /* LoggingService.swift */; };
+		5B1DAACC2CE78A05001C3092 /* UserCardAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1DAACB2CE78A05001C3092 /* UserCardAssembly.swift */; };
 		5B2B55CC2CE0B8C0002F8D7E /* NftButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */; };
 		5B69254A2CDE7746000561C2 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6925492CDE7746000561C2 /* UIView+Extension.swift */; };
 		5B69254C2CDE7948000561C2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B69254B2CDE7948000561C2 /* Protocols.swift */; };
@@ -128,6 +129,7 @@
 		5B0894202CE1D53000E09A50 /* StatisticRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticRequest.swift; sourceTree = "<group>"; };
 		5B0894222CE1DEC900E09A50 /* StatisticsAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsAssembly.swift; sourceTree = "<group>"; };
 		5B1DAAC72CE778B3001C3092 /* LoggingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingService.swift; sourceTree = "<group>"; };
+		5B1DAACB2CE78A05001C3092 /* UserCardAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardAssembly.swift; sourceTree = "<group>"; };
 		5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftButton.swift; sourceTree = "<group>"; };
 		5B6925492CDE7746000561C2 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		5B69254B2CDE7948000561C2 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 				5BAB4AE32CE0959B006A1910 /* UserCardViewController.swift */,
 				5BAB4AE52CE09630006A1910 /* UserCardPresenter.swift */,
 				5B2B55CB2CE0B8C0002F8D7E /* NftButton.swift */,
+				5B1DAACB2CE78A05001C3092 /* UserCardAssembly.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				5B69255C2CDF6DA9000561C2 /* StatisticsPresenter.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
+				5B1DAACC2CE78A05001C3092 /* UserCardAssembly.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
