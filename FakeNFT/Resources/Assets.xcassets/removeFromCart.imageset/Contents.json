@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "removeFromCart.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -13,7 +13,7 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     
     let servicesAssembly: ServicesAssembly
     
-    internal lazy var activityIndicator = UIActivityIndicatorView()
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Init
     init(servicesAssembly: ServicesAssembly) {

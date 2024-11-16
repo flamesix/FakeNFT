@@ -65,6 +65,7 @@
 		5B6925662CDFD962000561C2 /* FilterOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6925652CDFD962000561C2 /* FilterOption.swift */; };
 		5BAB4AE42CE0959B006A1910 /* UserCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAB4AE32CE0959B006A1910 /* UserCardViewController.swift */; };
 		5BAB4AE62CE09630006A1910 /* UserCardPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAB4AE52CE09630006A1910 /* UserCardPresenter.swift */; };
+		5BAC2EAE2CE8DB19002AE2F0 /* Cosmos in Frameworks */ = {isa = PBXBuildFile; productRef = 5BAC2EAD2CE8DB19002AE2F0 /* Cosmos */; };
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
@@ -161,6 +162,7 @@
 			files = (
 				5B6925572CDF5186000561C2 /* SnapKit in Frameworks */,
 				3F603CD029DB4A74000C43D7 /* Kingfisher in Frameworks */,
+				5BAC2EAE2CE8DB19002AE2F0 /* Cosmos in Frameworks */,
 				3F603CCD29DB4A53000C43D7 /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -486,6 +488,7 @@
 				3F603CCC29DB4A53000C43D7 /* ProgressHUD */,
 				3F603CCF29DB4A74000C43D7 /* Kingfisher */,
 				5B6925562CDF5186000561C2 /* SnapKit */,
+				5BAC2EAD2CE8DB19002AE2F0 /* Cosmos */,
 			);
 			productName = FakeNFT;
 			productReference = 3F68069329CBBAF100B4F915 /* FakeNFT.app */;
@@ -564,6 +567,7 @@
 				3F603CCB29DB4A53000C43D7 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				3F603CCE29DB4A74000C43D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				5B6925552CDF5186000561C2 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				5BAC2EAC2CE8DB19002AE2F0 /* XCRemoteSwiftPackageReference "Cosmos" */,
 			);
 			productRefGroup = 3F68069429CBBAF100B4F915 /* Products */;
 			projectDirPath = "";
@@ -1029,6 +1033,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		5BAC2EAC2CE8DB19002AE2F0 /* XCRemoteSwiftPackageReference "Cosmos" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/Cosmos";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 25.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1046,6 +1058,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5B6925552CDF5186000561C2 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		5BAC2EAD2CE8DB19002AE2F0 /* Cosmos */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5BAC2EAC2CE8DB19002AE2F0 /* XCRemoteSwiftPackageReference "Cosmos" */;
+			productName = Cosmos;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
