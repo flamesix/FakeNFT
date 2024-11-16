@@ -132,6 +132,8 @@ final class CartViewController: UIViewController, CartViewProtocol {
         
         nftTableView.isHidden = true
         cartMenuView.isHidden = true
+        
+        paymentButton.addTarget(self, action: #selector(openPaymentScreen), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -179,6 +181,12 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
+    }
+    
+    @objc private func openPaymentScreen() {
+        let paymentAssembly = PaymentAssembly()
+        let paymentController = paymentAssembly.build()
+        navigationController?.pushViewController(paymentController, animated: true)
     }
     
     @objc private func sortButtonTapped() {
