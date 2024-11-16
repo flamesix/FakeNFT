@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 protocol NftCollectionViewControllerProtocol: AnyObject {
     var presenter: NftCollectionPresenter? { get set }

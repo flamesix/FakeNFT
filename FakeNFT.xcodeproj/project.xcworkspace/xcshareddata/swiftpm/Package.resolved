@@ -1,6 +1,15 @@
 {
-  "originHash" : "4e532f9d3c3b422050861a088af28893f36de0f23d157737cb48c285edf8cdd3",
+  "originHash" : "2c0489feda2cf8ae543f2af9fdac09566a726c019ed08c196e37977b5eb94884",
   "pins" : [
+    {
+      "identity" : "cosmos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/Cosmos",
+      "state" : {
+        "revision" : "40ba10aaf175bf50abefd0e518bd3b40862af3b1",
+        "version" : "25.0.1"
+      }
+    },
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
