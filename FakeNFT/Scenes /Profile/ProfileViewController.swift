@@ -85,6 +85,7 @@ final class ProfileViewController: UIViewController {
         setupView()
     }
     
+    
     // MARK: - Setup Methods
     private func setupView(){
         addSubviews()
