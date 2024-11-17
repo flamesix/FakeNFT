@@ -9,6 +9,7 @@ import UIKit
 
 protocol DeleteNftViewProtocol: AnyObject {
     var presenter: DeleteNftPresenterProtocol { get set }
+    func dismissView()
 }
 
 final class DeleteNftViewController: UIViewController, DeleteNftViewProtocol {
@@ -94,6 +95,14 @@ final class DeleteNftViewController: UIViewController, DeleteNftViewProtocol {
         setup()
     }
     
+    // MARK: - Public Methods
+    
+    func dismissView() {
+        DispatchQueue.main.async { [weak self] in
+            self?.dismiss(animated: true)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setup() {
@@ -145,6 +154,6 @@ final class DeleteNftViewController: UIViewController, DeleteNftViewProtocol {
     }
     
     @objc private func returnButtonTapped() {
-        dismiss(animated: true)
+        dismissView()
     }
 }

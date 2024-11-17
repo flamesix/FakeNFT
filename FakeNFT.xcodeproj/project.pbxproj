@@ -66,7 +66,7 @@
 		E9451EA12CEA14F7006B0A1A /* DeleteNftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9451EA02CEA137B006B0A1A /* DeleteNftViewController.swift */; };
 		E9451EA32CEA1500006B0A1A /* DeleteNftPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9451EA22CEA14FA006B0A1A /* DeleteNftPresenter.swift */; };
 		E9451EA62CEA1514006B0A1A /* DeleteNftAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9451EA52CEA150F006B0A1A /* DeleteNftAssembly.swift */; };
-		E9451EAC2CEA2045006B0A1A /* DeleteNftRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9451EAB2CEA203E006B0A1A /* DeleteNftRequest.swift */; };
+		E9451EAE2CEA2F01006B0A1A /* DeleteNftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9451EAD2CEA2EFB006B0A1A /* DeleteNftService.swift */; };
 		E95FA2F42CE91286000A8C99 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95FA2F32CE9127D000A8C99 /* CurrencyCell.swift */; };
 		E99F676E2CE5F31D00D63097 /* CartSortStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99F676D2CE5F30E00D63097 /* CartSortStorage.swift */; };
 /* End PBXBuildFile section */
@@ -151,7 +151,7 @@
 		E9451EA02CEA137B006B0A1A /* DeleteNftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNftViewController.swift; sourceTree = "<group>"; };
 		E9451EA22CEA14FA006B0A1A /* DeleteNftPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNftPresenter.swift; sourceTree = "<group>"; };
 		E9451EA52CEA150F006B0A1A /* DeleteNftAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNftAssembly.swift; sourceTree = "<group>"; };
-		E9451EAB2CEA203E006B0A1A /* DeleteNftRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNftRequest.swift; sourceTree = "<group>"; };
+		E9451EAD2CEA2EFB006B0A1A /* DeleteNftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNftService.swift; sourceTree = "<group>"; };
 		E95FA2F32CE9127D000A8C99 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		E99F676D2CE5F30E00D63097 /* CartSortStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartSortStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -431,7 +431,7 @@
 		E9451EA42CEA1505006B0A1A /* Delete */ = {
 			isa = PBXGroup;
 			children = (
-				E9451EAB2CEA203E006B0A1A /* DeleteNftRequest.swift */,
+				E9451EAD2CEA2EFB006B0A1A /* DeleteNftService.swift */,
 				E9451EA52CEA150F006B0A1A /* DeleteNftAssembly.swift */,
 				E9451EA22CEA14FA006B0A1A /* DeleteNftPresenter.swift */,
 				E9451EA02CEA137B006B0A1A /* DeleteNftViewController.swift */,
@@ -629,6 +629,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
+				E9451EAE2CEA2F01006B0A1A /* DeleteNftService.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
@@ -655,7 +656,6 @@
 				E92AED042CE87CA400893A10 /* PaymentService.swift in Sources */,
 				E9219CBC2CE53F8B00CB0FE0 /* CartService.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
-				E9451EAC2CEA2045006B0A1A /* DeleteNftRequest.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				E90C2C192CE3A4A500E96DF5 /* CartViewController.swift in Sources */,

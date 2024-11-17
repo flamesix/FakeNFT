@@ -10,7 +10,7 @@ import UIKit
 protocol CartViewProtocol: AnyObject, ErrorView, LoadingView {
     func updateCart()
     func showEmptyInfo()
-    func presentDeleteNftScreen(for nft: Nft)
+    func presentDeleteNftScreen(for nft: Nft, from nfts: [Nft], delegate: DeleteNftPresenterDelegate)
     var presenter: CartPresenterProtocol { get set }
 }
 
@@ -110,9 +110,9 @@ final class CartViewController: UIViewController, CartViewProtocol {
         cartEmptyLabel.isHidden = false
     }
     
-    func presentDeleteNftScreen(for nft: Nft) {
+    func presentDeleteNftScreen(for nft: Nft, from nfts: [Nft], delegate: DeleteNftPresenterDelegate) {
         let deleteNftAssembly = DeleteNftAssembly()
-        let deleteNftController = deleteNftAssembly.build(nft: nft)
+        let deleteNftController = deleteNftAssembly.build(delegate: delegate, deletedNft: nft, allNft: nfts)
         deleteNftController.modalPresentationStyle = .overFullScreen
         present(deleteNftController, animated: true)
     }

@@ -26,7 +26,7 @@ enum SortType: String {
     case byPrice, byRating, byName
 }
 
-final class CartPresenter: CartPresenterProtocol {
+final class CartPresenter: CartPresenterProtocol, DeleteNftPresenterDelegate {
     
     // MARK: - Properties
     
@@ -62,6 +62,10 @@ final class CartPresenter: CartPresenterProtocol {
         state = .loadingCart
     }
     
+    func fetchCart(cart: Cart) {
+        state = .cartData(cart)
+    }
+    
     func getNumberOfNftInOrder() -> Int {
         nfts.count
     }
@@ -84,7 +88,13 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func deleteNft(from indexPath: IndexPath) {
-        view?.presentDeleteNftScreen(for: nfts[indexPath.row])
+        view?.presentDeleteNftScreen(for: nfts[indexPath.row], from: nfts, delegate: self)
+    }
+    
+    func showError(error: Error) {
+        let errorModel = makeErrorModel(error)
+        view?.hideLoading()
+        view?.showError(errorModel)
     }
     
     // MARK: - Private Methods

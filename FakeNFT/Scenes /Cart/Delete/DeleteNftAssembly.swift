@@ -14,9 +14,12 @@ public final class DeleteNftAssembly {
         nftStorage: NftStorageImpl()
     )
 
-    func build(nft: Nft) -> UIViewController {
+    func build(delegate: DeleteNftPresenterDelegate, deletedNft: Nft, allNft: [Nft]) -> UIViewController {
         let presenter = DeleteNftPresenter(
-            nft: nft
+            delegate: delegate,
+            service: servicesAssembler.deleteNftService,
+            deletedNft: deletedNft,
+            allNfts: allNft
         )
         let viewController = DeleteNftViewController(presenter: presenter)
         presenter.view = viewController

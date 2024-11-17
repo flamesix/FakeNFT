@@ -29,4 +29,10 @@ final class ServicesAssembly {
             networkClient: networkClient
         )
     }
+    
+    var deleteNftService: DeleteNftServiceProtocol {
+        DeleteNftService(
+            networkClient: networkClient
+        )
+    }
 }
