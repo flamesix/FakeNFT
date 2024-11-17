@@ -63,7 +63,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private let paymentButton: UIButton = {
         let button = UIButton()
-        button.setTitle(NSLocalizedString("Cart.toPay", comment: ""), for: .normal)
+        button.setTitle(NSLocalizedString("Cart.toPaymentScreen", comment: ""), for: .normal)
         button.titleLabel?.textColor = .nftWhite
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.backgroundColor = .nftBlack
@@ -177,6 +177,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
         sortButton.tintColor = .nftBlack
         navigationItem.rightBarButtonItem = sortButton
         definesPresentationContext = true
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
@@ -186,6 +187,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     @objc private func openPaymentScreen() {
         let paymentAssembly = PaymentAssembly()
         let paymentController = paymentAssembly.build()
+        paymentController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(paymentController, animated: true)
     }
     
