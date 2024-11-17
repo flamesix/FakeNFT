@@ -3,6 +3,7 @@ import Foundation
 protocol UserCardPresenterProtocol {
     var view: UserCardViewControllerProtocol? { get set }
     func viewDidLoad()
+    func getUserWebPage() -> String
 }
 
 final class UserCardPresenter: UserCardPresenterProtocol {
@@ -17,5 +18,9 @@ final class UserCardPresenter: UserCardPresenterProtocol {
     
     func viewDidLoad() {
         view?.configureUI(with: user)
+    }
+    
+    func getUserWebPage() -> String {
+        user.website
     }
 }

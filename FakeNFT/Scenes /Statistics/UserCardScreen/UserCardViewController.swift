@@ -59,6 +59,7 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
         button.titleLabel?.font = .regular15
         button.setTitle(NSLocalizedString("Statistics.GoToWeb", comment: ""), for: .normal)
         button.setTitleColor(.nftBlack, for: .normal)
+        button.addTarget(self, action: #selector(didTapWebPageButton), for: .touchUpInside)
         return button
     }()
     
@@ -80,6 +81,12 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     
     @objc private func didTapBackButton() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func didTapWebPageButton() {
+        guard let url = presenter?.getUserWebPage() else { return }
+        let vc = WebViewController(url: url)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func configureUI(with user: User) {
