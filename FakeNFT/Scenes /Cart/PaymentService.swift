@@ -5,8 +5,10 @@
 //  Created by Pavel Bobkov on 16.11.2024.
 //
 
+typealias PaymentCompletion = (Result<[Currency], Error>) -> Void
+
 protocol PaymentServiceProtocol {
-   
+    func loadCurrencies(completion: @escaping PaymentCompletion)
 }
 
 final class PaymentService: PaymentServiceProtocol {
@@ -16,15 +18,15 @@ final class PaymentService: PaymentServiceProtocol {
         self.networkClient = networkClient
     }
 
-//    func loadCart(completion: @escaping CartCompletion) {
-//        let request = CartRequest()
-//        networkClient.send(request: request, type: Cart.self) { result in
-//            switch result {
-//            case .success(let cart):
-//                completion(.success(cart))
-//            case .failure(let error):
-//                completion(.failure(error))
-//            }
-//        }
-//    }
+    func loadCurrencies(completion: @escaping PaymentCompletion) {
+        let request = CurrenciesRequest()
+        networkClient.send(request: request, type: [Currency].self) { result in
+            switch result {
+            case .success(let currencies):
+                completion(.success(currencies))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }
