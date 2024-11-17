@@ -72,7 +72,10 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     }
     
     @objc private func didTapNftButton() {
-        print("didTapNftButton")
+        let vc = NftCollectionViewController()
+        let presenter = NftCollectionPresenter()
+        vc.presenter = presenter
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func didTapBackButton() {

@@ -16,18 +16,26 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = .bold17
+        label.backgroundColor = .clear
         label.textColor = .nftBlack
         return label
     }()
     
     private lazy var ratingView: CosmosView = {
         let view = CosmosView()
+        view.settings.filledColor = .nftYellowUni
+        view.settings.emptyColor = .nftLightGrey
+        view.settings.filledBorderWidth = 0
+        view.settings.emptyBorderWidth = 0
+        view.settings.starSize = 12
+        view.settings.starMargin = 2
         view.rating = 4
         return view
     }()
     
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
+        label.backgroundColor = .clear
         label.font = .medium10
         label.textColor = .nftBlack
         return label
@@ -69,11 +77,19 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func config() {
+        nftImageView.image = UIImage(named: "NFT")
+        nameLabel.text = "Emma"
+        ratingView.rating = 4
+        priceLabel.text = "1.78 ETH"
+    }
 }
 
 // MARK: - SettingView
 extension NftCollectionCollectionViewCell: SettingViewsProtocol {
     func setupView() {
+        layer.cornerRadius = 12
         addSubviews(nftImageView, ratingView, nameLabel, priceLabel, subLikeView, subCartView)
         subCartView.addSubviews(cartButton)
         subLikeView.addSubviews(likeButton)
@@ -84,7 +100,7 @@ extension NftCollectionCollectionViewCell: SettingViewsProtocol {
         
         nftImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(108)
+            make.height.equalTo(nftImageView.snp.width)
         }
         
         subLikeView.snp.makeConstraints { make in
@@ -97,28 +113,30 @@ extension NftCollectionCollectionViewCell: SettingViewsProtocol {
         ratingView.snp.makeConstraints { make in
             make.top.equalTo(nftImageView.snp.bottom).offset(8)
             make.leading.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.63)
             make.height.equalTo(12)
         }
         
+
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(ratingView.snp.bottom).offset(4)
             make.leading.equalToSuperview()
-            make.width.equalTo(68)
-            make.height.equalTo(44)
+            make.width.equalTo(ratingView.snp.width)
+            make.height.equalTo(subCartView.snp.height).multipliedBy(0.55)
         }
         
         priceLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+            make.bottom.equalTo(subCartView.snp.bottom)
             make.leading.equalToSuperview()
             make.trailing.equalTo(subCartView.snp.leading)
-            make.height.equalTo(12)
+            make.height.equalTo(subCartView.snp.height).multipliedBy(0.3)
         }
         
         subCartView.snp.makeConstraints { make in
-            make.top.equalTo(ratingView.snp.bottom).offset(4)
+            make.top.equalTo(nameLabel.snp.top)
             make.leading.equalTo(nameLabel.snp.trailing)
             make.trailing.equalToSuperview()
-            make.height.equalTo(40)
+            make.height.equalTo(subCartView.snp.width)
         }
         
         likeButton.snp.makeConstraints { $0.center.equalToSuperview() }

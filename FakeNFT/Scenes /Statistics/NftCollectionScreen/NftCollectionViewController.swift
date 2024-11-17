@@ -33,21 +33,34 @@ extension NftCollectionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
+        cell.config()
+        return cell
     }
-    
-    
 }
 
 extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let spacing: CGFloat = 9
+        let width = (collectionView.bounds.width - 2 * spacing) / 3
+        let height: CGFloat = width * 1.6
+        return CGSize(width: width, height: height)
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 9
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 28
+    }
 }
 
 extension NftCollectionViewController: SettingViewsProtocol {
     func setupView() {
         title = NSLocalizedString("UserCard.NFTCollection.Count", comment: "")
         view.backgroundColor = .nftWhite
-        view.addSubviews(collectionView)
+        view.addSubviews(collectionView, activityIndicator)
         collectionView.delegate = self
         collectionView.dataSource = self
         addConstraints()
