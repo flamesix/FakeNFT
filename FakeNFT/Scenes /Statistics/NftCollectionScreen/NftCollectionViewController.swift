@@ -9,6 +9,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
     
     var presenter: NftCollectionPresenter?
     
+    // MARK: - UIElements
     lazy var activityIndicator = UIActivityIndicatorView()
     
     private lazy var collectionView: UICollectionView = {
@@ -19,6 +20,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         return collectionView
     }()
     
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -27,18 +29,23 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
     
 }
 
+// MARK: - UICollectionViewDataSource
 extension NftCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+//        presenter?.nfts.count ?? 0
+        25 // Mock to check UI
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-        cell.config()
+//        guard let nft = presenter?.nfts[indexPath.item] else { return UICollectionViewCell() }
+//        cell.config(with: nft)
+        cell.config() // Mock to check UI
         return cell
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let spacing: CGFloat = 9
@@ -56,6 +63,7 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - SettingView
 extension NftCollectionViewController: SettingViewsProtocol {
     func setupView() {
         title = NSLocalizedString("UserCard.NFTCollection.Count", comment: "")

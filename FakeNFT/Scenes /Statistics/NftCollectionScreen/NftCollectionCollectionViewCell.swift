@@ -4,6 +4,9 @@ import Cosmos
 
 final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     
+    private var isLiked: Bool = false
+    private var isCarted: Bool = false
+    
     // MARK: - UIElements
     private lazy var nftImageView: UIImageView = {
         let imageView = UIImageView()
@@ -49,7 +52,8 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     
     private lazy var likeButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         button.tintColor = .nftWhiteUni
         return button
     }()
@@ -63,6 +67,7 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     private lazy var cartButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "addToCart"), for: .normal)
+        button.addTarget(self, action: #selector(didTapCartButton), for: .touchUpInside)
         button.tintColor = .nftBlack
         return button
     }()
@@ -78,11 +83,29 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Mock method to check UI
     func config() {
         nftImageView.image = UIImage(named: "NFT")
         nameLabel.text = "Emma"
         ratingView.rating = 4
         priceLabel.text = "1.78 ETH"
+    }
+    
+    func config(with nft: Nft) {
+        nftImageView.image = UIImage(named: "NFT")
+        nameLabel.text = nft.name
+        ratingView.rating = Double(nft.rating)
+        priceLabel.text = String(nft.price) + " ETH"
+    }
+    
+    @objc private func didTapLikeButton() {
+        isLiked.toggle()
+        likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+    }
+    
+    @objc private func didTapCartButton() {
+        isCarted.toggle()
+        cartButton.setImage(UIImage(named: isCarted ? "removeFromCart" : "addToCart"), for: .normal)
     }
 }
 
