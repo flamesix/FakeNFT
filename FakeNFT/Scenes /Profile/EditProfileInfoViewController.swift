@@ -168,6 +168,14 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         setupVC()
         presenter = EditProfilePresenter(view: self)
         presenter?.loadProfileData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK: - Setup Methods
@@ -231,5 +239,23 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         dismiss(animated: true) {
             
         }
+    }
+    
+    @objc
+    private func keyboardWillShow(notification: Notification) {
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        let keyboardHeight = keyboardFrame.height
+        let bottomOfTextField = siteStackView.frame.origin.y + siteStackView.frame.height
+        let screenHeight = view.frame.height
+        let overlap = bottomOfTextField - (screenHeight - keyboardHeight)
+    
+        if overlap > 0 {
+            self.view.frame.origin.y = -overlap - 16
+        }
+    }
+
+    @objc
+    private func keyboardWillHide(notification: Notification) {
+        self.view.frame.origin.y = 0
     }
 }
