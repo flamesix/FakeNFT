@@ -234,6 +234,7 @@ extension CartViewController: UITableViewDataSource {
         
         cell.selectionStyle = .none
         presenter.configureCell(for: cell, with: indexPath)
+        cell.delegate = self
         
         return cell
     }
@@ -244,5 +245,14 @@ extension CartViewController: UITableViewDataSource {
 extension CartViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         NftCartCell.height
+    }
+}
+
+// MARK: - NftCartCellDelegate
+
+extension CartViewController: NftCartCellDelegate {
+    func deleteNft(from cell: NftCartCell) {
+        guard let indexPath = nftTableView.indexPath(for: cell) else { return }
+        presenter.deleteNft(from: indexPath)
     }
 }

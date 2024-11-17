@@ -13,6 +13,7 @@ protocol CartPresenterProtocol {
     func getOrderTotalCost() -> Float
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath)
     func sortBy(_: SortType)
+    func deleteNft(from indexPath: IndexPath)
 }
 
 // MARK: - Enum
@@ -81,6 +82,8 @@ final class CartPresenter: CartPresenterProtocol {
         let nft = nfts[indexPath.row]
         cell.configure(images: nft.images, name: nft.name, rating: nft.rating, price: nft.price)
     }
+    
+    func deleteNft(from indexPath: IndexPath) { }
     
     // MARK: - Private Methods
     
