@@ -13,5 +13,5 @@ struct NFTModel {
     let title: String
     let author: String
     let rating: Int
-    let price: String
+    let price: Double
 }

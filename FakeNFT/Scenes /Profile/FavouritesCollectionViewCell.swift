@@ -33,14 +33,16 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let ratingLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 10)
-        label.textColor = .yellow
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private var ratingStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
-    
+
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = .caption1
@@ -65,7 +67,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(favoriteIcon)
         contentView.addSubview(titleLabel)
         contentView.addSubview(priceLabel)
-        contentView.addSubview(ratingLabel)
+        contentView.addSubview(ratingStack)
         
         NSLayoutConstraint.activate([
             nftImageView.widthAnchor.constraint(equalToConstant: 80),
@@ -79,10 +81,12 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
             titleLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
             
-            ratingLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            ratingLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
+            ratingStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            ratingStack.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
+            ratingStack.widthAnchor.constraint(equalToConstant: 68),
+            ratingStack.heightAnchor.constraint(equalToConstant: 12),
             
-            priceLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 8),
+            priceLabel.topAnchor.constraint(equalTo: ratingStack.bottomAnchor, constant: 8),
             priceLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12)
         ])
     }
@@ -90,7 +94,33 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     func configure(with nft: NFTModel) {
         nftImageView.image = nft.image
         titleLabel.text = nft.title
-        ratingLabel.text = String(repeating: "⭐", count: nft.rating)
-        priceLabel.text = "\(nft.price) ETH"
+        ratingStack = configureRatingStackView(for: nft.rating)
+        priceLabel.text = formatPrice(nft.price)
+    }
+    
+    private func formatPrice(_ price: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "ETH"
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
+    }
+    
+    private func configureRatingStackView(for rating: Int) -> UIStackView {
+        let totalStars = 5
+        for _ in 0..<rating {
+            let activeStar = UIImageView(image: UIImage(named: "starFilled"))
+            activeStar.contentMode = .scaleAspectFit
+            ratingStack.addArrangedSubview(activeStar)
+        }
+        
+        for _ in 0..<(totalStars - rating) {
+            let inactiveStar = UIImageView(image: UIImage(named: "starEmpty"))
+            inactiveStar.contentMode = .scaleAspectFit
+            ratingStack.addArrangedSubview(inactiveStar)
+        }
+        
+        return ratingStack
     }
 }

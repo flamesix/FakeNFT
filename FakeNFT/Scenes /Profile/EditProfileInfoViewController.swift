@@ -8,9 +8,9 @@
 import UIKit
 import Kingfisher
 
-final class EditProfileInfoViewController: UIViewController {
+final class EditProfileInfoViewController: UIViewController, EditProfileViewProtocol {
     // MARK: - Private Properties
-    private let profileService = ProfileServiceImpl.shared
+    private var presenter: EditProfilePresenter?
     
     private lazy var closeEditVCButton: UIButton = {
         let button = UIButton(type: .system)
@@ -166,7 +166,8 @@ final class EditProfileInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupVC()
-        loadProfileData()
+        presenter = EditProfilePresenter(view: self)
+        presenter?.loadProfileData()
     }
     
     // MARK: - Setup Methods
@@ -174,23 +175,6 @@ final class EditProfileInfoViewController: UIViewController {
         view.backgroundColor = .background
         addSubviews()
         addConstraints()
-    }
-    
-    private func loadProfileData(){
-        profileService.loadProfile { result in
-            switch result{
-            case .success(let profile):
-                self.textFieldForName.text = profile.name
-                self.textViewForBio.text = profile.description
-                self.textFieldForSite.text = profile.website
-                if let avatarUrlString = profile.avatar, let url = URL(string: avatarUrlString) {
-                    self.editIconButton.kf.setImage(with: url, for: .normal)
-                }
-            case .failure(let error):
-                print("Error loading profile:", error)
-            }
-            
-        }
     }
     
     private func addSubviews(){
@@ -223,6 +207,22 @@ final class EditProfileInfoViewController: UIViewController {
             siteStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             siteStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
+    }
+    
+    func loadProfileData(profile: Profile) {
+        self.textFieldForName.text = profile.name
+        self.textViewForBio.text = profile.description
+        self.textFieldForSite.text = profile.website
+        if let avatarUrlString = profile.avatar, let url = URL(string: avatarUrlString) {
+            self.editIconButton.kf.setImage(with: url, for: .normal)
+        }
+    }
+    
+    func showError(_ error: String) {
+        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel)
+        alert.addAction(action)
+        present(alert, animated: true)
     }
     
     // MARK: - Private methods

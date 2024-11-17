@@ -8,10 +8,9 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, ProfileViewProtocol {
     // MARK: - Private Properties
-    private let profileService = ProfileServiceImpl.shared
-    private var profile: Profile?
+    private var presenter: ProfilePresenter?
     
     private lazy var editButton: UIButton = {
         let editButton = UIButton(type: .system)
@@ -83,6 +82,8 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        presenter = ProfilePresenter(view: self)
+        presenter?.loadProfileData()
     }
     
     
@@ -92,7 +93,6 @@ final class ProfileViewController: UIViewController {
         addConstraints()
         let editBarButtonItem = UIBarButtonItem(customView: editButton)
         navigationItem.rightBarButtonItem = editBarButtonItem
-        loadProfileData()
     }
     
     private func addSubviews(){
@@ -138,21 +138,14 @@ final class ProfileViewController: UIViewController {
         present(editProfileInfoVC, animated: true)
     }
     
-    private func loadProfileData() {
-        profileService.loadProfile { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let profile):
-                    self?.profile = profile
-                    self?.updateUI(with: profile)
-                case .failure(let error):
-                    print("Error loading profile:", error)
-                }
-            }
-        }
+    func showError(_ error: String) {
+        let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel)
+        alert.addAction(action)
+        present(alert, animated: true)
     }
     
-    private func updateUI(with profile: Profile) {
+    func updateUI(with profile: Profile) {
         usernameTitle.text = profile.name
         descriptionLabel.text = profile.description
         linkButton.setTitle(profile.website, for: .normal)
@@ -203,9 +196,9 @@ extension ProfileViewController: UITableViewDataSource{
         
         switch indexPath.row {
         case 0:
-            cell.setTitleLabel(text: "Мои NFT (\(profile?.nfts?.count ?? 0))")
+            cell.setTitleLabel(text: "Мои NFT (\(presenter?.getNFTCount() ?? 0))")
         case 1:
-            cell.setTitleLabel(text: "Избранные NFT (\(profile?.likes?.count ?? 0))")
+            cell.setTitleLabel(text: "Избранные NFT (\(presenter?.getLikesCount() ?? 0))")
         case 2:
             cell.setTitleLabel(text: "О разработчике")
         default:

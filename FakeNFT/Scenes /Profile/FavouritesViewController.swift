@@ -10,9 +10,9 @@ import UIKit
 final class FavouritesViewController: UIViewController {
     // MARK: - MockData
     private var nftItems: [NFTModel] = [
-        NFTModel(image: UIImage(named: "nftTest2")!, title: "Lilo", author: "John Doe", rating: 3, price: "1,78"),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 5, price: "1,78"),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 3, price: "1,78")
+        NFTModel(image: UIImage(named: "nftTest2")!, title: "Lilo", author: "John Doe", rating: 3, price: 1.7),
+        NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 5, price: 1.78),
+        NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 3, price: 1.78)
     ]
     
     // MARK: - Private Properties
