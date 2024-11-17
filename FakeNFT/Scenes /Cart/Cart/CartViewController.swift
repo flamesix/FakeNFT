@@ -107,6 +107,9 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     func showEmptyInfo() {
+        nftTableView.isHidden = true
+        cartMenuView.isHidden = true
+        navigationItem.rightBarButtonItem = .none
         cartEmptyLabel.isHidden = false
     }
     

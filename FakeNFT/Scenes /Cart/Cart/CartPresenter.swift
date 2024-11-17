@@ -110,8 +110,10 @@ final class CartPresenter: CartPresenterProtocol, DeleteNftPresenterDelegate {
             loadNfts(cart: cart)
         case .cartData(let cart):
             if cart.nfts.isEmpty {
-                view?.showEmptyInfo()
-                view?.hideLoading()
+                DispatchQueue.main.async { [weak self] in
+                    self?.view?.showEmptyInfo()
+                    self?.view?.hideLoading()
+                }
             } else {
                 self.state = .loadingNfts(cart)
             }
