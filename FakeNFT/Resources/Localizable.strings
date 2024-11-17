@@ -17,3 +17,7 @@
 "Cart.userAgreementInfo" = "Совершая покупку, вы соглашаетесь с условиями";
 "Cart.userAgreement" = "Пользовательского соглашения";
 "Cart.toPay" = "Оплатить";
+"Cart.deleteNftConfirmation" = "Вы уверены, что хотите
+удалить объект из корзины?";
+"Cart.delete" = "Удалить";
+"Cart.return" = "Вернуться";

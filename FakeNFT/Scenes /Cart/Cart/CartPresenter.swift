@@ -83,7 +83,9 @@ final class CartPresenter: CartPresenterProtocol {
         cell.configure(images: nft.images, name: nft.name, rating: nft.rating, price: nft.price)
     }
     
-    func deleteNft(from indexPath: IndexPath) { }
+    func deleteNft(from indexPath: IndexPath) {
+        view?.presentDeleteNftScreen(for: nfts[indexPath.row])
+    }
     
     // MARK: - Private Methods
     
