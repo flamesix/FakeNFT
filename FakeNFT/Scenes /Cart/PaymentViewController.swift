@@ -7,17 +7,29 @@
 
 import UIKit
 
-protocol PaymentViewProtocol: AnyObject {
-    
+protocol PaymentViewProtocol: AnyObject, ErrorView, LoadingView {
+    func updateCollection()
+    var presenter: PaymentPresenterProtocol { get set }
 }
 
 final class PaymentViewController: UIViewController, PaymentViewProtocol {
     
     // MARK: - Properties
     
-    private let presenter: PaymentPresenterProtocol
+    var presenter: PaymentPresenterProtocol
     
     // MARK: - View
+    
+    internal lazy var activityIndicator = UIActivityIndicatorView()
+    
+    private let currenciesCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 7
+        layout.minimumInteritemSpacing = 7
+        let collecion = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collecion.allowsMultipleSelection = false
+        return collecion
+    }()
     
     private let paymentMenuView: UIView = {
         let view = UIView()
@@ -79,18 +91,26 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         presenter.viewDidLoad()
     }
     
+    // MARK: - Public Methods
+    
+    func updateCollection() {
+        currenciesCollectionView.reloadData()
+    }
+    
     // MARK: - Private Methods
     
     private func setup() {
         setupViews()
         setupConstraints()
+        setupCollectionView()
         setupNavigationBarItem()
     }
     
     private func setupViews() {
         view.backgroundColor = .white
         
-        [paymentMenuView, userAgreementInfoLabel, userAgreementButton, payButton].forEach {
+        [currenciesCollectionView, paymentMenuView, userAgreementInfoLabel,
+         userAgreementButton, payButton, activityIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -98,6 +118,11 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            currenciesCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            currenciesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            currenciesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            currenciesCollectionView.bottomAnchor.constraint(equalTo: paymentMenuView.topAnchor),
+            
             paymentMenuView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentMenuView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentMenuView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -114,7 +139,10 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
             payButton.topAnchor.constraint(equalTo: userAgreementButton.bottomAnchor, constant: 16),
             payButton.leadingAnchor.constraint(equalTo: paymentMenuView.leadingAnchor, constant: 20),
             payButton.trailingAnchor.constraint(equalTo: paymentMenuView.trailingAnchor, constant: -20),
-            payButton.heightAnchor.constraint(equalToConstant: 60)
+            payButton.heightAnchor.constraint(equalToConstant: 60),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
     
@@ -122,5 +150,47 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         navigationItem.title = NSLocalizedString("Cart.paymentScreen", comment: "")
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.backItem?.title = .none
+    }
+    
+    private func setupCollectionView() {
+        currenciesCollectionView.dataSource = self
+        currenciesCollectionView.delegate = self
+        currenciesCollectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.identifier)
+    }
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension PaymentViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        presenter.getCurrencyNumber()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CurrencyCell.identifier, for: indexPath) as? CurrencyCell else {
+            return UICollectionViewCell()
+        }
+        
+        presenter.configureCell(for: cell, with: indexPath)
+        return cell
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension PaymentViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.bounds.width / 2 - 4, height: CurrencyCell.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CurrencyCell else { return }
+        cell.select()
+        presenter.setCurrency(by: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CurrencyCell else { return }
+        cell.deselect()
     }
 }
