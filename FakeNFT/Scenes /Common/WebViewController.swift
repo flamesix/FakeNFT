@@ -9,7 +9,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
     // MARK: - UIElements
     private lazy var activityIndicator = UIActivityIndicatorView()
 
-    lazy var webView: WKWebView = {
+    private lazy var webView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
         return webView
