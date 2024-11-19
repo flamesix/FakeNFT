@@ -5,7 +5,6 @@
 //  Created by Soslan Dzampaev on 09.11.2024.
 //
 
-import Foundation
 import UIKit
 
 final class ProfileTableViewCell: UITableViewCell {

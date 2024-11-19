@@ -235,7 +235,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     
     // MARK: - Private methods
     @objc
-    func closeEditVCButtonTapped(){
+    private func closeEditVCButtonTapped(){
         dismiss(animated: true) {
             
         }

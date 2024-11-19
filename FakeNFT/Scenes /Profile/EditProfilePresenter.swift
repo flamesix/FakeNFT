@@ -22,12 +22,12 @@ final class EditProfilePresenter {
     }
     
     func loadProfileData(){
-        profileService.loadProfile { result in
+        profileService.loadProfile { [weak self] result in
             switch result{
             case .success(let profile):
-                self.view?.loadProfileData(profile: profile)
+                self?.view?.loadProfileData(profile: profile)
             case .failure(let error):
-                self.view?.showError("Error loading profile: \(error.localizedDescription)")
+                self?.view?.showError("Error loading profile: \(error.localizedDescription)")
                 print("Error loading profile:", error)
             }
         }

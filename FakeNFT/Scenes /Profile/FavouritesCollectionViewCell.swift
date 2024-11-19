@@ -9,6 +9,7 @@ import UIKit
 
 final class FavouritesCollectionViewCell: UICollectionViewCell {
     // MARK: Private properties
+    private let totalStars: Int = 5
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -42,7 +43,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-
+    
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = .caption1
@@ -51,12 +52,22 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private lazy var priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "ETH"
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter
+    }()
+    
     // MARK: init
     override init(frame: CGRect){
         super.init(frame: frame)
         setupCell()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -99,26 +110,18 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     }
     
     private func formatPrice(_ price: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "ETH"
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
+        return priceFormatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
     }
     
     private func configureRatingStackView(for rating: Int) -> UIStackView {
-        let totalStars = 5
-        for _ in 0..<rating {
-            let activeStar = UIImageView(image: UIImage(named: "starFilled"))
-            activeStar.contentMode = .scaleAspectFit
-            ratingStack.addArrangedSubview(activeStar)
-        }
+        let ratingStack = UIStackView()
+        ratingStack.axis = .horizontal
+        ratingStack.spacing = 4
         
-        for _ in 0..<(totalStars - rating) {
-            let inactiveStar = UIImageView(image: UIImage(named: "starEmpty"))
-            inactiveStar.contentMode = .scaleAspectFit
-            ratingStack.addArrangedSubview(inactiveStar)
+        for i in 0..<totalStars {
+            let isActive = i < rating
+            let starImageView = UIImageView.createStar(isActive: isActive)
+            ratingStack.addArrangedSubview(starImageView)
         }
         
         return ratingStack
