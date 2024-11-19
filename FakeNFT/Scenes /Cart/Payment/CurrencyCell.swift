@@ -20,6 +20,7 @@ final class CurrencyCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 6
         imageView.layer.masksToBounds = true
+        imageView.backgroundColor = .nftBlackUni
         return imageView
     }()
     
@@ -33,7 +34,7 @@ final class CurrencyCell: UICollectionViewCell {
     private let tickerLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .nftGreyUni
+        label.textColor = .nftGreenUni
         return label
     }()
     
