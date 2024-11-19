@@ -180,7 +180,9 @@ extension PaymentViewController: UICollectionViewDataSource {
 
 extension PaymentViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width / 2 - 4, height: CurrencyCell.height)
+        let indent = CGFloat(4)
+        let columns = CGFloat(2)
+        return CGSize(width: collectionView.bounds.width / columns - indent, height: CurrencyCell.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
