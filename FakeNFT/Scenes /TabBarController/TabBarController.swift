@@ -10,15 +10,26 @@ final class TabBarController: UITabBarController {
         tag: 0
     )
 
+    private let profileTabBarItem = UITabBarItem(
+        title: NSLocalizedString("Tab.profile", comment: ""),
+        image: UIImage(named: "profileIcon"),
+        tag: 1
+    )
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tabBar.tintColor = UIColor(named: "nftBlack")
+        
         let catalogController = TestCatalogViewController(
             servicesAssembly: servicesAssembly
         )
         catalogController.tabBarItem = catalogTabBarItem
-
-        viewControllers = [catalogController]
+        
+        let profileController = ProfileViewController()
+        profileController.tabBarItem = profileTabBarItem
+        let profileNavigationController = UINavigationController(rootViewController: profileController)
+        
+        viewControllers = [profileNavigationController, catalogController]
 
         view.backgroundColor = .systemBackground
     }
