@@ -400,6 +400,7 @@
 			children = (
 				DB1524762CDE945A004C57B4 /* ProfileViewController.swift */,
 				DBCADA8B2CEA340800099A8D /* ProfilePresenter.swift */,
+				DB1524792CDECCF6004C57B4 /* ProfileTableViewCell.swift */,
 			);
 			path = ProfileScreen;
 			sourceTree = "<group>";
@@ -435,7 +436,6 @@
 			isa = PBXGroup;
 			children = (
 				DBBCF0732CE4F9C10022EA02 /* ProfileSiteViewController.swift */,
-				DB1524792CDECCF6004C57B4 /* ProfileTableViewCell.swift */,
 			);
 			path = ProfileWebViewScreen;
 			sourceTree = "<group>";
