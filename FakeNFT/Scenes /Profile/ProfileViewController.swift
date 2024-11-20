@@ -221,8 +221,11 @@ extension ProfileViewController: UITableViewDelegate{
             let favouriteViewController = FavouritesViewController()
             navigationController?.pushViewController(favouriteViewController, animated: true)
         case 2:
-            let profileSiteViewController = ProfileSiteViewController()
-            navigationController?.pushViewController(profileSiteViewController, animated: true)
+            if let urlString = linkButton.titleLabel?.text,
+               let url = URL(string: urlString) {
+                let profileSiteViewController = ProfileSiteViewController(websiteURL: url)
+                navigationController?.pushViewController(profileSiteViewController, animated: true)
+            }
         default:
             break
         }
