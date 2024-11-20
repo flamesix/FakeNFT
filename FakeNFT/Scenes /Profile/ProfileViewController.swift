@@ -84,8 +84,16 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         setupView()
         presenter = ProfilePresenter(view: self)
         presenter?.loadProfileData()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateProfileUI(_:)),
+                                               name: .profileUpdated,
+                                               object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .profileUpdated, object: nil)
+    }
     
     // MARK: - Setup Methods
     private func setupView(){
@@ -138,6 +146,14 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         present(editProfileInfoVC, animated: true)
     }
     
+    @objc
+    private func updateProfileUI(_ notification: Notification) {
+        if let userInfo = notification.userInfo,
+           let updatedProfile = userInfo["updatedProfile"] as? Profile {
+            updateUI(with: updatedProfile)
+        }
+    }
+    
     func showError(_ error: String) {
         let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel)
@@ -160,28 +176,6 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
             )
         }
     }
-    
-    //TODO: in progress
-    //    private func updateProfile() {
-    //        let name = "Updated Name"
-    //        let description = "Updated Description"
-    //        let website = "https://newwebsite.com"
-    //        let likes = ["1", "2", "3"]
-    //
-    //        profileService.updateProfile(
-    //            name: name,
-    //            description: description,
-    //            website: website,
-    //            likes: likes
-    //        ) { result in
-    //            switch result {
-    //            case .success(let updatedProfile):
-    //                print("Profile updated successfully:", updatedProfile)
-    //            case .failure(let error):
-    //                print("Failed to update profile:", error)
-    //            }
-    //        }
-    //    }
 }
 
 // MARK: - UITableViewDataSource

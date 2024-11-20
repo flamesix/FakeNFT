@@ -16,7 +16,6 @@ protocol ProfileService {
             name: String?,
             description: String?,
             website: String?,
-            likes: [String]?,
             completion: @escaping ProfileUpdateCompletion
         )
 }
@@ -56,10 +55,9 @@ final class ProfileServiceImpl: ProfileService {
         name: String?,
         description: String?,
         website: String?,
-        likes: [String]?,
         completion: @escaping ProfileUpdateCompletion
     ) {
-        let dto = ProfileUpdateDto(name: name, description: description, website: website, likes: likes)
+        let dto = ProfileUpdateDto(name: name, description: description, website: website)
         let request = ProfileUpdateRequest(dto: dto)
         
         networkClient.send(request: request, type: Profile.self) { [weak self] result in
@@ -72,4 +70,8 @@ final class ProfileServiceImpl: ProfileService {
             }
         }
     }
+}
+
+extension Notification.Name {
+    static let profileUpdated = Notification.Name("profileUpdated")
 }

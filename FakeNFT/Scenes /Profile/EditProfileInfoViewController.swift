@@ -236,8 +236,11 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     // MARK: - Private methods
     @objc
     private func closeEditVCButtonTapped(){
-        dismiss(animated: true) {
-            
+        dismiss(animated: true) { [self] in
+            presenter?.updateProfileData(
+                name: textFieldForName.text ?? "",
+                description: textViewForBio.text,
+                website: textFieldForSite.text ?? "")
         }
     }
     

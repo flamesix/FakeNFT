@@ -21,7 +21,6 @@ struct ProfileUpdateDto: Dto {
     let name: String?
     let description: String?
     let website: String?
-    let likes: [String]?
 
     func asDictionary() -> [String: String] {
         var dict: [String: String] = [:]
@@ -34,9 +33,6 @@ struct ProfileUpdateDto: Dto {
         }
         if let website = website {
             dict["website"] = website
-        }
-        if let likes = likes {
-            dict["likes"] = likes.joined(separator: ",")
         }
         
         return dict

@@ -32,4 +32,21 @@ final class EditProfilePresenter {
             }
         }
     }
+    
+    func updateProfileData(name: String, description: String, website: String) {
+        profileService.updateProfile(name: name, description: description, website: website) { [weak self] result in
+            switch result {
+            case .success(let updatedProfile):
+                print("Profile updated successfully:", updatedProfile)
+                NotificationCenter.default.post(
+                    name: .profileUpdated,
+                    object: nil,
+                    userInfo: ["updatedProfile": updatedProfile]
+                )
+            case .failure(let error):
+                self?.view?.showError("Error loading profile: \(error.localizedDescription)")
+            }
+        }
+    }
+
 }
