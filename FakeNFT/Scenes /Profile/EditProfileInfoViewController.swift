@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import ProgressHUD
 
 final class EditProfileInfoViewController: UIViewController, EditProfileViewProtocol {
     // MARK: - Private Properties
@@ -30,6 +31,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         button.layer.cornerRadius = 35
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editIconButtonTapped), for: .touchUpInside)
         
         let overlayView = UIView()
         overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
@@ -162,6 +164,22 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         return stackView
     }()
     
+    private lazy var textFieldForAvatar: UITextField = {
+        var textField = UITextField()
+        textField.isHidden = true
+        textField.placeholder = "Загрузить изображение"
+        textField.font = .bodyRegular
+        textField.textColor = UIColor(named: "nftBlack")
+        textField.borderStyle = .none
+        textField.backgroundColor = UIColor(named: "nftLightGrey")
+        textField.layer.cornerRadius = 12
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 44))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        return textField
+    }()
+    
     // MARK: - Life View Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -191,6 +209,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         view.addSubview(nameStackView)
         view.addSubview(bioStackView)
         view.addSubview(siteStackView)
+        view.addSubview(textFieldForAvatar)
     }
     
     private func addConstraints(){
@@ -214,6 +233,11 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
             siteStackView.topAnchor.constraint(equalTo: bioStackView.bottomAnchor, constant: 24),
             siteStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             siteStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            textFieldForAvatar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textFieldForAvatar.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+            textFieldForAvatar.heightAnchor.constraint(equalToConstant: 44),
+            textFieldForAvatar.widthAnchor.constraint(equalToConstant: 250)
         ])
     }
     
@@ -235,13 +259,29 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     
     // MARK: - Private methods
     @objc
-    private func closeEditVCButtonTapped(){
-        dismiss(animated: true) { [self] in
-            presenter?.updateProfileData(
-                name: textFieldForName.text ?? "",
-                description: textViewForBio.text,
-                website: textFieldForSite.text ?? "")
-        }
+    private func closeEditVCButtonTapped() {
+        ProgressHUD.show("Сохранение...")
+        presenter?.updateProfileData(
+            name: textFieldForName.text ?? "",
+            description: textViewForBio.text,
+            website: textFieldForSite.text ?? "",
+            completion: { [weak self] success in
+                DispatchQueue.main.async {
+                    ProgressHUD.dismiss()
+                    if success {
+                        self?.dismiss(animated: true)
+                    } else {
+                        ProgressHUD.showError("Ошибка обновления профиля")
+                    }
+                }
+            }
+        )
+    }
+
+    
+    @objc
+    private func editIconButtonTapped(){
+        textFieldForAvatar.isHidden = false
     }
     
     @objc
@@ -251,12 +291,12 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         let bottomOfTextField = siteStackView.frame.origin.y + siteStackView.frame.height
         let screenHeight = view.frame.height
         let overlap = bottomOfTextField - (screenHeight - keyboardHeight)
-    
+        
         if overlap > 0 {
             self.view.frame.origin.y = -overlap - 16
         }
     }
-
+    
     @objc
     private func keyboardWillHide(notification: Notification) {
         self.view.frame.origin.y = 0

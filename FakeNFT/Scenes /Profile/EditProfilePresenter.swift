@@ -33,7 +33,7 @@ final class EditProfilePresenter {
         }
     }
     
-    func updateProfileData(name: String, description: String, website: String) {
+    func updateProfileData(name: String, description: String, website: String, completion: @escaping (Bool) -> Void) {
         profileService.updateProfile(name: name, description: description, website: website) { [weak self] result in
             switch result {
             case .success(let updatedProfile):
@@ -43,10 +43,12 @@ final class EditProfilePresenter {
                     object: nil,
                     userInfo: ["updatedProfile": updatedProfile]
                 )
+                self?.view?.loadProfileData(profile: updatedProfile)
+                completion(true)
             case .failure(let error):
                 self?.view?.showError("Error loading profile: \(error.localizedDescription)")
+                completion(false)
             }
         }
     }
-
 }
