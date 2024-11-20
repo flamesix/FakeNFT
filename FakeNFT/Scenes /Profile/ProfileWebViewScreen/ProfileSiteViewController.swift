@@ -8,9 +8,9 @@
 import UIKit
 import WebKit
 
-final class ProfileSiteViewController: UIViewController, WKNavigationDelegate {
+final class ProfileSiteViewController: UIViewController, ProfileSiteViewProtocol {
     // MARK: - Private properties
-    private let websiteURL: URL
+    private let presenter: ProfileSitePresenter
     
     private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
@@ -36,17 +36,9 @@ final class ProfileSiteViewController: UIViewController, WKNavigationDelegate {
         return webView
     }()
     
-    
-    // MARK: - Life view cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-        loadWebsite()
-    }
-    
     // MARK: - Init
     init(websiteURL: URL) {
-        self.websiteURL = websiteURL
+        self.presenter = ProfileSitePresenter(view: nil, websiteURL: websiteURL)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,22 +46,30 @@ final class ProfileSiteViewController: UIViewController, WKNavigationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life view cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        presenter.setView(self)
+        setupUI()
+        presenter.attachWebView(webView)
+        presenter.loadWebsite()
+    }
+    
     // MARK: - Setup UI methods
-    private func setupUI(){
+    private func setupUI() {
         addSubviews()
         addConstraints()
         title = "О разработчике"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         view.backgroundColor = .white
-        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
     }
     
-    private func addSubviews(){
+    private func addSubviews() {
         view.addSubview(webView)
         view.addSubview(progressView)
     }
     
-    private func addConstraints(){
+    private func addConstraints() {
         NSLayoutConstraint.activate([
             progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -82,47 +82,28 @@ final class ProfileSiteViewController: UIViewController, WKNavigationDelegate {
         ])
     }
     
-    // MARK: - Private methods
     @objc
     private func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
     
-    private func loadWebsite(){
-        let request = URLRequest(url: websiteURL)
+    // MARK: - ProfileSiteViewProtocol
+    func showProgress(_ progress: Float) {
+        progressView.progress = progress
+        progressView.isHidden = progress == 1
+    }
+    
+    func hideProgress() {
+        progressView.isHidden = true
+    }
+    
+    func loadRequest(_ request: URLRequest) {
         webView.load(request)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "estimatedProgress" {
-            progressView.progress = Float(webView.estimatedProgress)
-            progressView.isHidden = webView.estimatedProgress == 1
-        }
-    }
-    
-    // MARK: - WKNavigationDelegate
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        progressView.isHidden = false
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        progressView.isHidden = true
-    }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        progressView.isHidden = true
-        showError(error.localizedDescription)
-    }
-    
-    // MARK: - Error Handling
-    private func showError(_ message: String) {
+    func showError(_ message: String) {
         let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
-    }
-    
-    // MARK: - Deinit
-    deinit {
-        webView.removeObserver(self, forKeyPath: "estimatedProgress")
     }
 }
