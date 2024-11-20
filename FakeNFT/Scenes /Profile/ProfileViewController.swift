@@ -64,6 +64,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         button.titleLabel?.font = .caption1
         button.titleLabel?.textColor = UIColor(named: "nftBlue")
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(linkButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -151,6 +152,15 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         if let userInfo = notification.userInfo,
            let updatedProfile = userInfo["updatedProfile"] as? Profile {
             updateUI(with: updatedProfile)
+        }
+    }
+    
+    @objc
+    private func linkButtonTapped(){
+        if let urlString = linkButton.titleLabel?.text,
+           let url = URL(string: urlString) {
+            let profileSiteViewController = ProfileSiteViewController(websiteURL: url)
+            navigationController?.pushViewController(profileSiteViewController, animated: true)
         }
     }
     
