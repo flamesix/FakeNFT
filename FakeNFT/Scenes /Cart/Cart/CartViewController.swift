@@ -10,6 +10,7 @@ import UIKit
 protocol CartViewProtocol: AnyObject, ErrorView, LoadingView {
     func updateCart()
     func showEmptyInfo()
+    func presentDeleteNftScreen(for nft: Nft, from nfts: [Nft], delegate: DeleteNftPresenterDelegate)
     var presenter: CartPresenterProtocol { get set }
 }
 
@@ -63,7 +64,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private let paymentButton: UIButton = {
         let button = UIButton()
-        button.setTitle(NSLocalizedString("Cart.toPay", comment: ""), for: .normal)
+        button.setTitle(NSLocalizedString("Cart.toPaymentScreen", comment: ""), for: .normal)
         button.titleLabel?.textColor = .nftWhite
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.backgroundColor = .nftBlack
@@ -106,7 +107,17 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     func showEmptyInfo() {
+        nftTableView.isHidden = true
+        cartMenuView.isHidden = true
+        navigationItem.rightBarButtonItem = .none
         cartEmptyLabel.isHidden = false
+    }
+    
+    func presentDeleteNftScreen(for nft: Nft, from nfts: [Nft], delegate: DeleteNftPresenterDelegate) {
+        let deleteNftAssembly = DeleteNftAssembly()
+        let deleteNftController = deleteNftAssembly.build(delegate: delegate, deletedNft: nft, allNft: nfts)
+        deleteNftController.modalPresentationStyle = .overFullScreen
+        present(deleteNftController, animated: true)
     }
     
     // MARK: - Private Methods
@@ -132,6 +143,8 @@ final class CartViewController: UIViewController, CartViewProtocol {
         
         nftTableView.isHidden = true
         cartMenuView.isHidden = true
+        
+        paymentButton.addTarget(self, action: #selector(openPaymentScreen), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -175,10 +188,18 @@ final class CartViewController: UIViewController, CartViewProtocol {
         sortButton.tintColor = .nftBlack
         navigationItem.rightBarButtonItem = sortButton
         definesPresentationContext = true
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
+    }
+    
+    @objc private func openPaymentScreen() {
+        let paymentAssembly = PaymentAssembly()
+        let paymentController = paymentAssembly.build()
+        paymentController.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(paymentController, animated: true)
     }
     
     @objc private func sortButtonTapped() {
@@ -224,6 +245,7 @@ extension CartViewController: UITableViewDataSource {
         
         cell.selectionStyle = .none
         presenter.configureCell(for: cell, with: indexPath)
+        cell.delegate = self
         
         return cell
     }
@@ -234,5 +256,14 @@ extension CartViewController: UITableViewDataSource {
 extension CartViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         NftCartCell.height
+    }
+}
+
+// MARK: - NftCartCellDelegate
+
+extension CartViewController: NftCartCellDelegate {
+    func deleteNft(from cell: NftCartCell) {
+        guard let indexPath = nftTableView.indexPath(for: cell) else { return }
+        presenter.deleteNft(from: indexPath)
     }
 }

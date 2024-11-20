@@ -6,10 +6,18 @@
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
 "Cart.price" = "Цена";
-"Cart.toPay" = "К оплате";
+"Cart.toPaymentScreen" = "К оплате";
 "Cart.isEmpty" = "Корзина пуста";
 "Cart.sort" = "Сортировка";
 "Cart.sortByPrice" = "По цене";
 "Cart.sortByRating" = "По рейтингу";
 "Cart.sortByName" = "По названию";
 "Cart.close" = "Закрыть";
+"Cart.paymentScreen" = "Выберите способ оплаты";
+"Cart.userAgreementInfo" = "Совершая покупку, вы соглашаетесь с условиями";
+"Cart.userAgreement" = "Пользовательского соглашения";
+"Cart.toPay" = "Оплатить";
+"Cart.deleteNftConfirmation" = "Вы уверены, что хотите
+удалить объект из корзины?";
+"Cart.delete" = "Удалить";
+"Cart.return" = "Вернуться";

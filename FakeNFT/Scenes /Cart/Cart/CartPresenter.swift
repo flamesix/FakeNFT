@@ -13,6 +13,7 @@ protocol CartPresenterProtocol {
     func getOrderTotalCost() -> Float
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath)
     func sortBy(_: SortType)
+    func deleteNft(from indexPath: IndexPath)
 }
 
 // MARK: - Enum
@@ -25,7 +26,7 @@ enum SortType: String {
     case byPrice, byRating, byName
 }
 
-final class CartPresenter: CartPresenterProtocol {
+final class CartPresenter: CartPresenterProtocol, DeleteNftPresenterDelegate {
     
     // MARK: - Properties
     
@@ -61,6 +62,10 @@ final class CartPresenter: CartPresenterProtocol {
         state = .loadingCart
     }
     
+    func fetchCart(cart: Cart) {
+        state = .cartData(cart)
+    }
+    
     func getNumberOfNftInOrder() -> Int {
         nfts.count
     }
@@ -82,6 +87,16 @@ final class CartPresenter: CartPresenterProtocol {
         cell.configure(images: nft.images, name: nft.name, rating: nft.rating, price: nft.price)
     }
     
+    func deleteNft(from indexPath: IndexPath) {
+        view?.presentDeleteNftScreen(for: nfts[indexPath.row], from: nfts, delegate: self)
+    }
+    
+    func showError(error: Error) {
+        let errorModel = makeErrorModel(error)
+        view?.hideLoading()
+        view?.showError(errorModel)
+    }
+    
     // MARK: - Private Methods
     
     private func stateDidChanged() {
@@ -95,8 +110,10 @@ final class CartPresenter: CartPresenterProtocol {
             loadNfts(cart: cart)
         case .cartData(let cart):
             if cart.nfts.isEmpty {
-                view?.showEmptyInfo()
-                view?.hideLoading()
+                DispatchQueue.main.async { [weak self] in
+                    self?.view?.showEmptyInfo()
+                    self?.view?.hideLoading()
+                }
             } else {
                 self.state = .loadingNfts(cart)
             }

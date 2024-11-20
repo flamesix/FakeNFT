@@ -7,10 +7,15 @@
 
 import UIKit
 
+protocol NftCartCellDelegate: AnyObject {
+    func deleteNft(from cell: NftCartCell)
+}
+
 final class NftCartCell: UITableViewCell {
     
     // MARK: - Properties
     
+    weak var delegate: NftCartCellDelegate?
     static let identifier = "NftCartCell"
     static let height: CGFloat = 140
     
@@ -86,6 +91,8 @@ final class NftCartCell: UITableViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
+        
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -114,5 +121,9 @@ final class NftCartCell: UITableViewCell {
             deleteButton.heightAnchor.constraint(equalToConstant: 40),
             deleteButton.widthAnchor.constraint(equalToConstant: 40),
         ])
+    }
+    
+    @objc private func deleteButtonTapped() {
+        delegate?.deleteNft(from: self)
     }
 }
