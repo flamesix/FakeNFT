@@ -90,6 +90,10 @@ final class CartViewController: UIViewController, CartViewProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         presenter.viewDidLoad()
     }
     
