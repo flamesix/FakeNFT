@@ -20,6 +20,10 @@ enum PaymentState {
     case initial, loading, failed(Error), data([Currency])
 }
 
+enum PaymentConstants: String {
+    case userAgreementUrl = "https://yandex.ru/legal/practicum_termsofuse/"
+}
+
 final class PaymentPresenter: PaymentPresenterProtocol {
     
     // MARK: - Properties

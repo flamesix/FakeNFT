@@ -114,6 +114,8 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
+        
+        userAgreementButton.addTarget(self, action: #selector(userAgreementButtonTapped), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -156,6 +158,12 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         currenciesCollectionView.dataSource = self
         currenciesCollectionView.delegate = self
         currenciesCollectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.identifier)
+    }
+    
+    @objc private func userAgreementButtonTapped() {
+        let urlString = PaymentConstants.userAgreementUrl.rawValue
+        let webViewController = WebViewController(urlString: urlString)
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 }
 
