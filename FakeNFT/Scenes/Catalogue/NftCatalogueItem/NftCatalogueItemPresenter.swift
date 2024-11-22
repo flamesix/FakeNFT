@@ -8,7 +8,7 @@ protocol NftCatalogueItemPresenterProtocol {
 }
 
 enum NftCatalogueItemState {
-    case initial, loading, failed(Error), data([NftCollectionItem])
+    case initial, loading, failed(Error), nftCollectionData, nftOrderData(NftOrder), nftLikesData(NftProfile)
 }
 
 final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
@@ -18,7 +18,11 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     weak var view: NftCatalogueItemViewControllerProtocol?
     private var input: [String]
     private var output: [NftCollectionItem] = []
-    private let service: NftItemsService
+    private let nftItemsService: NftItemsService
+    private let nftOrderService: NftOrderService
+    private let nftLikesService: NftLikesService
+    private var recycleStorage = NftRecycleStorage.shared
+    private var profileStorage = NftProfileStorage.shared
     private var state = NftCatalogueItemState.initial {
         didSet {
             stateDidChanged()
@@ -27,9 +31,11 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     
     // MARK: - Init
 
-    init(input: [String], service: NftItemsService) {
+    init(input: [String], servicesAssembly: CatalogueServicesAssembly) {
         self.input = input
-        self.service = service
+        self.nftItemsService = servicesAssembly.nftItemsService
+        self.nftOrderService = servicesAssembly.nftOrderService
+        self.nftLikesService = servicesAssembly.nftLikesService
     }
 
     // MARK: - Functions
@@ -46,13 +52,19 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
             view?.showLoading()
             let id = input.removeFirst()
             loadNftCollectionItems(id: id)
-        case .data(let nftItems):
+        case .nftCollectionData:
             if 0 < input.count {
                 state = .loading
             } else {
-                view?.hideLoading()
-                view?.displayItems(nftItems)
+                loadNftOrder()
             }
+        case .nftOrderData(let nftOrder):
+            recycleStorage.order = nftOrder.nfts
+            loadNftLikes()
+        case .nftLikesData(let nftProfile):
+            profileStorage.profile = nftProfile
+            view?.hideLoading()
+            view?.displayItems(output)
         case .failed(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
@@ -61,16 +73,40 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     }
 
     private func loadNftCollectionItems(id: String) {
-            service.loadNftItems(id: id) { [weak self] result in
+            nftItemsService.loadNftItems(id: id) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let nftItems):
                     self.output.append(nftItems)
-                    self.state = .data(output)
+                    self.state = .nftCollectionData
                 case .failure(let error):
                     self.state = .failed(error)
                 }
             }
+    }
+    
+    private func loadNftOrder() {
+        nftOrderService.loadNftOrder() { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let nftOrder):
+                    self.state = .nftOrderData(nftOrder)
+                case .failure(let error):
+                    self.state = .failed(error)
+                }
+            }
+    }
+    
+    private func loadNftLikes(){
+        nftLikesService.loadNftLikes { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let nftProfile):
+                self.state = .nftLikesData(nftProfile)
+            case .failure(let error):
+                self.state = .failed(error)
+            }
+        }
     }
 
     private func makeErrorModel(_ error: Error) -> ErrorModel {

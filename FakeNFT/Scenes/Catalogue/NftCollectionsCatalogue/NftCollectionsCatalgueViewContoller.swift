@@ -7,7 +7,6 @@ protocol NftCollectionsCatalgueViewContollerProtocol: AnyObject, ErrorView, Load
     func displayCatalogue(_ collectionCatalogue: [NftCatalogueCollection], _ cataloguesPerPage: Int)
 }
 
-
 enum SortedBy {
     case name, nftCount
 }
@@ -18,6 +17,8 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     private let servicesAssembly: CatalogueServicesAssembly
     private let nftCollectionSortAlerPresenter = NftCollectionSortAlerPresenter()
     private var collectionCatalogue: [NftCatalogueCollection] = []
+    private var collectionCatalogueAfterUpdate: [NftCatalogueCollection] = []
+    private var sortedCollectionCatalogue: [NftCatalogueCollection] = []
     private var cataloguesPerPage: Int = 5
     
     private lazy var nftCollectionsSort: UIButton = {
@@ -51,7 +52,6 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     override func viewDidLoad() {
         super.viewDidLoad()
         nftCollectionSortAlerPresenter.delegate = self
-        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         presenter.viewDidLoad()
@@ -62,8 +62,8 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     }
     
     func setupView() {
-        [nftCollectionsTableView, nftCollectionsSort].forEach {view.addSubview($0)
-        }
+        view.addSubviews(nftCollectionsTableView, nftCollectionsSort)
+        view.backgroundColor = .nftWhite
     }
     
     func addConstraints() {
@@ -85,6 +85,47 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
 }
 
 extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
+    func addNewRows(){
+        nftCollectionsTableView.performBatchUpdates {
+            
+            let insertStartIndex = collectionCatalogueAfterUpdate.count
+            let insertStopIndex = collectionCatalogue.count
+            
+            var indexPaths: [IndexPath] = []
+            for row in insertStartIndex..<insertStopIndex {
+                indexPaths.append(IndexPath(row: row, section: 0))
+            }
+            nftCollectionsTableView.insertRows(at: indexPaths, with: .automatic)
+            collectionCatalogueAfterUpdate = collectionCatalogue
+        }
+    }
+    
+    func updateTableView(){
+        nftCollectionsTableView.performBatchUpdates {
+            
+            let indexes: [Int] = Array(0..<sortedCollectionCatalogue.count)
+            var updatedIndexes: [Int] = indexes
+            
+            for index in 0..<sortedCollectionCatalogue.count {
+                if sortedCollectionCatalogue[index].id == collectionCatalogue[index].id {
+                    updatedIndexes.removeAll { removedIndex in
+                        index == removedIndex
+                    }
+                }
+            }
+            
+            let indexPaths = updatedIndexes.map { index in
+                IndexPath(row: index, section: 0)
+            }
+            
+            if !updatedIndexes.isEmpty {
+                nftCollectionsTableView.deleteRows(at: indexPaths, with: .automatic)
+                nftCollectionsTableView.insertRows(at: indexPaths, with: .automatic)
+            }
+            collectionCatalogue = sortedCollectionCatalogue
+        }
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if (indexPath.row + 1) % cataloguesPerPage == 0, indexPath.row == collectionCatalogue.count - 1 {
             presenter.viewDidLoad()
@@ -96,7 +137,7 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "collection cell", for: indexPath) as! NftCollectionTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "collection cell", for: indexPath) as? NftCollectionTableViewCell else { return UITableViewCell()}
         cell.configure(with: collectionCatalogue[indexPath.row])
         cell.selectionStyle = .none
         return cell
@@ -108,8 +149,8 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let catalogue = collectionCatalogue[indexPath.row]
-        let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, service: servicesAssembly.nftItemsService)
-        let viewController = NftCatalogueItemViewController(presenter: presenter, catalogue: catalogue)
+        let presenter = NftCatalogueItemPresenter(input: catalogue.nfts, servicesAssembly: servicesAssembly)
+        let viewController = NftCatalogueItemViewController(serviceAssembly: servicesAssembly, presenter: presenter, catalogue: catalogue)
         presenter.view = viewController
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: true)
@@ -126,22 +167,23 @@ extension NftCollectionsCatalgueViewContoller: NftCollectionsCatalgueViewContoll
 }
 
 extension NftCollectionsCatalgueViewContoller: NftCollectionSortProtocol {
-    
+
     func catalogueUpdate(with sortState: SortedBy?){
+        
         if let sortState = sortState {
             collectionSortState = sortState
         }
         switch collectionSortState {
         case .name:
-            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
+            self.sortedCollectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
                 catalogue1.name < catalogue2.name
             })
         case .nftCount:
-            self.collectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
+            self.sortedCollectionCatalogue = self.collectionCatalogue.sorted(by: { catalogue1, catalogue2 in
                 catalogue1.nfts.count > catalogue2.nfts.count
             })
         }
-        nftCollectionsTableView.reloadData()
+        addNewRows()
+        updateTableView()
     }
-    
 }

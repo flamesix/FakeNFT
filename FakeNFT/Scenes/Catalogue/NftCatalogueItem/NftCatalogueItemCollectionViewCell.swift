@@ -1,16 +1,45 @@
 import UIKit
 import Kingfisher
 
-final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol {
+// MARK: - Protocol
 
-    private var rank: Int = 0 {
-        didSet {
-            setRacnk()
-        }
-    }
+protocol NftItemRecycleUnlockProtocol: AnyObject {
+    func recycleUnlock()
+    func recyclePreviousStateUpdate()
+}
+
+protocol NftItemLikeUnlockProtocol: AnyObject {
+    func likeUnlock()
+    func likesPreviousStateUpdate()
+}
+
+final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol, ReuseIdentifying {
+    
+    // MARK: - Properties
     
     private var likeButtonState = false
+    private var nftRecycleManager: NftRecycleManagerProtocol?
+    private var nftProfileManager: NftProfileManagerProtocol?
+    private var profileBeforeUpdate: NftProfile?
+    private var recycleBeforeUpdate: [String]?
+    private var nftId: String = "" {
+        didSet {
+            recycleIsEmpty = !recycleStorage.orderCounted.contains(nftId)
+            if let index = recycleStorage.orderCounted.firstIndex(of: nftId) {
+                recycleStorage.orderCounted.remove(at: index)
+            }
+            likeButtonState = likesStorage.likesCounted.contains(nftId)
+            if let index = likesStorage.likesCounted.firstIndex(of: nftId) {
+                likesStorage.likesCounted.remove(at: index)
+            }
+        }
+    }
+    private var nftsOrder: [String] = []
+    private var recycleStorage = NftRecycleStorage.shared
+    private var profileStorage = NftProfileStorage.shared
+    private var likesStorage = NftLikesStorage.shared
     private var recycleIsEmpty = true
+    private var alertPresenter: NftNotificationAlerPresenter?
     
     private lazy var itemImageView: UIImageView = {
         let imageView = UIImageView()
@@ -29,52 +58,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         return button
     }()
     
-    private lazy var hStack: UIStackView = {
-        let stack = UIStackView()
-        stack.addArrangedSubview(starImage1)
-        stack.addArrangedSubview(starImage2)
-        stack.addArrangedSubview(starImage3)
-        stack.addArrangedSubview(starImage4)
-        stack.addArrangedSubview(starImage5)
-        stack.spacing = 2
-        stack.axis = .horizontal
-        return stack
-    }()
-    
-    private lazy var starImage1: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(resource: .nftCollectionCardStar)
-        imageView.tintColor = .nftLightGrey
-        return imageView
-    }()
-    
-    private lazy var starImage2: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(resource: .nftCollectionCardStar)
-        imageView.tintColor = .nftLightGrey
-        return imageView
-    }()
-    
-    private lazy var starImage3: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(resource: .nftCollectionCardStar)
-        imageView.tintColor = .nftLightGrey
-        return imageView
-    }()
-    
-    private lazy var starImage4: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(resource: .nftCollectionCardStar)
-        imageView.tintColor = .nftYellowUni
-        return imageView
-    }()
-    
-    private lazy var starImage5: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(resource: .nftCollectionCardStar)
-        imageView.tintColor = .nftLightGrey
-        return imageView
-    }()
+    private lazy var cosmosView = CosmosView()
     
     private lazy var itmeTitle: UILabel = {
         let label = UILabel()
@@ -97,6 +81,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         return button
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupView()
@@ -107,41 +92,136 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setRacnk() {
-        let starImageViews = [starImage1, starImage2, starImage3, starImage4, starImage5]
-        starImageViews.prefix(upTo: rank).forEach{ $0.tintColor = UIColor(resource: .nftYellow) }
-    }
-    
-    func configureItem(with item: NftCollectionItem) {
+    func configureItem(with item: NftCollectionItem, nftRecycleManager: NftRecycleManagerProtocol?, nftProfileManager: NftProfileManagerProtocol?, alertPresenter: NftNotificationAlerPresenter?) {
         itemImageView.kf.setImage(with: item.images.first)
         var itemName = item.name
         if itemName.count > 5 {
             itemName = itemName.prefix(5) + "..."
         }
+        self.nftRecycleManager = nftRecycleManager
+        self.nftProfileManager = nftProfileManager
+        self.alertPresenter = alertPresenter
+        nftId = item.id
         itmeTitle.text = itemName
-        rank = item.rating
+        cosmosView.setRank(item.rating)
         priceLable.text = "\(item.price) ETH"
+        recycleStateUpdate()
+        likeUpdate()
     }
     
     @objc func likeButtonTapped(){
+        self.nftProfileManager?.delegate = self
+        profileBeforeUpdate = profileStorage.profile
+        guard let nftProfileManager = nftProfileManager else { return }
+        if !likeButtonState {
+            if  likesStorage.likes.contains(nftId) {
+                alertPresenter?.showNotificationAlert(with: .likeNotification)
+                return
+            }
+            likesStorage.likes.append(nftId)
+        }else {
+            guard let index = likesStorage.likes.firstIndex(of: nftId) else { return }
+            likesStorage.likes.remove(at: index)
+        }
+        guard let profile = profileBeforeUpdate else { return }
+        let updateProfile = NftProfile(
+            name: profile.name,
+            description: profile.description,
+            website: profile.website,
+            likes: likesStorage.likes
+        )
+        profileStorage.profile = updateProfile
+        likeImageButton.isUserInteractionEnabled = false
+        nftProfileManager.sendProfile()
         likeButtonState.toggle()
+        likeUpdateAnimated()
+    }
+    
+    @objc func recycleButtonTapped(){
+        self.nftRecycleManager?.delegate = self
+        recycleBeforeUpdate = recycleStorage.order
+        guard let nftRecycleManager = nftRecycleManager else { return }
+        if recycleIsEmpty {
+            if  recycleStorage.order.contains(nftId) {
+                alertPresenter?.showNotificationAlert(with: .orderNotification)
+                return
+            }
+            recycleStorage.order.append(nftId)
+        } else {
+            if let index = recycleStorage.order.firstIndex(of: nftId) {
+                recycleStorage.order.remove(at: index)
+            }
+        }
+        recycleButton.isUserInteractionEnabled = false
+        nftRecycleManager.sendOrder()
+        recycleIsEmpty.toggle()
+        recycleStateUpdateAnimated()
+    }
+    
+    func recycleStateUpdate(){
+        let image = recycleIsEmpty
+        ? UIImage(resource: .nftRecycleEmpty)
+        : UIImage(resource: .nftRecycleFull)
+        recycleButton.setImage(image, for: .normal)
+        
+    }
+    
+    func likeUpdate(){
         likeImageButton.tintColor = likeButtonState
         ? .nftRedUni
         : .nftWhiteUni
     }
     
-    @objc func recycleButtonTapped(){
-        recycleIsEmpty.toggle()
+    func recycleStateUpdateAnimated(){
         let image = recycleIsEmpty
         ? UIImage(resource: .nftRecycleEmpty)
         : UIImage(resource: .nftRecycleFull)
-        recycleButton.setImage(image, for: .normal)
+        
+        UIView.animateKeyframes(withDuration: 0.3, delay: 0) {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.67) {
+                let transformation = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                self.recycleButton.transform = transformation
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.67, relativeDuration: 1) {
+                let transformation = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                self.recycleButton.transform = transformation
+                self.recycleButton.setImage(image, for: .normal)
+            }
+        }
+    }
+    
+    func likeUpdateAnimated(){
+        let likeButtonColor: UIColor = likeButtonState
+        ? .nftRedUni
+        : .nftWhiteUni
+        
+        UIView.animateKeyframes(withDuration: 1.2, delay: 0) {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25) {
+                let rotateTransform = CGAffineTransform.init(rotationAngle: 0.35)
+                let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.3).concatenating(rotateTransform)
+                self.likeImageButton.transform = scaleTransform
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.6) {
+                let rotateTransform = CGAffineTransform.init(rotationAngle: -0.4)
+                let scaleTransform = CGAffineTransform(scaleX: 1.5, y: 1.5).concatenating(rotateTransform)
+                self.likeImageButton.transform = scaleTransform
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.8) {
+                let rotateTransform = CGAffineTransform.init(rotationAngle: 0.1)
+                let scaleTransform = CGAffineTransform(scaleX: 1.2, y: 1.2).concatenating(rotateTransform)
+                self.likeImageButton.transform = scaleTransform
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 1) {
+                let rotateTransform = CGAffineTransform.init(rotationAngle: 0)
+                let scaleTransform = CGAffineTransform(scaleX: 1, y: 1).concatenating(rotateTransform)
+                self.likeImageButton.transform = scaleTransform
+                self.likeImageButton.tintColor = likeButtonColor
+            }
+        }
     }
     
     func setupView() {
-        [itemImageView, likeImageButton, hStack, itmeTitle, priceLable, recycleButton].forEach { subView in
-            contentView.addSubview(subView)
-        }
+        contentView.addSubviews(itemImageView, likeImageButton, cosmosView, itmeTitle, priceLable, recycleButton)
     }
     
     func addConstraints() {
@@ -159,7 +239,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
             make.width.equalTo(40)
         }
         
-        hStack.snp.makeConstraints { make in
+        cosmosView.snp.makeConstraints { make in
             make.top.equalTo(itemImageView.snp.bottom).offset(8)
             make.leading.equalTo(itemImageView.snp.leading)
             make.height.equalTo(12)
@@ -167,7 +247,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         }
         
         itmeTitle.snp.makeConstraints { make in
-            make.top.equalTo(hStack.snp.bottom).offset(5)
+            make.top.equalTo(cosmosView.snp.bottom).offset(5)
             make.leading.equalTo(itemImageView.snp.leading)
         }
         
@@ -182,5 +262,33 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
             make.height.equalTo(40)
             make.width.equalTo(40)
         }
+    }
+}
+
+extension NftCatalogueItemCollectionViewCell: NftItemRecycleUnlockProtocol {
+    func recyclePreviousStateUpdate() {
+        guard let recycleBeforeUpdate = recycleBeforeUpdate else { return }
+        recycleStorage.order = recycleBeforeUpdate
+        recycleIsEmpty.toggle()
+        recycleStateUpdateAnimated()
+        recycleButton.isUserInteractionEnabled = true
+    }
+    
+    func recycleUnlock() {
+        recycleButton.isUserInteractionEnabled = true
+    }
+}
+
+extension NftCatalogueItemCollectionViewCell: NftItemLikeUnlockProtocol {
+    func likesPreviousStateUpdate() {
+        guard let profileBeforeUpdate = profileBeforeUpdate else { return }
+        profileStorage.profile = profileBeforeUpdate
+        likeButtonState.toggle()
+        likeUpdate()
+        likeImageButton.isUserInteractionEnabled = true
+    }
+    
+    func likeUnlock() {
+        likeImageButton.isUserInteractionEnabled = true
     }
 }

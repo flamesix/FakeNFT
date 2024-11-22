@@ -1,6 +1,6 @@
 import UIKit
 
-public final class NftCollectionCatalogueAssembly {
+final class NftCollectionCatalogueAssembly {
 
     private let servicesAssembler: CatalogueServicesAssembly
 
@@ -8,7 +8,7 @@ public final class NftCollectionCatalogueAssembly {
         self.servicesAssembler = catalogueServicesAssembler
     }
 
-    public func build() -> UIViewController {
+    func build() -> UIViewController {
         let presenter = NftCollectionCataloguePresenter(service: servicesAssembler.nftCollectionCataloguService )
         let viewController = NftCollectionsCatalgueViewContoller(presenter: presenter, serviceAsssembly: servicesAssembler)
         presenter.view = viewController

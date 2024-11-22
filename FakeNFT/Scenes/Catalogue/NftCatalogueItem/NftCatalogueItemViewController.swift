@@ -2,16 +2,25 @@
 import UIKit
 import Kingfisher
 
+// MARK: - Protocol
+
 protocol NftCatalogueItemViewControllerProtocol: AnyObject, ErrorView, LoadingView {
     func displayItems(_ nftCollectionItems: [NftCollectionItem])
 }
 
-final class NftCatalogueItemViewController: UIViewController, SettingViewsProtocol  {
+protocol NftManagerUpdateProtocol: AnyObject, ErrorView, LoadingView {
+}
 
+final class NftCatalogueItemViewController: UIViewController, SettingViewsProtocol, NftManagerUpdateProtocol  {
+
+    // MARK: - Properties
+    
     private var catalogue: NftCatalogueCollection
     private var catalogeItems: [NftCollectionItem] = []
-    
     private var presenter: NftCatalogueItemPresenter
+    private var nftRecycleManager: NftRecycleManagerProtocol?
+    private var nftProfileManager: NftProfileManagerProtocol?
+    private var alertPresenter: NftNotificationAlerPresenter?
     
     private lazy var nftCatalogueCollectionHeight: Int = {
         let heightOfCollectionItem: Int = 192
@@ -75,6 +84,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         let button = UIButton()
         button.setTitleColor(.nftBlueUni, for: .normal)
         button.titleLabel?.font = UIFont.caption1
+        button.addTarget(self, action: #selector(oneAuthorWeb), for: .touchUpInside)
         return button
     }()
     
@@ -92,15 +102,20 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     private lazy var nftCatalogueCollectionView: NftCatalogueCollectionView = {
         let collectionView = NftCatalogueCollectionView()
+        collectionView.register(NftCatalogueItemCollectionViewCell.self)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
     }()
     
-    init(presenter: NftCatalogueItemPresenter, catalogue: NftCatalogueCollection) {
+    // MARK: - Init
+    
+    init(serviceAssembly: CatalogueServicesAssembly, presenter: NftCatalogueItemPresenter, catalogue: NftCatalogueCollection) {
         self.presenter = presenter
         self.catalogue = catalogue
         super.init(nibName: nil, bundle: nil)
+        self.nftRecycleManager = NftRecycleManager(servicesAssembly: serviceAssembly,view: self)
+        self.nftProfileManager = NftProfileManager(servicesAssembly: serviceAssembly,view: self)
     }
     
     required init?(coder: NSCoder) {
@@ -109,8 +124,8 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.alertPresenter = NftNotificationAlerPresenter(viewController: self)
         self.navigationController?.isNavigationBarHidden = true
-        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         prepareViews()
@@ -118,7 +133,17 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     }
     
     @objc func backButtonTapped(){
+        self.hideLoading()
         self.dismiss(animated: true)
+    }
+    
+    @objc func oneAuthorWeb(){
+        let urlString = "https://market.yandex.ru/"
+        let presenter = NftAuthorWebViewPresenter(urlString: urlString)
+        let authorWebView = NftAuthorWebView(presenter: presenter)
+        presenter.view = authorWebView
+        authorWebView.modalPresentationStyle = .fullScreen
+        self.present(authorWebView, animated: true)
     }
     
     func prepareViews() {
@@ -129,9 +154,10 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     }
     
     func setupView() {
+        view.backgroundColor = .nftWhite
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [coverImgeView, backButton, catalogueTitleLabel, authorLabel, authorButton, descriptionTextView, nftCatalogueCollectionView].forEach{contentView.addSubview($0)}
+        contentView.addSubviews(coverImgeView, backButton, catalogueTitleLabel, authorLabel, authorButton, descriptionTextView, nftCatalogueCollectionView)
     }
     
     func addConstraints() {
@@ -205,8 +231,8 @@ extension NftCatalogueItemViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectioItem", for: indexPath) as! NftCatalogueItemCollectionViewCell
-        cell.configureItem(with: catalogeItems[indexPath.row])
+        let cell: NftCatalogueItemCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
+        cell.configureItem(with: catalogeItems[indexPath.row], nftRecycleManager: nftRecycleManager, nftProfileManager: nftProfileManager, alertPresenter: alertPresenter)
         return cell
     }
 }

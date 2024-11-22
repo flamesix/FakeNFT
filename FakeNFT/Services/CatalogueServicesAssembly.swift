@@ -28,4 +28,26 @@ final class CatalogueServicesAssembly {
         )
     }
     
+    var nftOrderService: NftOrderService {
+        NftOrderServiceImpl(
+            networkClient: networkClient
+        )
+    }
+    
+    var nftOrderPutService: NftOrderPutService {
+        NftOrderPutServiceImpl(
+            networkClient: networkClient
+        )
+    }
+    
+    var nftLikesService: NftLikesService {
+        NftLikesServiceImpl(networkClient: networkClient)
+    }
+    
+    var nftProfilePutService: NftProfilePutService {
+        NftProfilePutServiceImpl(
+            networkClient: networkClient
+        )
+    }
+    
 }

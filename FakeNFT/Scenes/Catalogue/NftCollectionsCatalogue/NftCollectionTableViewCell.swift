@@ -1,9 +1,3 @@
-//
-//  NftCollectionTableViewCell.swift
-//  FakeNFT
-//
-//  Created by Федор Завьялов on 09.11.2024.
-//
 
 import UIKit
 import SnapKit
@@ -44,7 +38,7 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
     }
     
     func setupView() {
-        [collectionCoverImageView, collectiobTitleLabel].forEach { contentView.addSubview($0) }
+        contentView.addSubviews(collectionCoverImageView, collectiobTitleLabel)
     }
     
     func addConstraints() {
