@@ -1,0 +1,20 @@
+"Tab.catalog" = "Catalog";
+"Catalog.openft" = "Open Nft";
+"Error.network" = "A network error has occurred";
+"Error.unknown" = "An unknown error has occurred";
+"Error.repeat" = "Repeat";
+"Error.title" = "Error";
+
+// MARK: - NftCollectionSortAlerPresenter
+
+"sorting" = "Sorting";
+"nftCountSort" = "By the number of NFTs";
+"nftNameSort" = "By name";
+"sortAlertClose" = "Close";
+
+
+// MARK: - NftNotificationAlerPresenter
+
+"likeNotification" = "Nft has already been added to favorites!";
+"orderNotification" = "Nft has already been added to cart!";
+"nftNotificationAlertClose" = "Close";
