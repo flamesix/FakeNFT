@@ -12,12 +12,13 @@ protocol PaymentPresenterProtocol {
     func viewDidLoad()
     func configureCell(for cell: CurrencyCell, with indexPath: IndexPath)
     func setCurrency(by indexPath: IndexPath)
+    func payOrder()
 }
 
 // MARK: - Enum
 
 enum PaymentState {
-    case initial, loading, failed(Error), data([Currency])
+    case initial, loadingCurrencies, failedCurrencies(Error), data([Currency]), payingOrder, failedPay, payed
 }
 
 enum PaymentConstants: String {
@@ -30,7 +31,7 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     
     weak var view: PaymentViewProtocol?
     
-    private var selectedCyrency: Currency?
+    private var selectedCurrency: Currency?
     
     private var state = PaymentState.initial {
         didSet {
@@ -45,17 +46,19 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     }
     
     private let paymentService: PaymentServiceProtocol
+    private let deleteNftService: DeleteNftServiceProtocol
     
     // MARK: - Init
     
-    init(paymentService: PaymentServiceProtocol) {
+    init(paymentService: PaymentServiceProtocol, deleteNftService: DeleteNftServiceProtocol) {
         self.paymentService = paymentService
+        self.deleteNftService = deleteNftService
     }
     
     // MARK: - Public Methods
     
     func viewDidLoad() {
-        state = .loading
+        state = .loadingCurrencies
     }
     
     func getCurrencyNumber() -> Int {
@@ -68,7 +71,11 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func setCurrency(by indexPath: IndexPath) {
-        self.selectedCyrency = currencies[indexPath.row]
+        self.selectedCurrency = currencies[indexPath.row]
+    }
+    
+    func payOrder() {
+        state = .payingOrder
     }
     
     // MARK: - Private Methods
@@ -77,16 +84,26 @@ final class PaymentPresenter: PaymentPresenterProtocol {
         switch state {
         case .initial:
             assertionFailure("can't move to initial state")
-        case .loading:
+        case .loadingCurrencies:
             view?.showLoading()
             loadCurrencies()
         case .data(let currencies):
             self.currencies = currencies
             view?.hideLoading()
-        case .failed(let error):
+        case .failedCurrencies(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
             view?.showError(errorModel)
+        case .payingOrder:
+            view?.showLoading()
+            pay()
+        case .payed:
+            view?.hideLoading()
+            cleanCart()
+            view?.showSuccessPaymnetView()
+        case .failedPay:
+            view?.hideLoading()
+            view?.showPayError()
         }
     }
     
@@ -96,9 +113,25 @@ final class PaymentPresenter: PaymentPresenterProtocol {
             case .success(let currencies):
                 self?.state = .data(currencies)
             case .failure(let error):
-                self?.state = .failed(error)
+                self?.state = .failedCurrencies(error)
             }
         }
+    }
+    
+    private func pay() {
+        guard let currency = selectedCurrency else { return }
+        paymentService.payOrder(currency_id: currency.id) { [weak self] result in
+            switch result {
+            case .success:
+                self?.state = .payed
+            case .failure:
+                self?.state = .failedPay
+            }
+        }
+    }
+    
+    private func cleanCart() {
+        deleteNftService.updateCart(nfts: []) { _ in }
     }
     
     private func makeErrorModel(_ error: Error) -> ErrorModel {
@@ -112,7 +145,7 @@ final class PaymentPresenter: PaymentPresenterProtocol {
         
         let actionText = NSLocalizedString("Error.repeat", comment: "")
         return ErrorModel(message: message, actionText: actionText) { [weak self] in
-            self?.state = .loading
+            self?.state = .loadingCurrencies
         }
     }
 }
