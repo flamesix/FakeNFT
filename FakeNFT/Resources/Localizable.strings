@@ -21,3 +21,8 @@
 удалить объект из корзины?";
 "Cart.delete" = "Удалить";
 "Cart.return" = "Вернуться";
+"Cart.successPayment" = "Успех! Оплата прошла, поздравляем с покупкой!";
+"Cart.returnToCatalog" = "Вернуться в каталог";
+"Cart.error.cancel" = "Отмена";
+"Cart.error.repeat" = "Повторить";
+"Cart.error.payment" = "Не удалось произвести оплату";

@@ -16,7 +16,8 @@ public final class PaymentAssembly {
 
     public func build() -> UIViewController {
         let presenter = PaymentPresenter(
-            paymentService: servicesAssembler.paymentService
+            paymentService: servicesAssembler.paymentService,
+            deleteNftService: servicesAssembler.deleteNftService
         )
         let viewController = PaymentViewController(presenter: presenter)
         presenter.view = viewController

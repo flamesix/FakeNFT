@@ -90,6 +90,11 @@ final class CartViewController: UIViewController, CartViewProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        hideContent()
         presenter.viewDidLoad()
     }
     
@@ -107,9 +112,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     func showEmptyInfo() {
-        nftTableView.isHidden = true
-        cartMenuView.isHidden = true
-        navigationItem.rightBarButtonItem = .none
+        hideContent()
         cartEmptyLabel.isHidden = false
     }
     
@@ -193,6 +196,12 @@ final class CartViewController: UIViewController, CartViewProtocol {
     
     private func returnTheLongestLabel(_ firstLabel: UILabel, _ secondLabel: UILabel) -> UILabel {
         return firstLabel.intrinsicContentSize.width > secondLabel.intrinsicContentSize.width ? firstLabel : secondLabel
+    }
+    
+    private func hideContent() {
+        nftTableView.isHidden = true
+        cartMenuView.isHidden = true
+        navigationItem.rightBarButtonItem = .none
     }
     
     @objc private func openPaymentScreen() {

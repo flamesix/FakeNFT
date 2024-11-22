@@ -9,6 +9,8 @@ import UIKit
 
 protocol PaymentViewProtocol: AnyObject, ErrorView, LoadingView {
     func updateCollection()
+    func showSuccessPaymnetView()
+    func showPayError()
     var presenter: PaymentPresenterProtocol { get set }
 }
 
@@ -97,6 +99,28 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         currenciesCollectionView.reloadData()
     }
     
+    func showSuccessPaymnetView() {
+        let paymentSuccessViewController = PaymentSuccessViewController()
+        navigationController?.pushViewController(paymentSuccessViewController, animated: true)
+    }
+    
+    func showPayError() {
+        let alert = UIAlertController(title: NSLocalizedString("Cart.error.payment", comment: ""),
+                                      message: nil,
+                                      preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cart.error.cancel", comment: ""), style: .default) { _ in }
+        
+        let repeatAction = UIAlertAction(title: NSLocalizedString("Cart.error.repeat", comment: ""), style: .default) { [weak self] _ in
+            self?.presenter.payOrder()
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(repeatAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - Private Methods
     
     private func setup() {
@@ -114,6 +138,9 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
+        
+        userAgreementButton.addTarget(self, action: #selector(userAgreementButtonTapped), for: .touchUpInside)
+        payButton.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -156,6 +183,16 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         currenciesCollectionView.dataSource = self
         currenciesCollectionView.delegate = self
         currenciesCollectionView.register(CurrencyCell.self, forCellWithReuseIdentifier: CurrencyCell.identifier)
+    }
+    
+    @objc private func userAgreementButtonTapped() {
+        let urlString = PaymentConstants.userAgreementUrl.rawValue
+        let webViewController = WebViewController(urlString: urlString)
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
+    
+    @objc private func payButtonTapped() {
+        presenter.payOrder()
     }
 }
 
