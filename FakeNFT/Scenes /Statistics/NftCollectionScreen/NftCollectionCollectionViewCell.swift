@@ -83,14 +83,6 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Mock method to check UI
-    func config() {
-        nftImageView.image = UIImage(named: "NFT")
-        nameLabel.text = "Emma"
-        ratingView.rating = 4
-        priceLabel.text = "1.78 ETH"
-    }
-    
     func config(with nft: Nft) {
         nftImageView.image = UIImage(named: "NFT")
         nameLabel.text = nft.name

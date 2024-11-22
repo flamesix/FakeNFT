@@ -32,15 +32,13 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
 // MARK: - UICollectionViewDataSource
 extension NftCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        presenter?.nfts.count ?? 0
-        25 // Mock to check UI
+        presenter?.nfts.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-//        guard let nft = presenter?.nfts[indexPath.item] else { return UICollectionViewCell() }
-//        cell.config(with: nft)
-        cell.config() // Mock to check UI
+        guard let nft = presenter?.nfts[indexPath.item] else { return UICollectionViewCell() }
+        cell.config(with: nft)
         return cell
     }
 }
