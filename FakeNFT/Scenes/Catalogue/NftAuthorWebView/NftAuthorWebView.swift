@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-public protocol WebViewViewControllerProtocol: AnyObject {
+protocol WebViewViewControllerProtocol: AnyObject {
     var presenter: WebViewPresenterProtocol { get set }
     func setProgressValue(_ newValue: Float)
     func setProgressIsHidden(_ isHidden: Bool)
@@ -46,7 +46,6 @@ final class NftAuthorWebView: UIViewController, WKNavigationDelegate, SettingVie
     
     override func viewDidLoad () {
         super.viewDidLoad()
-        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         estimatedProgressObservation = authorWebView.observe(
@@ -64,7 +63,8 @@ final class NftAuthorWebView: UIViewController, WKNavigationDelegate, SettingVie
     }
     
     func setupView() {
-        [backButton, authorWebView, progreesView].forEach{view.addSubview($0)}
+        view.addSubviews( backButton, authorWebView, progreesView )
+        view.backgroundColor = .nftWhite
     }
     
     func addConstraints() {

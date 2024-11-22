@@ -102,6 +102,7 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     
     private lazy var nftCatalogueCollectionView: NftCatalogueCollectionView = {
         let collectionView = NftCatalogueCollectionView()
+        collectionView.register(NftCatalogueItemCollectionViewCell.self)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -125,7 +126,6 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
         super.viewDidLoad()
         self.alertPresenter = NftNotificationAlerPresenter(viewController: self)
         self.navigationController?.isNavigationBarHidden = true
-        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         prepareViews()
@@ -154,9 +154,10 @@ final class NftCatalogueItemViewController: UIViewController, SettingViewsProtoc
     }
     
     func setupView() {
+        view.backgroundColor = .nftWhite
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        [coverImgeView, backButton, catalogueTitleLabel, authorLabel, authorButton, descriptionTextView, nftCatalogueCollectionView].forEach{contentView.addSubview($0)}
+        contentView.addSubviews(coverImgeView, backButton, catalogueTitleLabel, authorLabel, authorButton, descriptionTextView, nftCatalogueCollectionView)
     }
     
     func addConstraints() {
@@ -230,7 +231,7 @@ extension NftCatalogueItemViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectioItem", for: indexPath) as! NftCatalogueItemCollectionViewCell
+        let cell: NftCatalogueItemCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
         cell.configureItem(with: catalogeItems[indexPath.row], nftRecycleManager: nftRecycleManager, nftProfileManager: nftProfileManager, alertPresenter: alertPresenter)
         return cell
     }

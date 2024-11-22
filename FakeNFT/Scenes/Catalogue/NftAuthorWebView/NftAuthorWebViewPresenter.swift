@@ -1,7 +1,7 @@
 
 import Foundation
 
-public protocol WebViewPresenterProtocol: AnyObject {
+protocol WebViewPresenterProtocol: AnyObject {
     var view: WebViewViewControllerProtocol? { get set }
     func viewDidLoad()
     func didUpdateProgresValue(_ newValue: Double)

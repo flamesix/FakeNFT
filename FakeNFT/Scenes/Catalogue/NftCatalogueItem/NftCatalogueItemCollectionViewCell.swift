@@ -13,7 +13,7 @@ protocol NftItemLikeUnlockProtocol: AnyObject {
     func likesPreviousStateUpdate()
 }
 
-final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol {
+final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingViewsProtocol, ReuseIdentifying {
     
     // MARK: - Properties
     
@@ -82,7 +82,6 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     }()
     
     // MARK: - Init
-    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupView()
@@ -222,9 +221,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
     }
     
     func setupView() {
-        [itemImageView, likeImageButton, cosmosView, itmeTitle, priceLable, recycleButton].forEach { subView in
-            contentView.addSubview(subView)
-        }
+        contentView.addSubviews(itemImageView, likeImageButton, cosmosView, itmeTitle, priceLable, recycleButton)
     }
     
     func addConstraints() {

@@ -52,7 +52,6 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     override func viewDidLoad() {
         super.viewDidLoad()
         nftCollectionSortAlerPresenter.delegate = self
-        view.backgroundColor = .nftWhite
         setupView()
         addConstraints()
         presenter.viewDidLoad()
@@ -63,8 +62,8 @@ final class NftCollectionsCatalgueViewContoller: UIViewController, SettingViewsP
     }
     
     func setupView() {
-        [nftCollectionsTableView, nftCollectionsSort].forEach {view.addSubview($0)
-        }
+        view.addSubviews(nftCollectionsTableView, nftCollectionsSort)
+        view.backgroundColor = .nftWhite
     }
     
     func addConstraints() {
@@ -138,7 +137,7 @@ extension NftCollectionsCatalgueViewContoller: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "collection cell", for: indexPath) as! NftCollectionTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "collection cell", for: indexPath) as? NftCollectionTableViewCell else { return UITableViewCell()}
         cell.configure(with: collectionCatalogue[indexPath.row])
         cell.selectionStyle = .none
         return cell

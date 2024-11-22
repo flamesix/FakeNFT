@@ -19,7 +19,7 @@ final class NftProfileStorage {
     var profile: NftProfile {
         get {
             guard let decodedData = userDefaluts.object(forKey: key) else { return defaultProfile}
-            guard let profile = try? decoder.decode(NftProfile.self, from: decodedData as! Data) else { return defaultProfile}
+            guard let profile = try? decoder.decode(NftProfile.self, from: decodedData as? Data ?? Data()) else { return defaultProfile}
             return profile
         } set {
             NftLikesStorage.shared.likes = newValue.likes

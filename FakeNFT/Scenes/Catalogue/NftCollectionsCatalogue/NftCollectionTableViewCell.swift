@@ -38,7 +38,7 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
     }
     
     func setupView() {
-        [collectionCoverImageView, collectiobTitleLabel].forEach { contentView.addSubview($0) }
+        contentView.addSubviews(collectionCoverImageView, collectiobTitleLabel)
     }
     
     func addConstraints() {
