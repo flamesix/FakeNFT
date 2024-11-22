@@ -1,8 +1,10 @@
 import UIKit
 import SnapKit
+import Kingfisher
 
 protocol UserCardViewControllerProtocol: AnyObject {
     var presenter: UserCardPresenterProtocol? { get set }
+    func configureUI(with user: User)
 }
 
 final class UserCardViewController: UIViewController, UserCardViewControllerProtocol {
@@ -15,13 +17,11 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
         image.contentMode = .scaleAspectFit
         image.layer.cornerRadius = 35
         image.clipsToBounds = true
-        image.image = UIImage(named: "profilePhoto")
         return image
     }()
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Joaquin Phoenix"
         label.font = .bold22
         label.textColor = .nftBlack
         return label
@@ -36,9 +36,6 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     
     private lazy var bioLabel: UILabel = {
         let label = UILabel()
-        label.text = """
-Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.
-"""
         label.numberOfLines = 0
         label.lineHeight = 18
         label.font = .regular13
@@ -62,6 +59,7 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
         button.titleLabel?.font = .regular15
         button.setTitle(NSLocalizedString("Statistics.GoToWeb", comment: ""), for: .normal)
         button.setTitleColor(.nftBlack, for: .normal)
+        button.addTarget(self, action: #selector(didTapWebPageButton), for: .touchUpInside)
         return button
     }()
     
@@ -71,10 +69,44 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        presenter?.viewDidLoad()
     }
     
     @objc private func didTapNftButton() {
-        print("didTapNftButton")
+        let vc = NftCollectionViewController()
+        let presenter = NftCollectionPresenter()
+        vc.presenter = presenter
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func didTapWebPageButton() {
+        guard let url = presenter?.getUserWebPage() else { return }
+        let vc = WebViewController(url: url)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func configureUI(with user: User) {
+        setProfileImage(for: user)
+        nameLabel.text = user.name
+        bioLabel.text = user.description
+        nftButton.setupTitle(user.nfts.count)
+    }
+    
+    private func setProfileImage(for user: User) {
+        let url = URL(string: user.avatar)
+        profileImage.kf.indicatorType = .activity
+        profileImage.kf.setImage(with: url, placeholder: UIImage(named: "avatarPlaceholder")) { [weak self] result in
+            switch result {
+            case .success(let image):
+                self?.profileImage.image = image.image
+            case .failure(_):
+                self?.profileImage.image = UIImage(named: "avatarPlaceholder")
+            }
+        }
     }
 }
 
@@ -86,9 +118,9 @@ extension UserCardViewController: SettingViewsProtocol {
         view.addSubviews(verticalStackView, webPageButton, nftButton)
         
         addConstraints()
+        setupNavigationBar()
         
         nftButton.addTarget(self, action: #selector(didTapNftButton), for: .touchUpInside)
-        nftButton.setupTitle("Коллекция NFT (112)")
     }
     
     func addConstraints() {
@@ -112,5 +144,13 @@ extension UserCardViewController: SettingViewsProtocol {
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(54)
         }
+    }
+
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: #selector(didTapBackButton))
+        navigationItem.leftBarButtonItem?.tintColor = .nftBlack
     }
 }

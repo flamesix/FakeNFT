@@ -13,7 +13,7 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     
     let servicesAssembly: ServicesAssembly
     
-    internal lazy var activityIndicator = UIActivityIndicatorView()
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Init
     init(servicesAssembly: ServicesAssembly) {
@@ -96,10 +96,9 @@ extension StatisticsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let user = presenter?.filteredUsers[indexPath.row] else { return }
-        print("USER ID: \(user.id)")
-        let vc = UserCardViewController()
-        let presenter = UserCardPresenter()
-        vc.presenter = presenter
+        print("USER NFTS \(user.nfts)")
+        let assembly = UserCardAssembly(user: user)
+        let vc = assembly.build()
         navigationController?.pushViewController(vc, animated: true)
     }
     

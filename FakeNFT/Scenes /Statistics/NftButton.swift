@@ -28,8 +28,8 @@ final class NftButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupTitle(_ title: String) {
-        self.title.text = title
+    func setupTitle(_ nftCount: Int) {
+        self.title.text = NSLocalizedString("UserCard.NFTCollection.Count", comment: "") + " (\(nftCount))"
     }
 }
 
