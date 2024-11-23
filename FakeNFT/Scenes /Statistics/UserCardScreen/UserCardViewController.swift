@@ -15,7 +15,7 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     // MARK: - UIElements
     private lazy var profileImage: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = 35
         image.clipsToBounds = true
         return image
@@ -85,9 +85,12 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     }
     
     @objc private func didTapNftButton() {
-        let assembly = NftCollectionAssembly(servicesAssembler: servicesAssembly)
-        let vc = assembly.build(nftCollection: presenter?.getNftCollection() ?? [])
-        navigationController?.pushViewController(vc, animated: true)
+        guard let presenter else { return }
+        if !presenter.isNftCollectionEmpty() {
+            let assembly = NftCollectionAssembly(servicesAssembler: servicesAssembly)
+            let vc = assembly.build(nftCollection: presenter.getNftCollection())
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @objc private func didTapBackButton() {
