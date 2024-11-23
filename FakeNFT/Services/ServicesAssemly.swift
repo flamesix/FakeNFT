@@ -17,4 +17,22 @@ final class ServicesAssembly {
             storage: nftStorage
         )
     }
+    
+    var cartService: CartServiceProtocol {
+        CartService(
+            networkClient: networkClient
+        )
+    }
+    
+    var paymentService: PaymentServiceProtocol {
+        PaymentService(
+            networkClient: networkClient
+        )
+    }
+    
+    var deleteNftService: DeleteNftServiceProtocol {
+        DeleteNftService(
+            networkClient: networkClient
+        )
+    }
 }
