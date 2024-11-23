@@ -38,6 +38,7 @@ final class NftCollectionTableViewCell: UITableViewCell, SettingViewsProtocol {
     }
     
     func setupView() {
+        contentView.backgroundColor = .nftWhite
         contentView.addSubviews(collectionCoverImageView, collectiobTitleLabel)
     }
     
