@@ -21,7 +21,7 @@ final class NftOrderService: NftOrderServiceProtocol {
     func loadOrder(completion: @escaping NftOrderCompletion) {
         let request = OrdersGetRequest()
         
-        self.networkClient.send(request: request, type: Order.self) { result in
+        networkClient.send(request: request, type: Order.self) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let order):

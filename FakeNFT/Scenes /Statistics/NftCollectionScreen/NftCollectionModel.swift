@@ -16,7 +16,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     
     weak var presenter: NftCollectionPresenterProtocol?
     private let nftService: NftServiceProtocol
-    private let nftLikesService: NftLikesService
+    private let nftLikesService: NftLikesServiceProtocol
     private let nftOrderService: NftOrderServiceProtocol
     
     private var nfts: [Nft] = []
@@ -24,10 +24,26 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     private var order: [String] = []
     private var id: String = ""
     
+    private var isNftsLoaded: Bool = false {
+        didSet {
+            isLoadingComplpeted()
+        }
+    }
+    private var isLikesLoaded: Bool = false {
+        didSet {
+            isLoadingComplpeted()
+        }
+    }
+    private var isOrderLoaded: Bool = false {
+        didSet {
+            isLoadingComplpeted()
+        }
+    }
+    
     private let nftCollection: [String]
     
     init(nftService: NftServiceProtocol,
-         nftLikesService: NftLikesService,
+         nftLikesService: NftLikesServiceProtocol,
          nftOrderService: NftOrderServiceProtocol,
          nftCollection: [String])
     {
@@ -53,7 +69,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
                 switch result {
                 case .success(let nft):
                     self?.nfts.append(nft)
-                    self?.presenter?.state = .success
+                    self?.isNftsLoaded = true
                 case .failure(let error):
                     self?.presenter?.state = .failed(error)
                 }
@@ -68,7 +84,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
             switch result {
             case .success(let likes):
                 self?.likes = likes.likes
-                self?.presenter?.state = .success
+                self?.isLikesLoaded = true
             case .failure(let error):
                 self?.presenter?.state = .failed(error)
             }
@@ -87,7 +103,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
             case .success(let order):
                 self?.order = order.nfts
                 self?.id = order.id
-                self?.presenter?.state = .success
+                self?.isOrderLoaded = true
             case .failure(let error):
                 self?.presenter?.state = .failed(error)
             }
@@ -131,6 +147,14 @@ final class NftCollectionModel: NftCollectionModelProtocol {
             case .failure(let error):
                 self?.presenter?.state = .failed(error)
             }
+        }
+    }
+    
+    private func isLoadingComplpeted() {
+        if isNftsLoaded && isLikesLoaded && isOrderLoaded {
+            presenter?.state = .success
+        } else {
+            presenter?.state = .loading
         }
     }
 }

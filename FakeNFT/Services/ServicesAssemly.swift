@@ -22,8 +22,8 @@ final class ServicesAssembly {
         StatisticService(networkClient: networkClient)
     }
     
-    var nftLikesService: NftLikesService {
-        NftLikesServiceImpl(networkClient: networkClient)
+    var nftLikesService: NftLikesServiceProtocol {
+        NftLikesService(networkClient: networkClient)
     }
     
     var nftOrderPutService: NftOrderServiceProtocol {
