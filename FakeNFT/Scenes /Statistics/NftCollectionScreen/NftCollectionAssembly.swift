@@ -8,11 +8,12 @@ final class NftCollectionAssembly {
         self.servicesAssembler = servicesAssembler
     }
 
-    func build() -> UIViewController {
-        let nftModel = NftCollectionModel(nftService: servicesAssembler.nftService)
+    func build(nftCollection: [String]) -> UIViewController {
+        let nftModel = NftCollectionModel(nftService: servicesAssembler.nftService, nftCollection: nftCollection)
         let presenter = NftCollectionPresenter(nftModel: nftModel)
         let viewController = NftCollectionViewController(servicesAssembly: servicesAssembler)
         presenter.view = viewController
+        nftModel.presenter = presenter
         viewController.presenter = presenter
         return viewController
     }

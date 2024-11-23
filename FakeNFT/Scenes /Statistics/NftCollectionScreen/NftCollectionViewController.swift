@@ -3,6 +3,7 @@ import SnapKit
 
 protocol NftCollectionViewControllerProtocol: AnyObject, LoadingView, ErrorView {
     var presenter: NftCollectionPresenter? { get set }
+    func updateCollectionView()
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewControllerProtocol {
@@ -39,6 +40,9 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         presenter?.viewDidLoad()
     }
     
+    func updateCollectionView() {
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDataSource

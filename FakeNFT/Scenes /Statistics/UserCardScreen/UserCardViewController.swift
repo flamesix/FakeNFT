@@ -86,9 +86,7 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     
     @objc private func didTapNftButton() {
         let assembly = NftCollectionAssembly(servicesAssembler: servicesAssembly)
-        let vc = assembly.build()
-//        let presenter = NftCollectionPresenter()
-//        vc.presenter = presenter
+        let vc = assembly.build(nftCollection: presenter?.getNftCollection() ?? [])
         navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -2,13 +2,14 @@ import Foundation
 
 protocol NftCollectionPresenterProtocol: AnyObject {
     var view: NftCollectionViewControllerProtocol? { get set }
+    var state: NftCollectionState { get set }
     func viewDidLoad()
     func getNftCount() -> Int
     func getNft(_ indexRow: Int) -> Nft
 }
 
 enum NftCollectionState {
-    case initial, loading, failed(Error), data([User])
+    case initial, loading, failed(Error), success
 }
 
 final class NftCollectionPresenter: NftCollectionPresenterProtocol {
@@ -16,8 +17,11 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     weak var view: NftCollectionViewControllerProtocol?
     
     private let nftModel: NftCollectionModelProtocol
+    private let logginService = LoggingService.shared
     
-    private var state = NftCollectionState.initial {
+    private var isLoading: Bool = false
+    
+    var state = NftCollectionState.initial {
         didSet {
             stateDidChanged()
         }
@@ -28,7 +32,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     func viewDidLoad() {
-        
+        nftModel.loadNfts()
     }
     
     func getNftCount() -> Int {
@@ -42,15 +46,36 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     func stateDidChanged() {
         switch state {
         case .initial:
-//            logginService.logCriticalError("can't move to initial state")
-            break
+            logginService.logCriticalError("can't move to initial state")
         case .loading:
             view?.showLoading()
-//            loadUsers()
-        case .data(let users):
-            break
+        case .success:
+            view?.hideLoading()
+            view?.updateCollectionView()
         case .failed(let error):
-            break
+            handleLoadingError(error)
+        }
+    }
+    
+    private func handleLoadingError(_ error: Error) {
+        let errorModel = makeErrorModel(error)
+        view?.hideLoading()
+        view?.showError(errorModel)
+        isLoading = false
+    }
+    
+    private func makeErrorModel(_ error: Error) -> ErrorModel {
+        let message: String
+        switch error {
+        case is NetworkClientError:
+            message = NSLocalizedString("Error.network", comment: "")
+        default:
+            message = NSLocalizedString("Error.unknown", comment: "")
+        }
+        
+        let actionText = NSLocalizedString("Error.repeat", comment: "")
+        return ErrorModel(message: message, actionText: actionText) { [weak self] in
+            self?.state = .loading
         }
     }
 }
