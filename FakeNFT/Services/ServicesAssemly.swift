@@ -21,4 +21,8 @@ final class ServicesAssembly {
     var statisticService: StatisticsServiceProtocol {
         StatisticService(networkClient: networkClient)
     }
+    
+    var nftLikesService: NftLikesService {
+        NftLikesServiceImpl(networkClient: networkClient)
+    }
 }

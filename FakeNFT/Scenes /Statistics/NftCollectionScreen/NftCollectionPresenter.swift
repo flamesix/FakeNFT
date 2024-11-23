@@ -33,6 +33,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func viewDidLoad() {
         nftModel.loadNfts()
+        nftModel.loadLikes()
     }
     
     func getNftCount() -> Int {
@@ -41,6 +42,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func getNft(_ indexRow: Int) -> Nft {
         nftModel.getNft(indexRow)
+    }
+    
+    func isLiked(_ indexRow: Int) -> Bool {
+        nftModel.isLiked(indexRow)
     }
     
     func stateDidChanged() {

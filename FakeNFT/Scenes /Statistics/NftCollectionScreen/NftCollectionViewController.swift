@@ -40,6 +40,10 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         presenter?.viewDidLoad()
     }
     
+    @objc private func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func updateCollectionView() {
         collectionView.reloadData()
     }
@@ -53,8 +57,10 @@ extension NftCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-        guard let nft = presenter?.getNft(indexPath.row) else { return UICollectionViewCell() }
-        cell.config(with: nft)
+        guard let presenter else { return UICollectionViewCell() }
+        let nft = presenter.getNft(indexPath.row)
+        let isLiked = presenter.isLiked(indexPath.row)
+        cell.config(with: nft, isLiked: isLiked)
         return cell
     }
 }
@@ -86,6 +92,7 @@ extension NftCollectionViewController: SettingViewsProtocol {
         collectionView.delegate = self
         collectionView.dataSource = self
         addConstraints()
+        setupNavigationBar()
     }
     
     func addConstraints() {
@@ -97,5 +104,13 @@ extension NftCollectionViewController: SettingViewsProtocol {
         }
         
         activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: #selector(didTapBackButton))
+        navigationItem.leftBarButtonItem?.tintColor = .nftBlack
     }
 }
