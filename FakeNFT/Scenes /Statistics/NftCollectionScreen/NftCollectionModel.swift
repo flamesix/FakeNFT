@@ -11,17 +11,23 @@ protocol NftCollectionModelProtocol: AnyObject {
 final class NftCollectionModel: NftCollectionModelProtocol {
     
     weak var presenter: NftCollectionPresenterProtocol?
-    private var nftService: NftServiceProtocol
-    private var nftLikesService: NftLikesService
+    private let nftService: NftServiceProtocol
+    private let nftLikesService: NftLikesService
+    private let nftOrderPutService: NftOrderPutService
     
     private var nfts: [Nft] = []
     private var likes: [String] = []
     
     private let nftCollection: [String]
     
-    init(nftService: NftServiceProtocol, nftLikesService: NftLikesService, nftCollection: [String]) {
+    init(nftService: NftServiceProtocol,
+         nftLikesService: NftLikesService,
+         nftOrderPutService: NftOrderPutService,
+         nftCollection: [String])
+    {
         self.nftService = nftService
         self.nftLikesService = nftLikesService
+        self.nftOrderPutService = nftOrderPutService
         self.nftCollection = nftCollection
     }
     
