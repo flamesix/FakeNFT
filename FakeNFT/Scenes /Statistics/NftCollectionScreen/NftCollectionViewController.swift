@@ -1,13 +1,14 @@
 import UIKit
 import SnapKit
 
-protocol NftCollectionViewControllerProtocol: AnyObject {
+protocol NftCollectionViewControllerProtocol: AnyObject, LoadingView, ErrorView {
     var presenter: NftCollectionPresenter? { get set }
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewControllerProtocol {
     
     var presenter: NftCollectionPresenter?
+    let servicesAssembly: ServicesAssembly
     
     // MARK: - UIElements
     lazy var activityIndicator = UIActivityIndicatorView()
@@ -19,6 +20,17 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         collectionView.register(NftCollectionCollectionViewCell.self)
         return collectionView
     }()
+    
+    // MARK: - Init
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -32,12 +44,12 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
 // MARK: - UICollectionViewDataSource
 extension NftCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter?.nfts.count ?? 0
+        presenter?.getNftCount() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-        guard let nft = presenter?.nfts[indexPath.item] else { return UICollectionViewCell() }
+        guard let nft = presenter?.getNft(indexPath.row) else { return UICollectionViewCell() }
         cell.config(with: nft)
         return cell
     }

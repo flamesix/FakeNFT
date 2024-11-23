@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 import Cosmos
+import Kingfisher
 
 final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     
@@ -88,6 +89,13 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         nameLabel.text = nft.name
         ratingView.rating = Double(nft.rating)
         priceLabel.text = String(nft.price) + " ETH"
+        setNftImage(for: nft)
+    }
+    
+    private func setNftImage(for nft: Nft) {
+        let url = nft.images[0]
+        nftImageView.kf.indicatorType = .activity
+        nftImageView.kf.setImage(with: url)
     }
     
     @objc private func didTapLikeButton() {

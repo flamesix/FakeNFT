@@ -9,10 +9,8 @@ protocol StatisticsServiceProtocol {
 final class StatisticService: StatisticsServiceProtocol {
 
     private let networkClient: NetworkClient
-//    private let storage: StatisticStorage
 
     init(networkClient: NetworkClient) {
-//        self.storage = storage
         self.networkClient = networkClient
     }
 
