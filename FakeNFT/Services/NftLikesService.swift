@@ -5,6 +5,7 @@ typealias NftLikeCompletion = (Result<Bool, Error>) -> Void
 
 protocol NftLikesService {
     func loadNftLikes(completion: @escaping NftLikesCompletion)
+    func putLikes(id: [String], completion: @escaping NftLikeCompletion)
 }
 
 final class NftLikesServiceImpl: NftLikesService {

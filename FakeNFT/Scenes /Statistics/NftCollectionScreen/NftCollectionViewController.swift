@@ -57,12 +57,25 @@ extension NftCollectionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
+        cell.delegate = self
         guard let presenter else { return UICollectionViewCell() }
         let nft = presenter.getNft(indexPath.row)
         let isLiked = presenter.isLiked(indexPath.row)
         let isOrdered = presenter.isOrdered(indexPath.row)
         cell.config(with: nft, isLiked: isLiked, isOrdered: isOrdered)
         return cell
+    }
+}
+
+extension NftCollectionViewController: NftCollectionCollectionViewCellDelegate {
+    func tapLike(_ id: String, _ cell: NftCollectionCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        presenter?.tapLike(id, indexPath)
+    }
+    
+    func tapCart(_ id: String, _ cell: NftCollectionCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        presenter?.tapCart(id, indexPath)
     }
 }
 

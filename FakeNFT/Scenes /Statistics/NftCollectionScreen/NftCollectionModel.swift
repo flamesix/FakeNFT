@@ -8,6 +8,8 @@ protocol NftCollectionModelProtocol: AnyObject {
     func isLiked(_ indexRow: Int) -> Bool
     func loadOrder()
     func isOrdered(_ indexRow: Int) -> Bool
+    func tapLike(_ id: String, _ indexPath: IndexPath)
+    func tapCart(_ id: String, _ indexPath: IndexPath)
 }
 
 final class NftCollectionModel: NftCollectionModelProtocol {
@@ -94,5 +96,41 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     
     func isOrdered(_ indexRow: Int) -> Bool {
         order.contains(nfts[indexRow].id)
+    }
+    
+    func tapLike(_ id: String, _ indexPath: IndexPath) {
+        var likesCopy = likes
+        if let index = likesCopy.firstIndex(of: id) {
+            likesCopy.remove(at: index)
+        } else {
+            likesCopy.append(id)
+        }
+        
+        nftLikesService.putLikes(id: likesCopy) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.likes = likesCopy
+            case .failure(let error):
+                self?.presenter?.state = .failed(error)
+            }
+        }
+    }
+
+    func tapCart(_ id: String, _ indexPath: IndexPath) {
+        var orderCopy = order
+        if let index = orderCopy.firstIndex(of: id) {
+            orderCopy.remove(at: index)
+        } else {
+            orderCopy.append(id)
+        }
+        
+        nftOrderService.sendOrderPutRequest(nfts: orderCopy) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.order = orderCopy
+            case .failure(let error):
+                self?.presenter?.state = .failed(error)
+            }
+        }
     }
 }

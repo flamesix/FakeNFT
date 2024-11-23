@@ -8,6 +8,8 @@ protocol NftCollectionPresenterProtocol: AnyObject {
     func getNft(_ indexRow: Int) -> Nft
     func isLiked(_ indexRow: Int) -> Bool
     func isOrdered(_ indexRow: Int) -> Bool
+    func tapCart(_ id: String, _ indexPath: IndexPath)
+    func tapLike(_ id: String, _ indexPath: IndexPath)
 }
 
 enum NftCollectionState {
@@ -53,6 +55,14 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func isOrdered(_ indexRow: Int) -> Bool {
         nftModel.isOrdered(indexRow)
+    }
+    
+    func tapCart(_ id: String, _ indexPath: IndexPath) {
+        nftModel.tapCart(id, indexPath)
+    }
+    
+    func tapLike(_ id: String, _ indexPath: IndexPath) {
+        nftModel.tapLike(id, indexPath)
     }
     
     func stateDidChanged() {

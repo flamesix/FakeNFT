@@ -3,8 +3,15 @@ import SnapKit
 import Cosmos
 import Kingfisher
 
+protocol NftCollectionCollectionViewCellDelegate: AnyObject {
+    func tapLike(_ id: String, _ cell: NftCollectionCollectionViewCell)
+    func tapCart(_ id: String, _ cell: NftCollectionCollectionViewCell)
+}
+
 final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     
+    var delegate: NftCollectionCollectionViewCellDelegate?
+    private var id: String?
     private var isLiked: Bool = false
     private var isCarted: Bool = false
     
@@ -85,7 +92,9 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     }
     
     func config(with nft: Nft, isLiked: Bool, isOrdered: Bool) {
-        nftImageView.image = UIImage(named: "NFT")
+        self.id = nft.id
+        self.isLiked = isLiked
+        self.isCarted = isOrdered
         nameLabel.text = nft.name
         ratingView.rating = Double(nft.rating)
         priceLabel.text = String(nft.price) + " ETH"
@@ -101,13 +110,17 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     }
     
     @objc private func didTapLikeButton() {
+        guard let id else { return }
         isLiked.toggle()
         likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+        delegate?.tapLike(id, self)
     }
     
     @objc private func didTapCartButton() {
+        guard let id else { return }
         isCarted.toggle()
         cartButton.setImage(UIImage(named: isCarted ? "removeFromCart" : "addToCart"), for: .normal)
+        delegate?.tapCart(id, self)
     }
 }
 
