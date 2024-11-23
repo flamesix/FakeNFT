@@ -19,7 +19,7 @@ final class NftRecycleManager: NftRecycleManagerProtocol {
     weak var delegate: NftItemRecycleUnlockProtocol?
     weak var view: NftManagerUpdateProtocol?
     private var recycleStorage = NftRecycleStorage.shared
-    private let nftOrderPutService: NftOrderPutService
+    private let nftOrderPutService: NftOrderServiceProtocol
     private var state = NftRecycleManagerState.initial {
         didSet {
             stateDidChanged()
