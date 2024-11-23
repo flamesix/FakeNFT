@@ -84,13 +84,14 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with nft: Nft, isLiked: Bool) {
+    func config(with nft: Nft, isLiked: Bool, isOrdered: Bool) {
         nftImageView.image = UIImage(named: "NFT")
         nameLabel.text = nft.name
         ratingView.rating = Double(nft.rating)
         priceLabel.text = String(nft.price) + " ETH"
         setNftImage(for: nft)
         likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+        cartButton.setImage(UIImage(named: isOrdered ? "removeFromCart" : "addToCart"), for: .normal)
     }
     
     private func setNftImage(for nft: Nft) {

@@ -6,6 +6,8 @@ protocol NftCollectionPresenterProtocol: AnyObject {
     func viewDidLoad()
     func getNftCount() -> Int
     func getNft(_ indexRow: Int) -> Nft
+    func isLiked(_ indexRow: Int) -> Bool
+    func isOrdered(_ indexRow: Int) -> Bool
 }
 
 enum NftCollectionState {
@@ -34,6 +36,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     func viewDidLoad() {
         nftModel.loadNfts()
         nftModel.loadLikes()
+        nftModel.loadOrder()
     }
     
     func getNftCount() -> Int {
@@ -46,6 +49,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func isLiked(_ indexRow: Int) -> Bool {
         nftModel.isLiked(indexRow)
+    }
+    
+    func isOrdered(_ indexRow: Int) -> Bool {
+        nftModel.isOrdered(indexRow)
     }
     
     func stateDidChanged() {

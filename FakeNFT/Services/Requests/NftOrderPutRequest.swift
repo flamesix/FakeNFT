@@ -2,7 +2,7 @@ import Foundation
 
 struct NftOrderPutRequest: NetworkPutRequest {
    var endpoint: URL? {
-       URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+       URL(string: "\(RequestConstants.baseURL)\(RequestConstants.orderPath)")
    }
    var httpMethod: HttpMethod = .put
    var dto: DtoPut?

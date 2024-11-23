@@ -6,6 +6,8 @@ protocol NftCollectionModelProtocol: AnyObject {
     func loadNfts()
     func loadLikes()
     func isLiked(_ indexRow: Int) -> Bool
+    func loadOrder()
+    func isOrdered(_ indexRow: Int) -> Bool
 }
 
 final class NftCollectionModel: NftCollectionModelProtocol {
@@ -13,21 +15,23 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     weak var presenter: NftCollectionPresenterProtocol?
     private let nftService: NftServiceProtocol
     private let nftLikesService: NftLikesService
-    private let nftOrderPutService: NftOrderPutService
+    private let nftOrderService: NftOrderServiceProtocol
     
     private var nfts: [Nft] = []
     private var likes: [String] = []
+    private var order: [String] = []
+    private var id: String = ""
     
     private let nftCollection: [String]
     
     init(nftService: NftServiceProtocol,
          nftLikesService: NftLikesService,
-         nftOrderPutService: NftOrderPutService,
+         nftOrderService: NftOrderServiceProtocol,
          nftCollection: [String])
     {
         self.nftService = nftService
         self.nftLikesService = nftLikesService
-        self.nftOrderPutService = nftOrderPutService
+        self.nftOrderService = nftOrderService
         self.nftCollection = nftCollection
     }
     
@@ -58,7 +62,6 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     func loadLikes() {
         presenter?.state = .loading
         
-        likes.removeAll()
         nftLikesService.loadNftLikes { [weak self] result in
             switch result {
             case .success(let likes):
@@ -72,5 +75,24 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     
     func isLiked(_ indexRow: Int) -> Bool {
         likes.contains(nfts[indexRow].id)
+    }
+    
+    func loadOrder() {
+        presenter?.state = .loading
+        
+        nftOrderService.loadOrder { [weak self] result in
+            switch result {
+            case .success(let order):
+                self?.order = order.nfts
+                self?.id = order.id
+                self?.presenter?.state = .success
+            case .failure(let error):
+                self?.presenter?.state = .failed(error)
+            }
+        }
+    }
+    
+    func isOrdered(_ indexRow: Int) -> Bool {
+        order.contains(nfts[indexRow].id)
     }
 }

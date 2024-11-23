@@ -2,13 +2,13 @@ import UIKit
 import SnapKit
 
 protocol NftCollectionViewControllerProtocol: AnyObject, LoadingView, ErrorView {
-    var presenter: NftCollectionPresenter? { get set }
+    var presenter: NftCollectionPresenterProtocol? { get set }
     func updateCollectionView()
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewControllerProtocol {
     
-    var presenter: NftCollectionPresenter?
+    var presenter: NftCollectionPresenterProtocol?
     let servicesAssembly: ServicesAssembly
     
     // MARK: - UIElements
@@ -60,7 +60,8 @@ extension NftCollectionViewController: UICollectionViewDataSource {
         guard let presenter else { return UICollectionViewCell() }
         let nft = presenter.getNft(indexPath.row)
         let isLiked = presenter.isLiked(indexPath.row)
-        cell.config(with: nft, isLiked: isLiked)
+        let isOrdered = presenter.isOrdered(indexPath.row)
+        cell.config(with: nft, isLiked: isLiked, isOrdered: isOrdered)
         return cell
     }
 }

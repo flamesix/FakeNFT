@@ -26,7 +26,7 @@ final class ServicesAssembly {
         NftLikesServiceImpl(networkClient: networkClient)
     }
     
-    var nftOrderPutService: NftOrderPutService {
-        NftOrderPutServiceImpl(networkClient: networkClient)
+    var nftOrderPutService: NftOrderServiceProtocol {
+        NftOrderService(networkClient: networkClient)
     }
 }

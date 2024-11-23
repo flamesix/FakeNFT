@@ -1,8 +1,9 @@
 import Foundation
 
-struct NftProfileRequest: NetworkRequest {
+struct LikesGetRequest: NetworkRequest {
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)\(RequestConstants.profilePath)")
     }
+    var httpMethod: HttpMethod = .get
     var dto: Dto?
 }
