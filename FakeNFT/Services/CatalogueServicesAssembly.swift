@@ -40,8 +40,8 @@ final class CatalogueServicesAssembly {
         )
     }
     
-    var nftLikesService: NftLikesService {
-        NftLikesServiceImpl(networkClient: networkClient)
+    var nftLikesService: NftLikesServiceProtocol {
+        NftLikesService(networkClient: networkClient)
     }
     
     var nftProfilePutService: NftProfilePutService {

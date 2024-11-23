@@ -20,7 +20,7 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
     private var output: [NftCollectionItem] = []
     private let nftItemsService: NftItemsService
     private let nftOrderService: NftOrderServiceProtocol
-    private let nftLikesService: NftLikesService
+    private let nftLikesService: NftLikesServiceProtocol
     private var recycleStorage = NftRecycleStorage.shared
     private var profileStorage = NftProfileStorage.shared
     private var state = NftCatalogueItemState.initial {

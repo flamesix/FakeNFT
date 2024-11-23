@@ -2,11 +2,11 @@ import Foundation
 
 typealias NftLikesCompletion = (Result<NftProfile, Error>) -> Void
 
-protocol NftLikesService {
+protocol NftLikesServiceProtocol {
     func loadNftLikes(completion: @escaping NftLikesCompletion)
 }
 
-final class NftLikesServiceImpl: NftLikesService {
+final class NftLikesService: NftLikesServiceProtocol {
 
     private let networkClient: NetworkClient
 
