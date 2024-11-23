@@ -22,7 +22,7 @@ final class NFTTableViewCell: UITableViewCell {
     
     private let favoriteIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "heart.fill"))
-        imageView.tintColor = UIColor(named: "nftWhiteUni")
+        imageView.tintColor = UIColor(resource: .nftWhiteUni)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -30,7 +30,7 @@ final class NFTTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyBold
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -38,7 +38,7 @@ final class NFTTableViewCell: UITableViewCell {
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.font = .caption2
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -57,7 +57,7 @@ final class NFTTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "Цена"
         label.font = .caption2
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -65,7 +65,7 @@ final class NFTTableViewCell: UITableViewCell {
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyBold
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -134,7 +134,7 @@ final class NFTTableViewCell: UITableViewCell {
         nftImageView.image = nft.image
         titleLabel.text = nft.title
         authorLabel.text = "от \(nft.author)"
-        ratingStack = configureRatingStackView(for: nft.rating)
+        configureRatingStackView(for: nft.rating)
         priceLabel.text = formatPrice(nft.price)
     }
     
@@ -142,17 +142,13 @@ final class NFTTableViewCell: UITableViewCell {
         return priceFormatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
     }
     
-    private func configureRatingStackView(for rating: Int) -> UIStackView {
-        let ratingStack = UIStackView()
-        ratingStack.axis = .horizontal
-        ratingStack.spacing = 4
+    private func configureRatingStackView(for rating: Int) {
+        ratingStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         for i in 0..<totalStars {
             let isActive = i < rating
             let starImageView = UIImageView.createStar(isActive: isActive)
             ratingStack.addArrangedSubview(starImageView)
         }
-        
-        return ratingStack
     }
 }

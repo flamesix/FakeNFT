@@ -11,7 +11,7 @@ final class ProfileTableViewCell: UITableViewCell {
     // MARK: Private properties
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.textColor = UIColor(named: "nftBlack")
+        titleLabel.textColor = UIColor(resource: .nftBlack)
         titleLabel.font = .bodyBold
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel

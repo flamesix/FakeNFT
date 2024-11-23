@@ -11,7 +11,7 @@ final class FavouritesViewController: UIViewController {
     // MARK: - MockData
     private var nftItems: [NFTModel] = [
         NFTModel(image: UIImage(named: "nftTest2")!, title: "Lilo", author: "John Doe", rating: 3, price: 1.7),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 5, price: 1.78),
+        NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 0, price: 1.78),
         NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 3, price: 1.78)
     ]
     
@@ -21,7 +21,7 @@ final class FavouritesViewController: UIViewController {
         let config = UIImage.SymbolConfiguration(weight: .bold)
         let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
         button.setImage(image, for: .normal)
-        button.tintColor = UIColor(named: "nftBlack")
+        button.tintColor = UIColor(resource: .nftBlack)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -40,7 +40,7 @@ final class FavouritesViewController: UIViewController {
         let label = UILabel()
         label.isHidden = true
         label.text = "У Вас ещё нет избранных NFT"
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.font = .bodyBold
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

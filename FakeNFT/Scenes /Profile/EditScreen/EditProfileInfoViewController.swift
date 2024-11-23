@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import ProgressHUD
 
 final class EditProfileInfoViewController: UIViewController, EditProfileViewProtocol {
     // MARK: - Private Properties
@@ -16,7 +17,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         let button = UIButton(type: .system)
         let closeIcon = UIImage(named: "close")
         button.setImage(closeIcon, for: .normal)
-        button.tintColor = UIColor(named: "nftBlack")
+        button.tintColor = UIColor(resource: .nftBlack)
         button.addTarget(self, action: #selector(closeEditVCButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -30,6 +31,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         button.layer.cornerRadius = 35
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editIconButtonTapped), for: .touchUpInside)
         
         let overlayView = UIView()
         overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
@@ -41,7 +43,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         titleLabel.text = "Сменить \nфото"
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
-        titleLabel.textColor = UIColor(named: "nftWhiteUni")
+        titleLabel.textColor = UIColor(resource: .nftWhiteUni)
         titleLabel.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +65,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         var nameTitle = UILabel()
         nameTitle.text = NSLocalizedString("editNameTitle", comment: "")
         nameTitle.font = .headline3
-        nameTitle.textColor = UIColor(named: "nftBlack")
+        nameTitle.textColor = UIColor(resource: .nftBlack)
         nameTitle.translatesAutoresizingMaskIntoConstraints = false
         return nameTitle
     }()
@@ -72,9 +74,9 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         var textField = UITextField()
         textField.text = "User Name"
         textField.font = .bodyRegular
-        textField.textColor = UIColor(named: "nftBlack")
+        textField.textColor = UIColor(resource: .nftBlack)
         textField.borderStyle = .none
-        textField.backgroundColor = UIColor(named: "nftLightGrey")
+        textField.backgroundColor = UIColor(resource: .nftLightGrey)
         textField.layer.cornerRadius = 12
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.widthAnchor.constraint(equalToConstant: 343).isActive = true
@@ -98,7 +100,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         var bioTitle = UILabel()
         bioTitle.text = NSLocalizedString("editBioTitle", comment: "")
         bioTitle.font = .headline3
-        bioTitle.textColor = UIColor(named: "nftBlack")
+        bioTitle.textColor = UIColor(resource: .nftBlack)
         bioTitle.translatesAutoresizingMaskIntoConstraints = false
         return bioTitle
     }()
@@ -107,8 +109,8 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         let textView = UITextView()
         textView.text = "Big text in future,"
         textView.font = .systemFont(ofSize: 17)
-        textView.textColor = UIColor(named: "nftBlack")
-        textView.backgroundColor = UIColor(named: "nftLightGrey")
+        textView.textColor = UIColor(resource: .nftBlack)
+        textView.backgroundColor = UIColor(resource: .nftLightGrey)
         textView.layer.cornerRadius = 12
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.widthAnchor.constraint(equalToConstant: 343).isActive = true
@@ -131,7 +133,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         var siteTitle = UILabel()
         siteTitle.text = NSLocalizedString("editSiteTitle", comment: "")
         siteTitle.font = .headline3
-        siteTitle.textColor = UIColor(named: "nftBlack")
+        siteTitle.textColor = UIColor(resource: .nftBlack)
         siteTitle.translatesAutoresizingMaskIntoConstraints = false
         return siteTitle
     }()
@@ -140,9 +142,9 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         var textField = UITextField()
         textField.text = "UserName.com"
         textField.font = .bodyRegular
-        textField.textColor = UIColor(named: "nftBlack")
+        textField.textColor = UIColor(resource: .nftBlack)
         textField.borderStyle = .none
-        textField.backgroundColor = UIColor(named: "nftLightGrey")
+        textField.backgroundColor = UIColor(resource: .nftLightGrey)
         textField.layer.cornerRadius = 12
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.widthAnchor.constraint(equalToConstant: 343).isActive = true
@@ -160,6 +162,22 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+    
+    private lazy var textFieldForAvatar: UITextField = {
+        var textField = UITextField()
+        textField.isHidden = true
+        textField.placeholder = "Загрузить изображение"
+        textField.font = .bodyRegular
+        textField.textColor = UIColor(resource: .nftBlack)
+        textField.borderStyle = .none
+        textField.backgroundColor = UIColor(resource: .nftLightGrey)
+        textField.layer.cornerRadius = 12
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 44))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        return textField
     }()
     
     // MARK: - Life View Cycle
@@ -183,14 +201,11 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         view.backgroundColor = .background
         addSubviews()
         addConstraints()
+        addDoneButtonOnKeyboard()
     }
     
     private func addSubviews(){
-        view.addSubview(closeEditVCButton)
-        view.addSubview(editIconButton)
-        view.addSubview(nameStackView)
-        view.addSubview(bioStackView)
-        view.addSubview(siteStackView)
+        [closeEditVCButton, editIconButton, nameStackView, bioStackView, siteStackView, textFieldForAvatar].forEach { view.addSubview($0) }
     }
     
     private func addConstraints(){
@@ -214,6 +229,11 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
             siteStackView.topAnchor.constraint(equalTo: bioStackView.bottomAnchor, constant: 24),
             siteStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             siteStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            textFieldForAvatar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textFieldForAvatar.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+            textFieldForAvatar.heightAnchor.constraint(equalToConstant: 44),
+            textFieldForAvatar.widthAnchor.constraint(equalToConstant: 250)
         ])
     }
     
@@ -234,11 +254,49 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     }
     
     // MARK: - Private methods
+    private func addDoneButtonOnKeyboard() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonTapped))
+        doneButton.tintColor = UIColor(resource: .nftBlue)
+        
+        toolbar.items = [flexSpace, doneButton]
+        
+        textFieldForName.inputAccessoryView = toolbar
+        textViewForBio.inputAccessoryView = toolbar
+        textFieldForSite.inputAccessoryView = toolbar
+    }
+    
     @objc
-    private func closeEditVCButtonTapped(){
-        dismiss(animated: true) {
-            
-        }
+    private func doneButtonTapped() {
+        view.endEditing(true)
+    }
+    
+    @objc
+    private func closeEditVCButtonTapped() {
+        ProgressHUD.show("Сохранение...")
+        presenter?.updateProfileData(
+            name: textFieldForName.text ?? "",
+            description: textViewForBio.text,
+            website: textFieldForSite.text ?? "",
+            completion: { [weak self] success in
+                DispatchQueue.main.async {
+                    ProgressHUD.dismiss()
+                    if success {
+                        self?.dismiss(animated: true)
+                    } else {
+                        ProgressHUD.showError("Ошибка обновления профиля")
+                    }
+                }
+            }
+        )
+    }
+    
+    @objc
+    private func editIconButtonTapped(){
+        textFieldForAvatar.isHidden = false
     }
     
     @objc
@@ -248,12 +306,12 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         let bottomOfTextField = siteStackView.frame.origin.y + siteStackView.frame.height
         let screenHeight = view.frame.height
         let overlap = bottomOfTextField - (screenHeight - keyboardHeight)
-    
+        
         if overlap > 0 {
             self.view.frame.origin.y = -overlap - 16
         }
     }
-
+    
     @objc
     private func keyboardWillHide(notification: Notification) {
         self.view.frame.origin.y = 0

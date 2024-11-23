@@ -10,9 +10,9 @@ import UIKit
 final class MyNFTViewController: UIViewController, UITableViewDelegate {
     // MARK: Mock Data
     private var nftItems: [NFTModel] = [
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "Lilo", author: "John Doe", rating: 3, price: 1.78),
+        NFTModel(image: UIImage(named: "nftCard1")!, title: "Lilo", author: "John Doe", rating: 0, price: 1.78),
         NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 3, price: 1.78),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 3, price: 1.78)
+        NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 0, price: 1.78)
     ]
     
     // MARK: - Private Properties
@@ -21,7 +21,7 @@ final class MyNFTViewController: UIViewController, UITableViewDelegate {
         let config = UIImage.SymbolConfiguration(weight: .bold)
         let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
         button.setImage(image, for: .normal)
-        button.tintColor = UIColor(named: "nftBlack")
+        button.tintColor = UIColor(resource: .nftBlack)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -30,7 +30,7 @@ final class MyNFTViewController: UIViewController, UITableViewDelegate {
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "filterButton"), for: .normal)
-        button.tintColor = UIColor(named: "nftBlack")
+        button.tintColor = UIColor(resource: .nftBlack)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(showMenu), for: .touchUpInside)
         return button
@@ -52,7 +52,7 @@ final class MyNFTViewController: UIViewController, UITableViewDelegate {
         let label = UILabel()
         label.isHidden = true
         label.text = "У Вас ещё нет NFT"
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.font = .bodyBold
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

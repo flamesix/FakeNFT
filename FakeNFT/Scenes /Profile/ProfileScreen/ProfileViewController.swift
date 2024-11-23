@@ -15,7 +15,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private lazy var editButton: UIButton = {
         let editButton = UIButton(type: .system)
         editButton.setImage(UIImage(named: "editButton"), for: .normal)
-        editButton.tintColor = UIColor(named: "nftBlack")
+        editButton.tintColor = UIColor(resource: .nftBlack)
         editButton.addTarget(self, action: #selector(didEditButtonTapped), for: .touchUpInside)
         editButton.translatesAutoresizingMaskIntoConstraints = false
         return editButton
@@ -34,7 +34,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         var usernameTitle = UILabel()
         usernameTitle.text = "User Name"
         usernameTitle.font = .headline3
-        usernameTitle.textColor = UIColor(named: "nftBlack")
+        usernameTitle.textColor = UIColor(resource: .nftBlack)
         usernameTitle.translatesAutoresizingMaskIntoConstraints = false
         return usernameTitle
     }()
@@ -53,7 +53,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 4
         descriptionLabel.lineBreakMode = .byWordWrapping
-        descriptionLabel.textColor = UIColor(named: "nftBlack")
+        descriptionLabel.textColor = UIColor(resource: .nftBlack)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         return descriptionLabel
     }()
@@ -62,8 +62,9 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         let button = UIButton(type: .system)
         button.setTitle("username.com", for: .normal)
         button.titleLabel?.font = .caption1
-        button.titleLabel?.textColor = UIColor(named: "nftBlue")
+        button.titleLabel?.textColor = UIColor(resource: .nftBlue)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(linkButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -84,8 +85,16 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         setupView()
         presenter = ProfilePresenter(view: self)
         presenter?.loadProfileData()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateProfileUI(_:)),
+                                               name: .profileUpdated,
+                                               object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .profileUpdated, object: nil)
+    }
     
     // MARK: - Setup Methods
     private func setupView(){
@@ -138,6 +147,23 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         present(editProfileInfoVC, animated: true)
     }
     
+    @objc
+    private func updateProfileUI(_ notification: Notification) {
+        if let userInfo = notification.userInfo,
+           let updatedProfile = userInfo["updatedProfile"] as? Profile {
+            updateUI(with: updatedProfile)
+        }
+    }
+    
+    @objc
+    private func linkButtonTapped(){
+        if let urlString = linkButton.titleLabel?.text,
+           let url = URL(string: urlString) {
+            let profileSiteViewController = ProfileSiteViewController(websiteURL: url)
+            navigationController?.pushViewController(profileSiteViewController, animated: true)
+        }
+    }
+    
     func showError(_ error: String) {
         let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel)
@@ -159,29 +185,8 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
                 ]
             )
         }
+        tableView.reloadData()
     }
-    
-    //TODO: in progress
-    //    private func updateProfile() {
-    //        let name = "Updated Name"
-    //        let description = "Updated Description"
-    //        let website = "https://newwebsite.com"
-    //        let likes = ["1", "2", "3"]
-    //
-    //        profileService.updateProfile(
-    //            name: name,
-    //            description: description,
-    //            website: website,
-    //            likes: likes
-    //        ) { result in
-    //            switch result {
-    //            case .success(let updatedProfile):
-    //                print("Profile updated successfully:", updatedProfile)
-    //            case .failure(let error):
-    //                print("Failed to update profile:", error)
-    //            }
-    //        }
-    //    }
 }
 
 // MARK: - UITableViewDataSource
@@ -191,13 +196,15 @@ extension ProfileViewController: UITableViewDataSource{
             return ProfileTableViewCell()
         }
         
-        cell.tintColor = UIColor(named: "nftBlack")
+        cell.tintColor = UIColor(resource: .nftBlack)
         cell.selectionStyle = .none
         
         switch indexPath.row {
         case 0:
+            print(presenter?.getNFTCount() ?? 0)
             cell.setTitleLabel(text: "Мои NFT (\(presenter?.getNFTCount() ?? 0))")
         case 1:
+            print(presenter?.getLikesCount() ?? 0)
             cell.setTitleLabel(text: "Избранные NFT (\(presenter?.getLikesCount() ?? 0))")
         case 2:
             cell.setTitleLabel(text: "О разработчике")
@@ -227,8 +234,11 @@ extension ProfileViewController: UITableViewDelegate{
             let favouriteViewController = FavouritesViewController()
             navigationController?.pushViewController(favouriteViewController, animated: true)
         case 2:
-            let profileSiteViewController = ProfileSiteViewController()
-            navigationController?.pushViewController(profileSiteViewController, animated: true)
+            if let urlString = linkButton.titleLabel?.text,
+               let url = URL(string: urlString) {
+                let profileSiteViewController = ProfileSiteViewController(websiteURL: url)
+                navigationController?.pushViewController(profileSiteViewController, animated: true)
+            }
         default:
             break
         }

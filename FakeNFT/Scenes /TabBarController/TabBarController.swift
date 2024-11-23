@@ -18,18 +18,12 @@ final class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBar.tintColor = UIColor(named: "nftBlack")
-        
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
-        catalogController.tabBarItem = catalogTabBarItem
         
         let profileController = ProfileViewController()
         profileController.tabBarItem = profileTabBarItem
         let profileNavigationController = UINavigationController(rootViewController: profileController)
         
-        viewControllers = [profileNavigationController, catalogController]
+        viewControllers = [profileNavigationController]
 
         view.backgroundColor = .systemBackground
     }

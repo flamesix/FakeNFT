@@ -21,7 +21,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     
     private let favoriteIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "heart.fill"))
-        imageView.tintColor = UIColor(named: "nftWhiteUni")
+        imageView.tintColor = UIColor(resource: .nftWhiteUni)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -29,7 +29,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .bodyBold
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -47,7 +47,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = .caption1
-        label.textColor = UIColor(named: "nftBlack")
+        label.textColor = UIColor(resource: .nftBlack)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -105,7 +105,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     func configure(with nft: NFTModel) {
         nftImageView.image = nft.image
         titleLabel.text = nft.title
-        ratingStack = configureRatingStackView(for: nft.rating)
+        configureRatingStackView(for: nft.rating)
         priceLabel.text = formatPrice(nft.price)
     }
     
@@ -113,17 +113,13 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         return priceFormatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
     }
     
-    private func configureRatingStackView(for rating: Int) -> UIStackView {
-        let ratingStack = UIStackView()
-        ratingStack.axis = .horizontal
-        ratingStack.spacing = 4
+    private func configureRatingStackView(for rating: Int) {
+        ratingStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         for i in 0..<totalStars {
             let isActive = i < rating
             let starImageView = UIImageView.createStar(isActive: isActive)
             ratingStack.addArrangedSubview(starImageView)
         }
-        
-        return ratingStack
     }
 }
