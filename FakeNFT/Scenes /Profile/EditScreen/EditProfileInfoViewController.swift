@@ -201,6 +201,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
         view.backgroundColor = .background
         addSubviews()
         addConstraints()
+        addDoneButtonOnKeyboard()
     }
     
     private func addSubviews(){
@@ -253,6 +254,26 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     }
     
     // MARK: - Private methods
+    private func addDoneButtonOnKeyboard() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonTapped))
+        doneButton.tintColor = UIColor(resource: .nftBlue)
+        
+        toolbar.items = [flexSpace, doneButton]
+        
+        textFieldForName.inputAccessoryView = toolbar
+        textViewForBio.inputAccessoryView = toolbar
+        textFieldForSite.inputAccessoryView = toolbar
+    }
+    
+    @objc
+    private func doneButtonTapped() {
+        view.endEditing(true)
+    }
+    
     @objc
     private func closeEditVCButtonTapped() {
         ProgressHUD.show("Сохранение...")
@@ -272,7 +293,6 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
             }
         )
     }
-
     
     @objc
     private func editIconButtonTapped(){
