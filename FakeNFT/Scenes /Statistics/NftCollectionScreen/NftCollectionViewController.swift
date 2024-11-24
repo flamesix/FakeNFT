@@ -40,6 +40,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         presenter?.viewDidLoad()
     }
     
+    // MARK: - Methods
     @objc private func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
@@ -67,6 +68,7 @@ extension NftCollectionViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - NftCollectionCollectionViewCellDelegate
 extension NftCollectionViewController: NftCollectionCollectionViewCellDelegate {
     func tapLike(_ id: String, _ cell: NftCollectionCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }

@@ -91,6 +91,7 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Methods
     func config(with nft: Nft, isLiked: Bool, isOrdered: Bool) {
         self.id = nft.id
         self.isLiked = isLiked

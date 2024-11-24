@@ -21,7 +21,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     weak var view: NftCollectionViewControllerProtocol?
     
     private let nftModel: NftCollectionModelProtocol
-    private let logginService = LoggingService.shared
+    private let loggingService = LoggingService.shared
     
     private var isLoading: Bool = false
     
@@ -31,10 +31,12 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
     
+    // MARK: - Init
     init(nftModel: NftCollectionModelProtocol) {
         self.nftModel = nftModel
     }
     
+    // MARK: - Methods
     func viewDidLoad() {
         nftModel.loadNfts()
         nftModel.loadLikes()
@@ -68,7 +70,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     func stateDidChanged() {
         switch state {
         case .initial:
-            logginService.logCriticalError("can't move to initial state")
+            loggingService.logCriticalError("can't move to initial state")
         case .loading:
             view?.showLoading()
         case .success:

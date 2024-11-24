@@ -42,6 +42,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
     
     private let nftCollection: [String]
     
+    // MARK: - Init
     init(nftService: NftServiceProtocol,
          nftLikesService: NftLikesServiceProtocol,
          nftOrderService: NftOrderServiceProtocol,
@@ -53,6 +54,7 @@ final class NftCollectionModel: NftCollectionModelProtocol {
         self.nftCollection = nftCollection
     }
     
+    // MARK: - Methods
     func getNftCount() -> Int {
         nfts.count
     }
