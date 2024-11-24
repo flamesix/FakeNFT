@@ -1,13 +1,15 @@
 import UIKit
 import SnapKit
 
-protocol NftCollectionViewControllerProtocol: AnyObject {
-    var presenter: NftCollectionPresenter? { get set }
+protocol NftCollectionViewControllerProtocol: AnyObject, LoadingView, ErrorView {
+    var presenter: NftCollectionPresenterProtocol? { get set }
+    func updateCollectionView()
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewControllerProtocol {
     
-    var presenter: NftCollectionPresenter?
+    var presenter: NftCollectionPresenterProtocol?
+    let servicesAssembly: ServicesAssembly
     
     // MARK: - UIElements
     lazy var activityIndicator = UIActivityIndicatorView()
@@ -20,6 +22,17 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         return collectionView
     }()
     
+    // MARK: - Init
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,19 +40,44 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
         presenter?.viewDidLoad()
     }
     
+    // MARK: - Methods
+    @objc private func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func updateCollectionView() {
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDataSource
 extension NftCollectionViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter?.nfts.count ?? 0
+        presenter?.getNftCount() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: NftCollectionCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-        guard let nft = presenter?.nfts[indexPath.item] else { return UICollectionViewCell() }
-        cell.config(with: nft)
+        cell.delegate = self
+        guard let presenter else { return UICollectionViewCell() }
+        let nft = presenter.getNft(indexPath.row)
+        let isLiked = presenter.isLiked(indexPath.row)
+        let isOrdered = presenter.isOrdered(indexPath.row)
+        cell.config(with: nft, isLiked: isLiked, isOrdered: isOrdered)
         return cell
+    }
+}
+
+// MARK: - NftCollectionCollectionViewCellDelegate
+extension NftCollectionViewController: NftCollectionCollectionViewCellDelegate {
+    func tapLike(_ id: String, _ cell: NftCollectionCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        presenter?.tapLike(id, indexPath)
+    }
+    
+    func tapCart(_ id: String, _ cell: NftCollectionCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        presenter?.tapCart(id, indexPath)
     }
 }
 
@@ -70,6 +108,7 @@ extension NftCollectionViewController: SettingViewsProtocol {
         collectionView.delegate = self
         collectionView.dataSource = self
         addConstraints()
+        setupNavigationBar()
     }
     
     func addConstraints() {
@@ -81,5 +120,13 @@ extension NftCollectionViewController: SettingViewsProtocol {
         }
         
         activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: #selector(didTapBackButton))
+        navigationItem.leftBarButtonItem?.tintColor = .nftBlack
     }
 }

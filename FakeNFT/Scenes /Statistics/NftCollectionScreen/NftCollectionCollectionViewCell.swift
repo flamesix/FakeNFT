@@ -1,9 +1,17 @@
 import UIKit
 import SnapKit
 import Cosmos
+import Kingfisher
+
+protocol NftCollectionCollectionViewCellDelegate: AnyObject {
+    func tapLike(_ id: String, _ cell: NftCollectionCollectionViewCell)
+    func tapCart(_ id: String, _ cell: NftCollectionCollectionViewCell)
+}
 
 final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     
+    var delegate: NftCollectionCollectionViewCellDelegate?
+    private var id: String?
     private var isLiked: Bool = false
     private var isCarted: Bool = false
     
@@ -83,21 +91,37 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with nft: Nft) {
-        nftImageView.image = UIImage(named: "NFT")
+    // MARK: - Methods
+    func config(with nft: Nft, isLiked: Bool, isOrdered: Bool) {
+        self.id = nft.id
+        self.isLiked = isLiked
+        self.isCarted = isOrdered
         nameLabel.text = nft.name
         ratingView.rating = Double(nft.rating)
         priceLabel.text = String(nft.price) + " ETH"
+        setNftImage(for: nft)
+        likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+        cartButton.setImage(UIImage(named: isOrdered ? "removeFromCart" : "addToCart"), for: .normal)
+    }
+    
+    private func setNftImage(for nft: Nft) {
+        let url = nft.images[0]
+        nftImageView.kf.indicatorType = .activity
+        nftImageView.kf.setImage(with: url)
     }
     
     @objc private func didTapLikeButton() {
+        guard let id else { return }
         isLiked.toggle()
         likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+        delegate?.tapLike(id, self)
     }
     
     @objc private func didTapCartButton() {
+        guard let id else { return }
         isCarted.toggle()
         cartButton.setImage(UIImage(named: isCarted ? "removeFromCart" : "addToCart"), for: .normal)
+        delegate?.tapCart(id, self)
     }
 }
 

@@ -10,11 +10,12 @@ protocol UserCardViewControllerProtocol: AnyObject {
 final class UserCardViewController: UIViewController, UserCardViewControllerProtocol {
     
     var presenter: UserCardPresenterProtocol?
+    let servicesAssembly: ServicesAssembly
     
     // MARK: - UIElements
     private lazy var profileImage: UIImageView = {
         let image = UIImageView()
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         image.layer.cornerRadius = 35
         image.clipsToBounds = true
         return image
@@ -65,6 +66,17 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     
     private lazy var nftButton = NftButton()
     
+    // MARK: - Init
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +85,12 @@ final class UserCardViewController: UIViewController, UserCardViewControllerProt
     }
     
     @objc private func didTapNftButton() {
-        let vc = NftCollectionViewController()
-        let presenter = NftCollectionPresenter()
-        vc.presenter = presenter
-        navigationController?.pushViewController(vc, animated: true)
+        guard let presenter else { return }
+        if !presenter.isNftCollectionEmpty() {
+            let assembly = NftCollectionAssembly(servicesAssembler: servicesAssembly)
+            let vc = assembly.build(nftCollection: presenter.getNftCollection())
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @objc private func didTapBackButton() {

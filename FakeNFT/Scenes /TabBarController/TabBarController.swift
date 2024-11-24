@@ -31,5 +31,6 @@ final class TabBarController: UITabBarController {
         viewControllers = [catalogController, statisticsController]
         
         view.backgroundColor = .systemBackground
+        tabBar.unselectedItemTintColor = .nftBlack
     }
 }

@@ -4,6 +4,8 @@ protocol UserCardPresenterProtocol {
     var view: UserCardViewControllerProtocol? { get set }
     func viewDidLoad()
     func getUserWebPage() -> String
+    func getNftCollection() -> [String]
+    func isNftCollectionEmpty() -> Bool
 }
 
 final class UserCardPresenter: UserCardPresenterProtocol {
@@ -22,5 +24,13 @@ final class UserCardPresenter: UserCardPresenterProtocol {
     
     func getUserWebPage() -> String {
         user.website
+    }
+    
+    func getNftCollection() -> [String] {
+        user.nfts
+    }
+    
+    func isNftCollectionEmpty() -> Bool {
+        user.nfts.isEmpty
     }
 }
