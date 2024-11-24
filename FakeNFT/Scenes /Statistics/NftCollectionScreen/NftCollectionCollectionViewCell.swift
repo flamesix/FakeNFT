@@ -98,7 +98,7 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         self.isCarted = isOrdered
         nameLabel.text = nft.name
         ratingView.rating = Double(nft.rating)
-        priceLabel.text = String(nft.price) + " ETH"
+        priceLabel.text = "\(nft.price) ETH"
         setNftImage(for: nft)
         likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
         cartButton.setImage(UIImage(named: isOrdered ? "removeFromCart" : "addToCart"), for: .normal)
