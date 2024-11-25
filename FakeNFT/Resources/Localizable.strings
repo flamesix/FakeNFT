@@ -26,3 +26,10 @@
 "Cart.error.cancel" = "Отмена";
 "Cart.error.repeat" = "Повторить";
 "Cart.error.payment" = "Не удалось произвести оплату";
+"Tab.statistics" = "Статистика";
+"Statistics.Sort" = "Сортировка";
+"Statistics.ByName" = "По имени";
+"Statistics.ByRating" = "По рейтингу";
+"Statistics.Close" = "Закрыть";
+"Statistics.GoToWeb" = "Перейти на сайт пользователя";
+"UserCard.NFTCollection.Count" = "Коллекция NFT";
