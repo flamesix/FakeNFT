@@ -8,10 +8,10 @@ protocol NftCollectionSortProtocol: AnyObject {
 final class NftCollectionSortAlerPresenter {
     
     weak var delegate: NftCollectionSortProtocol?
-    private let sorting = NSLocalizedString("sorting", comment: "")
-    private let nftCountSort = NSLocalizedString("nftCountSort", comment: "")
-    private let nftNameSort = NSLocalizedString("nftNameSort", comment: "")
-    private let sortAlertClose = NSLocalizedString("sortAlertClose", comment: "")
+    private let sorting = NSLocalizedString("Sorting", comment: "")
+    private let nftCountSort = NSLocalizedString("Nft.count.sort", comment: "")
+    private let nftNameSort = NSLocalizedString("Nft.name.sort", comment: "")
+    private let sortAlertClose = NSLocalizedString("Sort.alert.close", comment: "")
     
     func showSortAlert(on viewController: UIViewController){
         guard let delegate = delegate else { return }
