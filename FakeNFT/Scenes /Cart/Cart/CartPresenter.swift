@@ -10,7 +10,7 @@ import Foundation
 protocol CartPresenterProtocol {
     func viewDidLoad()
     func getNumberOfNftInOrder() -> Int
-    func getOrderTotalCost() -> Float
+    func getOrderTotalCost() -> Decimal
     func configureCell(for cell: NftCartCell, with indexPath: IndexPath)
     func sortBy(_: SortType)
     func deleteNft(from indexPath: IndexPath)
@@ -46,11 +46,11 @@ final class CartPresenter: CartPresenterProtocol, DeleteNftPresenterDelegate {
     
     private let sortStorage: CartSortStorageProtocol
     private let cartService: CartServiceProtocol
-    private let nftService: NftService
+    private let nftService: NftServiceProtocol
     
     // MARK: - Init
     
-    init(sortStorage: CartSortStorageProtocol, cartService: CartServiceProtocol, nftService: NftService) {
+    init(sortStorage: CartSortStorageProtocol, cartService: CartServiceProtocol, nftService: NftServiceProtocol) {
         self.sortStorage = sortStorage
         self.cartService = cartService
         self.nftService = nftService
@@ -70,8 +70,8 @@ final class CartPresenter: CartPresenterProtocol, DeleteNftPresenterDelegate {
         nfts.count
     }
     
-    func getOrderTotalCost() -> Float {
-        var totalCost: Float = 0
+    func getOrderTotalCost() -> Decimal {
+        var totalCost: Decimal = 0
         nfts.forEach { totalCost += $0.price }
         return totalCost
     }

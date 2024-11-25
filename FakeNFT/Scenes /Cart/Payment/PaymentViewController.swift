@@ -187,7 +187,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     
     @objc private func userAgreementButtonTapped() {
         let urlString = PaymentConstants.userAgreementUrl.rawValue
-        let webViewController = WebViewController(urlString: urlString)
+        let webViewController = WebViewController(url: urlString)
         navigationController?.pushViewController(webViewController, animated: true)
     }
     

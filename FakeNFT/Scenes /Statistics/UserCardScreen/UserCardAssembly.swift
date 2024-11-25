@@ -15,6 +15,7 @@ final class UserCardAssembly {
         let viewController = UserCardViewController(servicesAssembly: servicesAssembler)
         presenter.view = viewController
         viewController.presenter = presenter
+        viewController.hidesBottomBarWhenPushed = true
         return viewController
     }
 }

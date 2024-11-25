@@ -71,7 +71,7 @@ final class NftCartCell: UITableViewCell {
     
     // MARK: - Methods
     
-    func configure(images: [URL], name: String, rating: Int, price: Float) {
+    func configure(images: [URL], name: String, rating: Int, price: Decimal) {
         if let imageUrl = images.first {
             nftImageView.kf.setImage(with: imageUrl)
         }

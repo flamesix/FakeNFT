@@ -3,6 +3,7 @@ import UIKit
 enum TabBarTags: Int {
     case catalog = 0
     case cart = 1
+    case statistic = 3
 }
 
 final class TabBarController: UITabBarController {
@@ -25,7 +26,7 @@ final class TabBarController: UITabBarController {
     private let statisticsTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.statistics", comment: ""),
         image: UIImage(systemName: "flag.2.crossed.fill"),
-        tag: 3
+        tag: TabBarTags.statistic.rawValue
     )
     
     override func viewDidLoad() {
@@ -39,17 +40,14 @@ final class TabBarController: UITabBarController {
         let cartAssembly = CartAssembly(servicesAssembler: servicesAssembly)
         let cartController = cartAssembly.build()
         cartController.tabBarItem = cartTabBarItem
-
-        viewControllers = [catalogController, cartController]
-
         
-        let assembly = StatisticsAssembly(servicesAssembler: servicesAssembly)
-        let statisticsController = assembly.build()
+        let statisticsAssembly = StatisticsAssembly(servicesAssembler: servicesAssembly)
+        let statisticsController = statisticsAssembly.build()
         statisticsController.tabBarItem = statisticsTabBarItem
         
-        viewControllers = [catalogController, statisticsController]
+        viewControllers = [catalogController, cartController, statisticsController]
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .nftWhite
         tabBar.unselectedItemTintColor = .nftBlack
     }
 }

@@ -7,12 +7,18 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
     private let url: String
 
     // MARK: - UIElements
-    private lazy var activityIndicator = UIActivityIndicatorView()
 
     private lazy var webView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         return webView
+    }()
+    
+    private let progressView: UIProgressView = {
+        let progressView = UIProgressView(progressViewStyle: .default)
+        progressView.progressTintColor = .nftBlueUni
+        return progressView
     }()
 
     // MARK: - Init
@@ -43,15 +49,25 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         let request = URLRequest(url: url)
         webView.load(request)
     }
-}
+    
+    // MARK: - KVO Observer
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?,
+                               context: UnsafeMutableRawPointer?) {
+        if keyPath == "estimatedProgress" {
+            progressView.progress = Float(webView.estimatedProgress)
 
-extension WebViewController {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        activityIndicator.stopAnimating()
+            if webView.estimatedProgress >= 1.0 {
+                progressView.isHidden = true
+            } else {
+                progressView.isHidden = false
+            }
+        }
     }
 
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        activityIndicator.stopAnimating()
+    deinit {
+        webView.removeObserver(self, forKeyPath: "estimatedProgress")
     }
 }
 
@@ -60,21 +76,23 @@ extension WebViewController: SettingViewsProtocol {
     func setupView() {
         view.backgroundColor = .background
         webView.navigationDelegate = self
-        view.addSubviews(webView)
-        webView.addSubviews(activityIndicator)
-        activityIndicator.startAnimating()
-        activityIndicator.hidesWhenStopped = true
+        view.addSubviews(progressView, webView)
         addConstraints()
         setupNavigationBar()
     }
     
     func addConstraints() {
-        webView.snp.makeConstraints { make in
+        
+        progressView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(2)
         }
         
-        activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
+        webView.snp.makeConstraints { make in
+            make.top.equalTo(progressView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
     }
     
     private func setupNavigationBar() {
