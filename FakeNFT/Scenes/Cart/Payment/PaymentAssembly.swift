@@ -12,8 +12,7 @@ public final class PaymentAssembly {
     private let servicesAssembler = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        nftCollectionCatalogueStorage: NftCollectionCatalogueStorageImpl(),
-        nftCollectionItemsStorage: NftStorageImpl()
+        nftCollectionCatalogueStorage: NftCollectionCatalogueStorageImpl()
     )
 
     public func build() -> UIViewController {

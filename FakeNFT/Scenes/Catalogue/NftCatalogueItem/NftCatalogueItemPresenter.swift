@@ -33,7 +33,7 @@ final class NftCatalogueItemPresenter: NftCatalogueItemPresenterProtocol {
 
     init(input: [String], servicesAssembly: ServicesAssembly) {
         self.input = input
-        self.nftItemsService = servicesAssembly.nftItemsService
+        self.nftItemsService = servicesAssembly.nftService
         self.nftOrderService = servicesAssembly.nftOrderService
         self.nftLikesService = servicesAssembly.nftLikesService
     }

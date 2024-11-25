@@ -12,8 +12,7 @@ public final class DeleteNftAssembly {
     private let servicesAssembler = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        nftCollectionCatalogueStorage: NftCollectionCatalogueStorageImpl(),
-        nftCollectionItemsStorage: NftStorageImpl()
+        nftCollectionCatalogueStorage: NftCollectionCatalogueStorageImpl()
     )
 
     func build(delegate: DeleteNftPresenterDelegate, deletedNft: Nft, allNft: [Nft]) -> UIViewController {
