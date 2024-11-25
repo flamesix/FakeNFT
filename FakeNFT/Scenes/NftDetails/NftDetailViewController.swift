@@ -33,7 +33,6 @@ final class NftDetailViewController: UIViewController {
     }()
 
     private lazy var pageControl = LinePageControl()
-    internal lazy var activityIndicator = UIActivityIndicatorView()
 
     private var cellModels: [NftDetailCellModel] = []
 
@@ -62,8 +61,6 @@ final class NftDetailViewController: UIViewController {
     // MARK: - private functions
 
     private func setupLayout() {
-        collectionView.addSubview(activityIndicator)
-        activityIndicator.constraintCenters(to: collectionView)
 
         view.addSubview(collectionView)
         collectionView.constraintEdges(to: view)

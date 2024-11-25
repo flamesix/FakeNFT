@@ -13,8 +13,6 @@ final class StatisticsViewController: UIViewController, StatisticsViewController
     
     let servicesAssembly: ServicesAssembly
     
-    lazy var activityIndicator = UIActivityIndicatorView()
-    
     // MARK: - Init
     init(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
@@ -110,7 +108,7 @@ extension StatisticsViewController: UITableViewDelegate {
 extension StatisticsViewController: SettingViewsProtocol {
     func setupView() {
         view.backgroundColor = .nftWhite
-        view.addSubviews(tableView, activityIndicator)
+        view.addSubviews(tableView)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "sortIcon"),
                                                             style: .plain,
@@ -128,7 +126,5 @@ extension StatisticsViewController: SettingViewsProtocol {
             make.trailing.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(8)
         }
-        
-        activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
     }
 }

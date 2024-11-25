@@ -19,7 +19,6 @@ final class CartViewController: UIViewController, CartViewProtocol {
     // MARK: - Properties
     
     var presenter: CartPresenterProtocol
-    internal lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Views
     
@@ -135,7 +134,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     private func setupViews() {
         view.backgroundColor = .background
         
-        [nftTableView, cartMenuView, cartEmptyLabel, activityIndicator].forEach {
+        [nftTableView, cartMenuView, cartEmptyLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -174,10 +173,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
             nftCountLabel.leadingAnchor.constraint(equalTo: cartMenuView.leadingAnchor, constant: 16),
             nftCountLabel.topAnchor.constraint(equalTo: cartMenuView.topAnchor, constant: 16),
             totalCostLabel.leadingAnchor.constraint(equalTo: cartMenuView.leadingAnchor, constant: 16),
-            totalCostLabel.bottomAnchor.constraint(equalTo: cartMenuView.bottomAnchor, constant: -16),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            totalCostLabel.bottomAnchor.constraint(equalTo: cartMenuView.bottomAnchor, constant: -16)
         ])
     }
     

@@ -12,7 +12,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewCont
     let servicesAssembly: ServicesAssembly
     
     // MARK: - UIElements
-    lazy var activityIndicator = UIActivityIndicatorView()
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -104,7 +103,7 @@ extension NftCollectionViewController: SettingViewsProtocol {
     func setupView() {
         title = NSLocalizedString("UserCard.NFTCollection.Count", comment: "")
         view.backgroundColor = .nftWhite
-        view.addSubviews(collectionView, activityIndicator)
+        view.addSubviews(collectionView)
         collectionView.delegate = self
         collectionView.dataSource = self
         addConstraints()
@@ -118,8 +117,6 @@ extension NftCollectionViewController: SettingViewsProtocol {
             make.trailing.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(8)
         }
-        
-        activityIndicator.snp.makeConstraints { $0.center.equalToSuperview() }
     }
     
     private func setupNavigationBar() {
