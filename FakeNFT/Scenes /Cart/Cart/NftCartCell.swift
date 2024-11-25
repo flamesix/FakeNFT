@@ -54,7 +54,9 @@ final class NftCartCell: UITableViewCell {
     
     private let deleteButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named: "removeCartIcon"), for: .normal)
+        let image = UIImage(named: "removeCartIcon")?.withRenderingMode(.alwaysTemplate)
+        button.setImage(image, for: .normal)
+        button.tintColor = .nftBlack
         return button
     }()
     
@@ -86,6 +88,8 @@ final class NftCartCell: UITableViewCell {
     }
     
     private func setupView() {
+        contentView.backgroundColor = .background
+        
         [nftImageView, nftTitleLabel, starRatingView,
          priceLabel, nftPriceLabel, deleteButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
