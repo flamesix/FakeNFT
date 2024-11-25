@@ -58,7 +58,7 @@ final class CurrencyCell: UICollectionViewCell {
     }
     
     func select() {
-        contentView.layer.borderColor = UIColor.nftBlackUni.cgColor
+        contentView.layer.borderColor = UIColor.nftBlack.cgColor
     }
     
     func deselect() {

@@ -36,6 +36,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     private let nftTableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .background
         return tableView
     }()
     
@@ -65,8 +66,8 @@ final class CartViewController: UIViewController, CartViewProtocol {
     private let paymentButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Cart.toPaymentScreen", comment: ""), for: .normal)
-        button.titleLabel?.textColor = .nftWhite
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        button.setTitleColor(UIColor.nftWhite, for: .normal)
         button.backgroundColor = .nftBlack
         button.layer.masksToBounds = false
         button.layer.cornerRadius = 16
@@ -132,7 +133,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         [nftTableView, cartMenuView, cartEmptyLabel, activityIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false

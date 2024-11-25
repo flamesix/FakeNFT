@@ -68,7 +68,7 @@ final class DeleteNftViewController: UIViewController, DeleteNftViewProtocol {
     private let returnButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Cart.return", comment: ""), for: .normal)
-        button.setTitleColor(.nftWhiteUni, for: .normal)
+        button.setTitleColor(.nftWhite, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .regular)
         button.backgroundColor = .nftBlack
         button.layer.masksToBounds = false

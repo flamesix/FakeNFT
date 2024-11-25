@@ -30,6 +30,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         layout.minimumInteritemSpacing = 7
         let collecion = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collecion.allowsMultipleSelection = false
+        collecion.backgroundColor = .background
         return collecion
     }()
     
@@ -65,8 +66,8 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     private let payButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Cart.toPay", comment: ""), for: .normal)
-        button.titleLabel?.textColor = .nftWhite
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        button.setTitleColor(UIColor.nftWhite, for: .normal)
         button.backgroundColor = .nftBlack
         button.layer.masksToBounds = false
         button.layer.cornerRadius = 16
@@ -131,7 +132,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         [currenciesCollectionView, paymentMenuView, userAgreementInfoLabel,
          userAgreementButton, payButton, activityIndicator].forEach {
@@ -175,7 +176,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     
     private func setupNavigationBarItem() {
         navigationItem.title = NSLocalizedString("Cart.paymentScreen", comment: "")
-        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.tintColor = .nftBlack
         navigationController?.navigationBar.backItem?.title = .none
     }
     
