@@ -4,7 +4,8 @@ import ProgressHUD
 extension ProgressHUD {
     
     static func showIndicator() {
-        ProgressHUD.show("Загрузка...")
+        let loadingLable = NSLocalizedString("Loadiung", comment: "")
+        ProgressHUD.show(loadingLable)
         ProgressHUD.colorAnimation = .nftBlack
         ProgressHUD.colorStatus = .nftBlack
         }

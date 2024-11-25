@@ -2,8 +2,8 @@
 import UIKit
 
 enum AlertMessage: String {
-    case likeNotification = "likeNotification"
-    case orderNotification = "orderNotification"
+    case likeNotification = "Like.notification"
+    case orderNotification = "Order.notification"
     
     func localizedString() -> String {
         return NSLocalizedString(self.rawValue, comment: "")
@@ -13,7 +13,7 @@ enum AlertMessage: String {
 final class NftNotificationAlerPresenter {
     
     private let viewController: UIViewController
-    private let nftNotificationAlertClose = NSLocalizedString("nftNotificationAlertClose", comment: "")
+    private let nftNotificationAlertClose = NSLocalizedString("Nft.notification.alert.close", comment: "")
     
     init(viewController: UIViewController) {
         self.viewController = viewController
