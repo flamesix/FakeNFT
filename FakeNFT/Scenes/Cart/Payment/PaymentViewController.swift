@@ -22,8 +22,6 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
     
     // MARK: - View
     
-    internal lazy var activityIndicator = UIActivityIndicatorView()
-    
     private let currenciesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 7
@@ -135,7 +133,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
         view.backgroundColor = .background
         
         [currenciesCollectionView, paymentMenuView, userAgreementInfoLabel,
-         userAgreementButton, payButton, activityIndicator].forEach {
+         userAgreementButton, payButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -167,10 +165,7 @@ final class PaymentViewController: UIViewController, PaymentViewProtocol {
             payButton.topAnchor.constraint(equalTo: userAgreementButton.bottomAnchor, constant: 16),
             payButton.leadingAnchor.constraint(equalTo: paymentMenuView.leadingAnchor, constant: 20),
             payButton.trailingAnchor.constraint(equalTo: paymentMenuView.trailingAnchor, constant: -20),
-            payButton.heightAnchor.constraint(equalToConstant: 60),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            payButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
     
