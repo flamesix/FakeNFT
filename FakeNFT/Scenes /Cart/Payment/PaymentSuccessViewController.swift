@@ -43,8 +43,8 @@ final class PaymentSuccessViewController: UIViewController {
     private let returnToCatalogButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("Cart.returnToCatalog", comment: ""), for: .normal)
-        button.titleLabel?.textColor = .nftWhite
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        button.setTitleColor(UIColor.nftWhite, for: .normal)
         button.backgroundColor = .nftBlack
         button.layer.masksToBounds = false
         button.layer.cornerRadius = 16
@@ -70,7 +70,7 @@ final class PaymentSuccessViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         view.addSubview(contentStack)
         view.addSubview(returnToCatalogButton)
