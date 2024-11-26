@@ -78,6 +78,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         let button = UIButton()
         button.setImage(UIImage(resource: .nftRecycleEmpty), for: .normal)
         button.addTarget(self, action: #selector(recycleButtonTapped), for: .touchUpInside)
+        button.tintColor = .nftBlack
         return button
     }()
     
