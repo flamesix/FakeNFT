@@ -13,7 +13,7 @@ final class TabBarController: UITabBarController {
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(resource: .nftCatalogueTabBarItem),
-        tag: 0
+        tag: TabBarTags.catalog.rawValue
     )
     
     private let cartTabBarItem = UITabBarItem(
@@ -57,5 +57,7 @@ final class TabBarController: UITabBarController {
         
         view.backgroundColor = .nftWhite
         tabBar.unselectedItemTintColor = .nftBlack
+        tabBar.barTintColor = .nftWhite
+        tabBar.isTranslucent = false
     }
 }

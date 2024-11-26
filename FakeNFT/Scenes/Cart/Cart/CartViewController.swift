@@ -198,6 +198,7 @@ final class CartViewController: UIViewController, CartViewProtocol {
     private func hideContent() {
         nftTableView.isHidden = true
         cartMenuView.isHidden = true
+        cartEmptyLabel.isHidden = true
         navigationItem.rightBarButtonItem = .none
     }
     
