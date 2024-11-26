@@ -101,7 +101,7 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
         priceLabel.text = "\(nft.price) ETH"
         setNftImage(for: nft)
         likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
-        cartButton.setImage(UIImage(named: isOrdered ? "removeFromCart" : "addToCart"), for: .normal)
+        cartButton.setImage(UIImage(named: isOrdered ? "nftRecycleEmpty" : "nftRecycleFull"), for: .normal)
     }
     
     private func setNftImage(for nft: Nft) {
@@ -113,14 +113,14 @@ final class NftCollectionCollectionViewCell: UICollectionViewCell, ReuseIdentify
     @objc private func didTapLikeButton() {
         guard let id else { return }
         isLiked.toggle()
-        likeButton.tintColor = isLiked ? .nftRedUni : .nftWhiteUni
+        likeUpdateAnimated(isLiked, likeButton)
         delegate?.tapLike(id, self)
     }
     
     @objc private func didTapCartButton() {
         guard let id else { return }
         isCarted.toggle()
-        cartButton.setImage(UIImage(named: isCarted ? "removeFromCart" : "addToCart"), for: .normal)
+        recycleStateUpdateAnimated(isCarted, cartButton)
         delegate?.tapCart(id, self)
     }
 }

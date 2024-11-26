@@ -134,7 +134,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         likeImageButton.isUserInteractionEnabled = false
         nftProfileManager.sendProfile()
         likeButtonState.toggle()
-        likeUpdateAnimated()
+        likeUpdateAnimated(likeButtonState, likeImageButton)
     }
     
     @objc func recycleButtonTapped(){
@@ -155,7 +155,7 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         recycleButton.isUserInteractionEnabled = false
         nftRecycleManager.sendOrder()
         recycleIsEmpty.toggle()
-        recycleStateUpdateAnimated()
+        recycleStateUpdateAnimated(recycleIsEmpty, recycleButton)
     }
     
     func recycleStateUpdate(){
@@ -170,54 +170,6 @@ final class NftCatalogueItemCollectionViewCell: UICollectionViewCell, SettingVie
         likeImageButton.tintColor = likeButtonState
         ? .nftRedUni
         : .nftWhiteUni
-    }
-    
-    func recycleStateUpdateAnimated(){
-        let image = recycleIsEmpty
-        ? UIImage(resource: .nftRecycleEmpty)
-        : UIImage(resource: .nftRecycleFull)
-        
-        UIView.animateKeyframes(withDuration: 0.3, delay: 0) {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.67) {
-                let transformation = CGAffineTransform(scaleX: 1.2, y: 1.2)
-                self.recycleButton.transform = transformation
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.67, relativeDuration: 1) {
-                let transformation = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                self.recycleButton.transform = transformation
-                self.recycleButton.setImage(image, for: .normal)
-            }
-        }
-    }
-    
-    func likeUpdateAnimated(){
-        let likeButtonColor: UIColor = likeButtonState
-        ? .nftRedUni
-        : .nftWhiteUni
-        
-        UIView.animateKeyframes(withDuration: 1.2, delay: 0) {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25) {
-                let rotateTransform = CGAffineTransform.init(rotationAngle: 0.35)
-                let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.3).concatenating(rotateTransform)
-                self.likeImageButton.transform = scaleTransform
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.6) {
-                let rotateTransform = CGAffineTransform.init(rotationAngle: -0.4)
-                let scaleTransform = CGAffineTransform(scaleX: 1.5, y: 1.5).concatenating(rotateTransform)
-                self.likeImageButton.transform = scaleTransform
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.8) {
-                let rotateTransform = CGAffineTransform.init(rotationAngle: 0.1)
-                let scaleTransform = CGAffineTransform(scaleX: 1.2, y: 1.2).concatenating(rotateTransform)
-                self.likeImageButton.transform = scaleTransform
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 1) {
-                let rotateTransform = CGAffineTransform.init(rotationAngle: 0)
-                let scaleTransform = CGAffineTransform(scaleX: 1, y: 1).concatenating(rotateTransform)
-                self.likeImageButton.transform = scaleTransform
-                self.likeImageButton.tintColor = likeButtonColor
-            }
-        }
     }
     
     func setupView() {
@@ -270,7 +222,7 @@ extension NftCatalogueItemCollectionViewCell: NftItemRecycleUnlockProtocol {
         guard let recycleBeforeUpdate = recycleBeforeUpdate else { return }
         recycleStorage.order = recycleBeforeUpdate
         recycleIsEmpty.toggle()
-        recycleStateUpdateAnimated()
+        recycleStateUpdateAnimated(recycleIsEmpty, recycleButton)
         recycleButton.isUserInteractionEnabled = true
     }
     
