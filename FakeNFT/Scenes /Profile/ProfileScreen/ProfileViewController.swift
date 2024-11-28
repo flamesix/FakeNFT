@@ -11,6 +11,7 @@ import Kingfisher
 final class ProfileViewController: UIViewController, ProfileViewProtocol {
     // MARK: - Private Properties
     private var presenter: ProfilePresenter?
+    private var likesCountLabel: String = "0"
     
     private lazy var editButton: UIButton = {
         let editButton = UIButton(type: .system)
@@ -90,9 +91,14 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
                                                selector: #selector(updateProfileUI(_:)),
                                                name: .profileUpdated,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleFavouritesUpdate(_:)),
+                                               name: .favouritesDidUpdate,
+                                               object: nil)
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self, name: .favouritesDidUpdate, object: nil)
         NotificationCenter.default.removeObserver(self, name: .profileUpdated, object: nil)
     }
     
@@ -164,6 +170,17 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         }
     }
     
+    @objc
+    private func handleFavouritesUpdate(_ notification: Notification) {
+        if let favourites = notification.userInfo?["favourites"] as? [String] {
+            presenter?.updateLikes(favourites)
+            likesCountLabel = "\(favourites.count)"
+        } else if let updatedCount = notification.userInfo?["count"] as? Int {
+            likesCountLabel = "\(updatedCount)"
+        }
+        tableView.reloadData()
+    }
+    
     func showError(_ error: String) {
         let alert = UIAlertController(title: "Ошибка", message: error, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel)
@@ -175,6 +192,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         usernameTitle.text = profile.name
         descriptionLabel.text = profile.description
         linkButton.setTitle(profile.website, for: .normal)
+        likesCountLabel = "\(presenter?.getLikesCount() ?? 0)"
         if let avatarUrlString = profile.avatar, let url = URL(string: avatarUrlString) {
             profileImageLogo.kf.setImage(
                 with: url,
@@ -201,11 +219,9 @@ extension ProfileViewController: UITableViewDataSource{
         
         switch indexPath.row {
         case 0:
-            print(presenter?.getNFTCount() ?? 0)
             cell.setTitleLabel(text: "Мои NFT (\(presenter?.getNFTCount() ?? 0))")
         case 1:
-            print(presenter?.getLikesCount() ?? 0)
-            cell.setTitleLabel(text: "Избранные NFT (\(presenter?.getLikesCount() ?? 0))")
+            cell.setTitleLabel(text: "Избранные NFT (\(likesCountLabel))")
         case 2:
             cell.setTitleLabel(text: "О разработчике")
         default:
@@ -231,7 +247,7 @@ extension ProfileViewController: UITableViewDelegate{
             let myNFTViewController = MyNFTViewController()
             navigationController?.pushViewController(myNFTViewController, animated: true)
         case 1:
-            let favouriteViewController = FavouritesViewController()
+            let favouriteViewController = FavouritesViewController(favoriteNfts: presenter?.getLikes() ?? [])
             navigationController?.pushViewController(favouriteViewController, animated: true)
         case 2:
             if let urlString = linkButton.titleLabel?.text,
@@ -243,5 +259,5 @@ extension ProfileViewController: UITableViewDelegate{
             break
         }
     }
-    
 }
+
