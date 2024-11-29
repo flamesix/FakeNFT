@@ -44,6 +44,10 @@ final class ProfilePresenter {
         return profile?.nfts?.count ?? 0
     }
     
+    func getNFTs() -> [String] {
+        return profile?.nfts ?? []
+    }
+    
     func getLikesCount() -> Int {
         return profile?.likes?.count ?? 0
     }

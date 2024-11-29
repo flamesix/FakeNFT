@@ -54,6 +54,7 @@
 		DB15247A2CDECCF6004C57B4 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1524792CDECCF6004C57B4 /* ProfileTableViewCell.swift */; };
 		DB5BEBBB2CEE96C5002C3F1B /* ProfileSitePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5BEBBA2CEE96C5002C3F1B /* ProfileSitePresenter.swift */; };
 		DB8FD9912CF9291600836FDC /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8FD9902CF9291600836FDC /* FavouritesPresenter.swift */; };
+		DB8FD9952CF93B0400836FDC /* MyNFTPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8FD9942CF93B0400836FDC /* MyNFTPresenter.swift */; };
 		DBBCF0702CE3D23A0022EA02 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBCF06F2CE3D23A0022EA02 /* FavouritesViewController.swift */; };
 		DBBCF0722CE3D3C00022EA02 /* FavouritesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBCF0712CE3D3C00022EA02 /* FavouritesCollectionViewCell.swift */; };
 		DBBCF0742CE4F9C10022EA02 /* ProfileSiteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBCF0732CE4F9C10022EA02 /* ProfileSiteViewController.swift */; };
@@ -138,6 +139,7 @@
 		DB1524792CDECCF6004C57B4 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		DB5BEBBA2CEE96C5002C3F1B /* ProfileSitePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSitePresenter.swift; sourceTree = "<group>"; };
 		DB8FD9902CF9291600836FDC /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
+		DB8FD9942CF93B0400836FDC /* MyNFTPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenter.swift; sourceTree = "<group>"; };
 		DBBCF06F2CE3D23A0022EA02 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		DBBCF0712CE3D3C00022EA02 /* FavouritesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesCollectionViewCell.swift; sourceTree = "<group>"; };
 		DBBCF0732CE4F9C10022EA02 /* ProfileSiteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSiteViewController.swift; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 			children = (
 				DB040C392CE00A3D00F2AD62 /* MyNFTViewController.swift */,
 				DB040C3B2CE00A7200F2AD62 /* NFTTableViewCell.swift */,
+				DB8FD9942CF93B0400836FDC /* MyNFTPresenter.swift */,
 			);
 			path = MyNFTScreen;
 			sourceTree = "<group>";
@@ -670,6 +673,7 @@
 				DB5BEBBB2CEE96C5002C3F1B /* ProfileSitePresenter.swift in Sources */,
 				DBCADA8E2CEA342600099A8D /* EditProfilePresenter.swift in Sources */,
 				DB040C3C2CE00A7200F2AD62 /* NFTTableViewCell.swift in Sources */,
+				DB8FD9952CF93B0400836FDC /* MyNFTPresenter.swift in Sources */,
 				DB040C3A2CE00A3D00F2AD62 /* MyNFTViewController.swift in Sources */,
 				DB02F4FA2CF25B98004F53C5 /* LikesUpdateRequest.swift in Sources */,
 				DBCADA8C2CEA340800099A8D /* ProfilePresenter.swift in Sources */,
