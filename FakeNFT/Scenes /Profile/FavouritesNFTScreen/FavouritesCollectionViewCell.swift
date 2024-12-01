@@ -108,9 +108,7 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
     
     func configure(with nft: FavouriteNftModel) {
         if let imageUrlString = nft.images.first, let imageUrl = URL(string: imageUrlString) {
-            nftImageView.kf.setImage(with: imageUrl)
-        } else {
-            nftImageView.image = UIImage(named: "placeholderImage")
+            nftImageView.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholderImage"))
         }
         titleLabel.text = nft.name.components(separatedBy: " ").first ?? ""
         configureRatingStackView(for: nft.rating)

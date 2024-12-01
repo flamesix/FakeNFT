@@ -430,8 +430,8 @@
 			isa = PBXGroup;
 			children = (
 				DB040C392CE00A3D00F2AD62 /* MyNFTViewController.swift */,
-				DB040C3B2CE00A7200F2AD62 /* NFTTableViewCell.swift */,
 				DB8FD9942CF93B0400836FDC /* MyNFTPresenter.swift */,
+				DB040C3B2CE00A7200F2AD62 /* NFTTableViewCell.swift */,
 			);
 			path = MyNFTScreen;
 			sourceTree = "<group>";
@@ -870,7 +870,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H2GQX47PU;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FakeNFT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -898,7 +898,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H2GQX47PU;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FakeNFT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

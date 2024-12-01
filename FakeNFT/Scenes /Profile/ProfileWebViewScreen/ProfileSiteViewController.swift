@@ -32,6 +32,7 @@ final class ProfileSiteViewController: UIViewController, ProfileSiteViewProtocol
     
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
+        webView.backgroundColor = UIColor(resource: .nftWhite)
         webView.translatesAutoresizingMaskIntoConstraints = false
         return webView
     }()
@@ -61,7 +62,7 @@ final class ProfileSiteViewController: UIViewController, ProfileSiteViewProtocol
         addConstraints()
         title = "О разработчике"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(resource: .nftWhite)
     }
     
     private func addSubviews() {

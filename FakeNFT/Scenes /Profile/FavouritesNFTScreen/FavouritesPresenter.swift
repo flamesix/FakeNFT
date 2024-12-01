@@ -16,10 +16,13 @@ protocol FavouritesView: AnyObject {
 }
 
 final class FavouritesPresenter {
+    // MARK: - Public properties
+    var nftItems: [FavouriteNftModel] = []
+    
+    // MARK: - Private properties
     private weak var view: FavouritesView?
     private let nftService: ProfileServiceImpl = ProfileServiceImpl.shared
     private var favoriteNfts: [String?]
-    private var nftItems: [FavouriteNftModel] = []
 
     init(view: FavouritesView, favoriteNfts: [String?]) {
         self.view = view
@@ -49,6 +52,7 @@ final class FavouritesPresenter {
                 if nfts.isEmpty {
                     self?.view?.showStubUI()
                 } else {
+                    self?.nftItems = nfts
                     self?.view?.hideStubUI()
                     self?.view?.updateNftItems(nfts)
                 }
@@ -81,7 +85,7 @@ final class FavouritesPresenter {
     func handleLikeAction(for nft: FavouriteNftModel) {
         let nftId = nft.id
         guard let indexToDelete = nftItems.firstIndex(where: { $0.id == nftId }) else {
-            print("NFT с указанным id не найден")
+            assertionFailure("NFT с указанным id не найден")
             return
         }
 
@@ -106,10 +110,9 @@ final class FavouritesPresenter {
                 self?.view?.hideLoading()
                 switch result {
                 case .success:
-                    print("Список избранного успешно обновлен на сервере")
                     NotificationCenter.default.post(name: .favouritesDidUpdate, object: nil, userInfo: ["count": updatedLikes.count])
                 case .failure(let error):
-                    print("Ошибка при обновлении избранного: \(error)")
+                    assertionFailure("Ошибка при обновлении избранного: \(error)")
                     self?.view?.showError("Не удалось обновить избранное")
                 }
             }

@@ -10,7 +10,6 @@ import ProgressHUD
 
 final class FavouritesViewController: UIViewController, FavouritesView {
     private var presenter: FavouritesPresenter?
-    private var nftItems: [FavouriteNftModel] = []
 
     // MARK: - UI Components
     private lazy var backButton: UIButton = {
@@ -26,6 +25,7 @@ final class FavouritesViewController: UIViewController, FavouritesView {
 
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.backgroundColor = UIColor(resource: .nftWhite)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(FavouritesCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -49,6 +49,7 @@ final class FavouritesViewController: UIViewController, FavouritesView {
         self.presenter = FavouritesPresenter(view: self, favoriteNfts: favoriteNfts)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -71,7 +72,7 @@ final class FavouritesViewController: UIViewController, FavouritesView {
         addConstraints()
         title = "Избранные NFT"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(resource: .nftWhite)
     }
 
     private func addSubviews() {
@@ -91,12 +92,6 @@ final class FavouritesViewController: UIViewController, FavouritesView {
         ])
     }
 
-    // MARK: - Actions
-    @objc
-    private func didTapBackButton() {
-        navigationController?.popViewController(animated: true)
-    }
-
     // MARK: - FavouritesView Protocol Methods
     func showLoading() {
         ProgressHUD.show("Загрузка...")
@@ -111,7 +106,6 @@ final class FavouritesViewController: UIViewController, FavouritesView {
     }
 
     func updateNftItems(_ items: [FavouriteNftModel]) {
-        self.nftItems = items
         collectionView.reloadData()
     }
 
@@ -124,18 +118,24 @@ final class FavouritesViewController: UIViewController, FavouritesView {
         collectionView.isHidden = false
         stubLabel.isHidden = true
     }
-
+    
+    // MARK: - Private methods
     private func showErrorAlert(with message: String) {
         let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
     }
 }
 
 // MARK: UICollectionViewDataSource
 extension FavouritesViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return nftItems.count
+        return presenter?.nftItems.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -143,11 +143,11 @@ extension FavouritesViewController: UICollectionViewDataSource {
             return FavouritesCollectionViewCell()
         }
 
-        let nft = nftItems[indexPath.row]
-        cell.configure(with: nft)
-        cell.onLikeButtonTapped = { [weak self] in
-            guard let self = self else { return }
-            self.presenter?.handleLikeAction(for: nft)
+        if let nft = presenter?.nftItems[indexPath.row] {
+            cell.configure(with: nft)
+            cell.onLikeButtonTapped = { [weak self] in
+                self?.presenter?.handleLikeAction(for: nft)
+            }
         }
 
         return cell

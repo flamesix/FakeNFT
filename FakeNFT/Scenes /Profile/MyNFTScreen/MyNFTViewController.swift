@@ -9,8 +9,9 @@ import UIKit
 import ProgressHUD
 
 final class MyNFTViewController: UIViewController {
+    var onLikeButtonTapped: (() -> Void)?
+    
     private var presenter: MyNFTPresenter?
-    private var nftItems: [FavouriteNftModel] = []
 
     // MARK: - UI Components
     private lazy var backButton: UIButton = {
@@ -35,6 +36,7 @@ final class MyNFTViewController: UIViewController {
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = UIColor(resource: .nftWhite)
         tableView.dataSource = self
         tableView.register(NFTTableViewCell.self, forCellReuseIdentifier: "NFTTableViewCell")
         tableView.rowHeight = UITableView.automaticDimension
@@ -55,11 +57,12 @@ final class MyNFTViewController: UIViewController {
     }()
 
     // MARK: - Init
-    init(myNfts: [String]) {
+    init(myNfts: [String], favoriteNfts: [String?]) {
         super.init(nibName: nil, bundle: nil)
-        self.presenter = MyNFTPresenter(view: self, myNfts: myNfts)
+        self.presenter = MyNFTPresenter(view: self, myNfts: myNfts, favoriteNfts: favoriteNfts)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -73,7 +76,7 @@ final class MyNFTViewController: UIViewController {
 
     // MARK: - Setup UI methods
     private func setupUI(){
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(resource: .nftWhite)
         title = "Мои NFT"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: filterButton)
@@ -102,16 +105,16 @@ final class MyNFTViewController: UIViewController {
     private func showMenu(){
         let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
 
-        alert.addAction(UIAlertAction(title: "По цене", style: .default) { _ in
-            self.presenter?.didSelectSortOption(.price)
+        alert.addAction(UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.price)
         })
 
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { _ in
-            self.presenter?.didSelectSortOption(.rating)
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.rating)
         })
 
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
-            self.presenter?.didSelectSortOption(.name)
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.name)
         })
 
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
@@ -124,17 +127,24 @@ final class MyNFTViewController: UIViewController {
 extension MyNFTViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return nftItems.count
+        return presenter?.nftItems.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "NFTTableViewCell", for: indexPath) as? NFTTableViewCell else {
             return UITableViewCell()
         }
         cell.selectionStyle = .none
-        let nft = nftItems[indexPath.row]
-        cell.configure(with: nft)
+        cell.backgroundColor = .clear
+        if let nft = presenter?.nftItems[indexPath.row] {
+            let isLiked = presenter?.favoriteNfts.contains(nft.id) ?? false
+            cell.configure(with: nft, isLiked: isLiked)
+            cell.onLikeButtonTapped = { [weak self] in
+                self?.presenter?.handleLikeAction(for: nft)
+                self?.tableView.reloadData()
+            }
+        }
+        
         return cell
     }
 }
@@ -142,7 +152,6 @@ extension MyNFTViewController: UITableViewDataSource {
 // MARK: - MyNFTView Protocol Methods
 extension MyNFTViewController: MyNFTView {
     func updateNftItems(_ items: [FavouriteNftModel]) {
-        self.nftItems = items
         tableView.reloadData()
     }
     
