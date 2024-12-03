@@ -1,9 +1,9 @@
 import UIKit
 
 enum TabBarTags: Int {
-    case catalog = 0
-    case cart = 1
-    case profile = 2
+    case profile = 0
+    case catalog = 1
+    case cart = 2
     case statistic = 3
 }
 

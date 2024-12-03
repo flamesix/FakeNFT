@@ -102,10 +102,7 @@ final class PaymentSuccessViewController: UIViewController {
     @objc private func returnToCatalogButtonTapped() {        
         if let tabBarController = self.tabBarController {
             tabBarController.selectedIndex = TabBarTags.catalog.rawValue
-            
-            if let navController = tabBarController.viewControllers?[TabBarTags.cart.rawValue] as? UINavigationController {
-                navController.popToRootViewController(animated: true)
-            }
+            navigationController?.popToRootViewController(animated: true)
         }
     }
 }
