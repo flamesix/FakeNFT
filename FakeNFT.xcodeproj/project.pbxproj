@@ -421,7 +421,6 @@
 				3F478ECD29DB473000F6D39E /* DesignSystem */,
 				3F6806CE29CBBD1B00B4F915 /* Foundation */,
 				3F6806C929CBBCAF00B4F915 /* Models */,
-				5B22ECAC2CFF895E00420E10 /* Stat */,
 				3F6806C729CBBC5B00B4F915 /* Scenes  */,
 				3F6806C629CBBC4E00B4F915 /* Services */,
 				3F6806A429CBBAF200B4F915 /* Info.plist */,
@@ -463,6 +462,7 @@
 		3F6806C729CBBC5B00B4F915 /* Scenes  */ = {
 			isa = PBXGroup;
 			children = (
+				5B6925582CDF6D1A000561C2 /* Statistics */,
 				9020019A2CF50396003663D9 /* Catalogue */,
 				E90C2C172CE3A49D00E96DF5 /* Cart */,
 				E1A1B9D82AA01C9700C3AFBC /* TabBarController */,
@@ -565,14 +565,6 @@
 				5BA0D45F2CF1B4AB00F8C081 /* NftCollectionAssembly.swift */,
 			);
 			path = NftCollectionScreen;
-			sourceTree = "<group>";
-		};
-		5B22ECAC2CFF895E00420E10 /* Stat */ = {
-			isa = PBXGroup;
-			children = (
-				5B6925582CDF6D1A000561C2 /* Statistics */,
-			);
-			path = Stat;
 			sourceTree = "<group>";
 		};
 		5B6925482CDE7731000561C2 /* Helpers */ = {
