@@ -2,71 +2,89 @@ import Foundation
 
 // MARK: - Protocol
 
-protocol NftDetailPresenter {
+protocol NftCatalogueDetailPresenter {
     func viewDidLoad()
 }
 
 // MARK: - State
 
-enum NftDetailState {
-    case initial, loading, failed(Error), data(Nft)
+enum NftCatalogueDetailState {
+    case initial, loading, failed(Error), data([NftCatalogueCollection])
 }
 
-final class NftDetailPresenterImpl: NftDetailPresenter {
-
+final class NftCollectionCataloguePresenter: NftCatalogueDetailPresenter {
+    
     // MARK: - Properties
+<<<<<<<< HEAD:FakeNFT/Scenes/NftDetails/NftDetailPresenter.swift
 
     weak var view: NftDetailView?
     private let input: NftDetailInput
     private let service: NftServiceProtocol
     private var state = NftDetailState.initial {
+========
+    
+    weak var view: NftCollectionsCatalgueViewContollerProtocol?
+    private let service: NftCollectionCatalogueService
+    private var state = NftCatalogueDetailState.initial {
+>>>>>>>> catalogue:FakeNFT/Scenes/Catalogue/NftCollectionsCatalogue/NftCollectionCataloguePresenter.swift
         didSet {
             stateDidChanged()
         }
     }
-
+    
+    private var page = 0
+    private let cataloguesPerPage = 5
+    
     // MARK: - Init
+<<<<<<<< HEAD:FakeNFT/Scenes/NftDetails/NftDetailPresenter.swift
 
     init(input: NftDetailInput, service: NftServiceProtocol) {
         self.input = input
+========
+    
+    init(service: NftCollectionCatalogueService) {
+>>>>>>>> catalogue:FakeNFT/Scenes/Catalogue/NftCollectionsCatalogue/NftCollectionCataloguePresenter.swift
         self.service = service
     }
-
+    
     // MARK: - Functions
-
+    
     func viewDidLoad() {
         state = .loading
     }
-
+    
     private func stateDidChanged() {
         switch state {
         case .initial:
             assertionFailure("can't move to initial state")
         case .loading:
             view?.showLoading()
-            loadNft()
-        case .data(let nft):
+            loadNftCollectionCatalogue(page: page)
+        case .data(let nftCatalogue):
+            if nftCatalogue.count == (page + 1) * cataloguesPerPage {
+                page += 1
+            }
             view?.hideLoading()
-            let cellModels = nft.images.map { NftDetailCellModel(url: $0) }
-            view?.displayCells(cellModels)
+            view?.displayCatalogue(nftCatalogue, cataloguesPerPage)
+            
         case .failed(let error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
             view?.showError(errorModel)
         }
     }
-
-    private func loadNft() {
-        service.loadNft(id: input.id) { [weak self] result in
+    
+    private func loadNftCollectionCatalogue(page: Int) {
+        service.loadNftCatalogue(page: page) { [weak self] result in
             switch result {
-            case .success(let nft):
-                self?.state = .data(nft)
+            case .success(let nftCatalogue):
+                self?.state = .data(nftCatalogue)
             case .failure(let error):
                 self?.state = .failed(error)
             }
         }
     }
-
+    
     private func makeErrorModel(_ error: Error) -> ErrorModel {
         let message: String
         switch error {
@@ -75,7 +93,7 @@ final class NftDetailPresenterImpl: NftDetailPresenter {
         default:
             message = NSLocalizedString("Error.unknown", comment: "")
         }
-
+        
         let actionText = NSLocalizedString("Error.repeat", comment: "")
         return ErrorModel(message: message, actionText: actionText) { [weak self] in
             self?.state = .loading
