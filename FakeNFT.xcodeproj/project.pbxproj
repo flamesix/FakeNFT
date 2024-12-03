@@ -265,7 +265,6 @@
 				5B6925482CDE7731000561C2 /* Helpers */,
 				3F68069629CBBAF100B4F915 /* AppDelegate.swift */,
 				3F68069829CBBAF100B4F915 /* SceneDelegate.swift */,
-				DB1524752CDE943E004C57B4 /* Profile */,
 				0C79EE642A76DDCF00EE90EA /* NftDetails */,
 				E1CD40DA2A96BE9B00BE7FE8 /* Resources */,
 				3F478ECD29DB473000F6D39E /* DesignSystem */,
@@ -309,6 +308,7 @@
 			isa = PBXGroup;
 			children = (
 				E1A1B9D82AA01C9700C3AFBC /* TabBarController */,
+				DB1524752CDE943E004C57B4 /* Profile */,
 				0CF2C2D92A783C1600FDC837 /* Common */,
 				3F6806C829CBBC8100B4F915 /* ProductDetails */,
 			);
