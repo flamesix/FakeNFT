@@ -19,6 +19,7 @@ protocol ProfileService {
             completion: @escaping ProfileUpdateCompletion
         )
 }
+
 final class ProfileServiceImpl: ProfileService {
     static let shared = ProfileServiceImpl(
         networkClient: DefaultNetworkClient(),
@@ -65,6 +66,25 @@ final class ProfileServiceImpl: ProfileService {
             case .success(let updatedProfile):
                 self?.storage.saveProfile(updatedProfile) 
                 completion(.success(updatedProfile))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func getNft(by id: String, completion: @escaping (Result<FavouriteNftModel, Error>) -> Void) {
+        let request = FavouriteNftRequest(nftId: id)
+        networkClient.send(request: request, type: FavouriteNftModel.self, onResponse: completion)
+    }
+    
+    func updateLikes(_ likes: [String], completion: @escaping (Result<Void, Error>) -> Void) {
+        let likesDto = LikesUpdateDto(likes: likes)
+        let request = LikesUpdateRequest(dto: likesDto)
+        
+        networkClient.send(request: request) { result in
+            switch result {
+            case .success(_):
+                completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
             }

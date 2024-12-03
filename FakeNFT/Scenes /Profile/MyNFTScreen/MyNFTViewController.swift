@@ -6,40 +6,38 @@
 //
 
 import UIKit
+import ProgressHUD
 
-final class MyNFTViewController: UIViewController, UITableViewDelegate {
-    // MARK: Mock Data
-    private var nftItems: [NFTModel] = [
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "Lilo", author: "John Doe", rating: 0, price: 1.78),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "Spring", author: "John Doe", rating: 3, price: 1.78),
-        NFTModel(image: UIImage(named: "nftCard1")!, title: "April", author: "John Doe", rating: 0, price: 1.78)
-    ]
+final class MyNFTViewController: UIViewController {
+    var onLikeButtonTapped: (() -> Void)?
     
-    // MARK: - Private Properties
+    private var presenter: MyNFTPresenter?
+
+    // MARK: - UI Components
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(weight: .bold)
         let image = UIImage(systemName: "chevron.backward", withConfiguration: config)
         button.setImage(image, for: .normal)
-        button.tintColor = UIColor(resource: .nftBlack)
+        button.tintColor = UIColor(named: "nftBlack")
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "filterButton"), for: .normal)
-        button.tintColor = UIColor(resource: .nftBlack)
+        button.tintColor = UIColor(named: "nftBlack")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(showMenu), for: .touchUpInside)
         return button
     }()
-    
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = UIColor(resource: .nftWhite)
         tableView.dataSource = self
-        tableView.delegate = self
         tableView.register(NFTTableViewCell.self, forCellReuseIdentifier: "NFTTableViewCell")
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
@@ -47,95 +45,139 @@ final class MyNFTViewController: UIViewController, UITableViewDelegate {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    
+
     private lazy var stubLabel: UILabel = {
         let label = UILabel()
         label.isHidden = true
         label.text = "У Вас ещё нет NFT"
-        label.textColor = UIColor(resource: .nftBlack)
-        label.font = .bodyBold
+        label.textColor = UIColor(named: "nftBlack")
+        label.font = UIFont.boldSystemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
+    // MARK: - Init
+    init(myNfts: [String], favoriteNfts: [String?]) {
+        super.init(nibName: nil, bundle: nil)
+        self.presenter = MyNFTPresenter(view: self, myNfts: myNfts, favoriteNfts: favoriteNfts)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Life view cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        presenter?.viewDidLoad()
     }
-    
+
     // MARK: - Setup UI methods
     private func setupUI(){
-        addSubviews()
-        addConstraints()
+        view.backgroundColor = UIColor(resource: .nftWhite)
         title = "Мои NFT"
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: filterButton)
-        view.backgroundColor = .white
-    }
-    
-    private func addSubviews(){
+
         view.addSubview(tableView)
         view.addSubview(stubLabel)
-    }
-    
-    private func addConstraints(){
+
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+
             stubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    
-    private func showStubUI(){
-        // TO DO: прописать логику
-        filterButton.isHidden = true
-        stubLabel.isHidden = false
-    }
-    
-    // MARK: - Private methods
+
+    // MARK: - Actions
     @objc
     private func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
-    
+
     @objc
     private func showMenu(){
-        let alert = UIAlertController(title: NSLocalizedString("sort", comment: ""), message: nil, preferredStyle: .actionSheet)
-        
-        alert.addAction(UIAlertAction(title: "По цене", style: .default) { _ in
-            print("По цене")
+        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.price)
         })
-        
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { _ in
-            print("По рейтингуе")
+
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.rating)
         })
-        
-        alert.addAction(UIAlertAction(title: "По названию", style: .default) { _ in
-            print("По названию")
+
+        alert.addAction(UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.name)
         })
-        
+
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
-        
+
         present(alert, animated: true)
     }
 }
 
 // MARK: - UITableViewDataSource
 extension MyNFTViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return nftItems.count
+        return presenter?.nftItems.count ?? 0
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "NFTTableViewCell", for: indexPath) as? NFTTableViewCell else {
             return UITableViewCell()
         }
-        cell.configure(with: nftItems[indexPath.row])
+        cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        if let nft = presenter?.nftItems[indexPath.row] {
+            let isLiked = presenter?.favoriteNfts.contains(nft.id) ?? false
+            cell.configure(with: nft, isLiked: isLiked)
+            cell.onLikeButtonTapped = { [weak self] in
+                self?.presenter?.handleLikeAction(for: nft)
+                self?.tableView.reloadData()
+            }
+        }
+        
         return cell
+    }
+}
+
+// MARK: - MyNFTView Protocol Methods
+extension MyNFTViewController: MyNFTView {
+    func updateNftItems(_ items: [FavouriteNftModel]) {
+        tableView.reloadData()
+    }
+    
+    func showLoading() {
+        ProgressHUD.show("Загрузка...")
+    }
+
+    func hideLoading() {
+        ProgressHUD.dismiss()
+    }
+
+    func showError(_ message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ОК", style: .default))
+        present(alert, animated: true)
+    }
+
+    func showStubUI() {
+        filterButton.isHidden = true
+        tableView.isHidden = true
+        stubLabel.isHidden = false
+    }
+
+    func hideStubUI() {
+        filterButton.isHidden = false
+        tableView.isHidden = false
+        stubLabel.isHidden = true
     }
 }

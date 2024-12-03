@@ -198,7 +198,7 @@ final class EditProfileInfoViewController: UIViewController, EditProfileViewProt
     
     // MARK: - Setup Methods
     private func setupVC(){
-        view.backgroundColor = .background
+        view.backgroundColor = UIColor(resource: .nftWhite)
         addSubviews()
         addConstraints()
         addDoneButtonOnKeyboard()

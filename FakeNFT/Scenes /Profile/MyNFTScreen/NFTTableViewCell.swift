@@ -8,6 +8,7 @@
 import UIKit
 
 final class NFTTableViewCell: UITableViewCell {
+    var onLikeButtonTapped: (() -> Void)?
     // MARK: - Private Properties
     private let totalStars: Int = 5
     
@@ -20,11 +21,12 @@ final class NFTTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let favoriteIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "heart.fill"))
-        imageView.tintColor = UIColor(resource: .nftWhiteUni)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let favoriteIcon: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "activeLike"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
+        return button
     }()
     
     private let titleLabel: UILabel = {
@@ -91,25 +93,19 @@ final class NFTTableViewCell: UITableViewCell {
     
     // MARK: - setup methods
     private func setupCell() {
-        contentView.addSubview(nftImageView)
-        contentView.addSubview(favoriteIcon)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(authorLabel)
-        contentView.addSubview(ratingStack)
-        contentView.addSubview(priceLabel)
-        contentView.addSubview(priceTitile)
-        
+        [nftImageView, favoriteIcon, titleLabel, authorLabel, ratingStack, priceLabel, priceTitile].forEach { contentView.addSubview($0) }
+
         NSLayoutConstraint.activate([
-            nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            
             nftImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             nftImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             nftImageView.widthAnchor.constraint(equalToConstant: 108),
             nftImageView.heightAnchor.constraint(equalToConstant: 108),
             
-            favoriteIcon.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 12),
-            favoriteIcon.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: -12),
-            favoriteIcon.widthAnchor.constraint(equalToConstant: 17.64),
-            favoriteIcon.heightAnchor.constraint(equalToConstant: 15.75),
+            favoriteIcon.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 5),
+            favoriteIcon.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: -5),
+            favoriteIcon.widthAnchor.constraint(equalToConstant: 21),
+            favoriteIcon.heightAnchor.constraint(equalToConstant: 18),
             
             titleLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 39),
@@ -121,22 +117,29 @@ final class NFTTableViewCell: UITableViewCell {
             
             authorLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             authorLabel.topAnchor.constraint(equalTo: ratingStack.bottomAnchor, constant: 5),
+            authorLabel.widthAnchor.constraint(equalToConstant: 100),
             
-            priceTitile.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -81),
-            priceTitile.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 49),
+            priceTitile.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -65),
+            priceTitile.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 54),
             
             priceLabel.leadingAnchor.constraint(equalTo: priceTitile.leadingAnchor),
             priceLabel.topAnchor.constraint(equalTo: priceTitile.bottomAnchor, constant: 2),
         ])
     }
     
-    func configure(with nft: NFTModel) {
-        nftImageView.image = nft.image
-        titleLabel.text = nft.title
+    func configure(with nft: FavouriteNftModel, isLiked: Bool) {
+        if let imageUrlString = nft.images.first, let imageUrl = URL(string: imageUrlString) {
+            nftImageView.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholderImage"))
+        }
+        titleLabel.text = nft.name
         authorLabel.text = "от \(nft.author)"
         configureRatingStackView(for: nft.rating)
         priceLabel.text = formatPrice(nft.price)
+        
+        let likeImage = isLiked ? UIImage(named: "activeLike") : UIImage(named: "noActiveLike")
+        favoriteIcon.setImage(likeImage, for: .normal)
     }
+    
     
     private func formatPrice(_ price: Double) -> String {
         return priceFormatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
@@ -150,5 +153,10 @@ final class NFTTableViewCell: UITableViewCell {
             let starImageView = UIImageView.createStar(isActive: isActive)
             ratingStack.addArrangedSubview(starImageView)
         }
+    }
+    
+    @objc
+    private func didTapLikeButton() {
+        onLikeButtonTapped?()
     }
 }

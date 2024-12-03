@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class FavouritesCollectionViewCell: UICollectionViewCell {
+    var onLikeButtonTapped: (() -> Void)?
+    
     // MARK: Private properties
     private let totalStars: Int = 5
     private let nftImageView: UIImageView = {
@@ -19,11 +22,12 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    private let favoriteIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "heart.fill"))
-        imageView.tintColor = UIColor(resource: .nftWhiteUni)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let favoriteIcon: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "activeLike"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
+        return button
     }()
     
     private let titleLabel: UILabel = {
@@ -84,10 +88,10 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
             nftImageView.widthAnchor.constraint(equalToConstant: 80),
             nftImageView.heightAnchor.constraint(equalToConstant: 80),
             
-            favoriteIcon.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 12),
-            favoriteIcon.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: -12),
-            favoriteIcon.widthAnchor.constraint(equalToConstant: 17.64),
-            favoriteIcon.heightAnchor.constraint(equalToConstant: 15.75),
+            favoriteIcon.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 5),
+            favoriteIcon.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: -5),
+            favoriteIcon.widthAnchor.constraint(equalToConstant: 21),
+            favoriteIcon.heightAnchor.constraint(equalToConstant: 18),
             
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
             titleLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
@@ -98,16 +102,19 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
             ratingStack.heightAnchor.constraint(equalToConstant: 12),
             
             priceLabel.topAnchor.constraint(equalTo: ratingStack.bottomAnchor, constant: 8),
-            priceLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12)
+            priceLabel.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
         ])
     }
     
-    func configure(with nft: NFTModel) {
-        nftImageView.image = nft.image
-        titleLabel.text = nft.title
+    func configure(with nft: FavouriteNftModel) {
+        if let imageUrlString = nft.images.first, let imageUrl = URL(string: imageUrlString) {
+            nftImageView.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholderImage"))
+        }
+        titleLabel.text = nft.name.components(separatedBy: " ").first ?? ""
         configureRatingStackView(for: nft.rating)
         priceLabel.text = formatPrice(nft.price)
     }
+    
     
     private func formatPrice(_ price: Double) -> String {
         return priceFormatter.string(from: NSNumber(value: price)) ?? "\(price) ETH"
@@ -121,5 +128,10 @@ final class FavouritesCollectionViewCell: UICollectionViewCell {
             let starImageView = UIImageView.createStar(isActive: isActive)
             ratingStack.addArrangedSubview(starImageView)
         }
+    }
+    
+    @objc
+    private func didTapLikeButton() {
+        onLikeButtonTapped?()
     }
 }

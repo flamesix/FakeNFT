@@ -30,7 +30,6 @@ final class ProfilePresenter {
                 switch result {
                 case .success(let profile):
                     self?.profile = profile
-                    print(profile)
                     self?.view?.updateUI(with: profile)
                 case .failure(let error):
                     self?.view?.showError("Error loading profile: \(error.localizedDescription)")
@@ -44,7 +43,19 @@ final class ProfilePresenter {
         return profile?.nfts?.count ?? 0
     }
     
+    func getNFTs() -> [String] {
+        return profile?.nfts ?? []
+    }
+    
     func getLikesCount() -> Int {
         return profile?.likes?.count ?? 0
+    }
+    
+    func getLikes() -> [String] {
+        return profile?.likes ?? []
+    }
+    
+    func updateLikes(_ likes: [String]) {
+        profile?.likes = likes 
     }
 }
