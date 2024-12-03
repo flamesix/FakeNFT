@@ -1,0 +1,20 @@
+"Tab.catalog" = "Каталог";
+"Catalog.openNft" = "Открыть Nft";
+"Error.network" = "Произошла ошибка сети";
+"Error.unknown" = "Произошла неизвестная ошибка";
+"Error.repeat" = "Повторить";
+"Error.title" = "Ошибка";
+
+// MARK: - NftCollectionSortAlerPresenter
+
+"sorting" = "Сртировка";
+"nftCountSort" = "По количеству NFT";
+"nftNameSort" = "По названию";
+"sortAlertClose" = "Закрыть";
+
+
+// MARK: - NftNotificationAlerPresenter
+
+"likeNotification" = "Nft уже добавлен в избранное!";
+"orderNotification" = "Nft уже добавлен в корзину!";
+"nftNotificationAlertClose" = "Закрыть";
