@@ -203,5 +203,7 @@
 - экран «Корзина»
 - экран «Мои NFT»
 - экран «Статистика»
-https://github.com/user-attachments/assets/2ec3539c-520f-4a8a-96e0-1c4c768c655c
+https://github.com/user-attachments/assets/ab717e8b-599e-45f1-8162-baade5f62259
+
+
 
