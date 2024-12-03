@@ -3,12 +3,19 @@ import UIKit
 enum TabBarTags: Int {
     case catalog = 0
     case cart = 1
+    case profile = 2
     case statistic = 3
 }
 
 final class TabBarController: UITabBarController {
     
     var servicesAssembly: ServicesAssembly
+    
+    private let profileTabBarItem = UITabBarItem(
+        title: NSLocalizedString("Tab.profile", comment: ""),
+        image: UIImage(named: "profileIcon"),
+        tag: TabBarTags.profile.rawValue
+    )
     
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
@@ -49,11 +56,15 @@ final class TabBarController: UITabBarController {
         let cartController = cartAssembly.build()
         cartController.tabBarItem = cartTabBarItem
         
+        let profileController = ProfileViewController()
+        profileController.tabBarItem = profileTabBarItem
+        let profileNavigationController = UINavigationController(rootViewController: profileController)
+        
         let statisticsAssembly = StatisticsAssembly(servicesAssembler: servicesAssembly)
         let statisticsController = statisticsAssembly.build()
         statisticsController.tabBarItem = statisticsTabBarItem
         
-        viewControllers = [catalogController, cartController, statisticsController]
+        viewControllers = [profileNavigationController, catalogController, cartController, statisticsController]
         
         view.backgroundColor = .nftWhite
         tabBar.unselectedItemTintColor = .nftBlack

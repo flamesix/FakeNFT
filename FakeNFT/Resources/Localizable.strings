@@ -50,3 +50,12 @@
 // MARK: - ProgressHud
 
 "Loadiung" = "Загрузка...";
+
+// MARK: ProfileVC
+"Tab.profile" = "Профиль";
+"editNameTitle" = "Имя";
+"editBioTitle" = "Описание";
+"editSiteTitle" = "Сайт";
+
+// MARK: MyNFTVC
+"sort" = "Сортировка";
