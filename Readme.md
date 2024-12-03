@@ -200,7 +200,7 @@
 
 **Запись экранов с демонстрацией работы**
 - экран «Каталог» https://disk.yandex.ru/i/ETKOVRZXgLeOgg
-- экран «Корзина»
+- экран «Корзина» https://github.com/user-attachments/assets/391d5007-9928-4ec5-a131-dfe16537b4c1
 - экран «Мои NFT»
 - экран «Статистика»
 https://github.com/user-attachments/assets/ab717e8b-599e-45f1-8162-baade5f62259
