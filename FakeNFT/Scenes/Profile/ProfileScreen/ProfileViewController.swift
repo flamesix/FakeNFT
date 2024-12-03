@@ -215,6 +215,7 @@ extension ProfileViewController: UITableViewDataSource{
         }
         
         cell.tintColor = UIColor(resource: .nftBlack)
+        cell.backgroundColor = .nftWhite
         cell.selectionStyle = .none
         
         switch indexPath.row {
