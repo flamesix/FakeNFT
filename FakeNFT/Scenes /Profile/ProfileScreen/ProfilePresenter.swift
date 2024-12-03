@@ -30,7 +30,6 @@ final class ProfilePresenter {
                 switch result {
                 case .success(let profile):
                     self?.profile = profile
-                    //print(profile)
                     self?.view?.updateUI(with: profile)
                 case .failure(let error):
                     self?.view?.showError("Error loading profile: \(error.localizedDescription)")
